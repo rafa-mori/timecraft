@@ -1,40 +1,101 @@
 # TimeCraft
 
-Bem-vindo ao TimeCraft! Este projeto foi criado para facilitar a análise de séries temporais, integração com bancos de dados e automação de tarefas.
+Bem-vindo ao **TimeCraft**! Este projeto foi criado para facilitar a análise de séries temporais, integração com bancos de dados e automação de tarefas.
 
-## Funcionalidades Principais
+[![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) ![Last Commit](https://img.shields.io/github/last-commit/faelmori/timecraft) ![Repo Size](https://img.shields.io/github/repo-size/faelmori/timecraft)
 
-- **Análise de Séries Temporais**: Scripts robustos para modelagem e previsão.
-- **Conexão com Bancos de Dados**: Ferramentas para integração eficiente com diferentes bancos.
-- **Automação e Notificações**: Módulos para automação de tarefas e envio de notificações.
+---
 
-## Estrutura do Projeto
+## 🚀 Funcionalidades Principais
 
-O repositório está organizado para facilitar a navegação e o desenvolvimento:
+* 📈 **Análise de Séries Temporais**  
+  Scripts robustos para modelagem, previsão e avaliação de dados temporais.
 
-1. **Documentação**: Arquivos como `README.md`, `INSTALL.md` e `CONTRIBUTING.md`.
-2. **Código-Fonte**: Módulos principais dentro de `/src/`.
-3. **Recursos de Divulgação**: Material visual e rascunhos de publicações.
-4. **Tutoriais e Guias**: Passo a passo detalhado e casos de uso avançados.
-5. **Dados e Exemplos**: Arquivos de dados e resultados gerados.
-6. **Ambiente Virtual**: Configuração de dependências no `/venv/`.
+* 🛢️ **Integração com Bancos de Dados**  
+  Ferramentas para conectar e consultar diferentes bancos de dados de forma eficiente.
 
-## Como Começar
+* ⚙️ **Automação e Notificações**  
+  Módulos para automatizar fluxos de trabalho de dados e enviar notificações ou alertas.
 
-1. Clone o repositório:
-   ```sh
-   git clone https://github.com/seu-usuario/TimeCraft.git
+---
+
+## 📁 Estrutura do Projeto
+
+```
+timecraft/
+├── /src/                # Lógica central e módulos
+├── /docs/               # Arquivos de documentação (README, INSTALL, CONTRIBUTING)
+├── /tutorials/          # Guias passo a passo e casos de uso avançados
+├── /data/               # Conjuntos de dados de exemplo e resultados gerados
+├── /assets/             # Conteúdo visual para divulgação e publicação
+├── /venv/               # Ambiente virtual e gerenciamento de dependências
+└── requirements.txt     # Dependências do Python
+```
+
+---
+
+## 🧭 Começando
+
+1. **Clone o repositório**:
+
+   ```bash
+   git clone https://github.com/faelmori/timecraft.git
+   cd timecraft
    ```
-2. Instale as dependências:
-   ```sh
+
+2. **Crie e ative um ambiente virtual** *(opcional, mas recomendado)*:
+
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # No Windows: venv\Scripts\activate
+   ```
+
+3. **Instale as dependências**:
+
+   ```bash
    pip install -r requirements.txt
    ```
-3. Explore os tutoriais e exemplos na pasta `/tutorials`.
 
-## Contribuição
+4. **Explore os tutoriais**:  
+   Navegue até a pasta `/tutorials` para exemplos de uso e melhores práticas.
 
-Se você deseja contribuir, confira o arquivo `CONTRIBUTING.md` para orientações detalhadas.
+---
 
-## Licença
+## 📚 Tutoriais e Exemplos
+
+| Tópico | Descrição | 
+| --- | --- | 
+| [Previsão de Séries Temporais](tutorials/forecasting.md) | Aprenda a modelar e prever pontos de dados futuros. | 
+| [Conexão com Banco de Dados](tutorials/database.md) | Conecte e recupere dados de bancos de dados suportados. | 
+| [Pipeline de Automação](tutorials/automation.md) | Construa e agende tarefas usando os recursos de automação do TimeCraft. | 
+
+---
+
+## 🤝 Contribuindo
+
+Contribuições de todos os tipos são bem-vindas! Leia nosso [CONTRIBUTING.md](CONTRIBUTING.md) para orientações detalhadas sobre como ajudar a melhorar o TimeCraft.
+
+---
+
+## 🛣️ Funcionalidades Planejadas (Roadmap)
+
+* ✅ Modelos plug-and-play para ARIMA, Prophet e LSTM  
+* 🚧 Suporte para fontes de dados baseadas em nuvem (ex.: BigQuery, Snowflake)  
+* 🔔 Sistema de notificações por e-mail e webhook  
+* 📊 Interface de dashboard para resultados visuais (módulo opcional)  
+
+---
+
+## 📄 Licença
 
 Este projeto está licenciado sob a [MIT License](https://opensource.org/licenses/MIT).
+
+
+
+## 📧 Contato
+
+Para perguntas, sugestões ou feedback, entre em contato:
+
+- Email: [faelmori@gmail.com](mailto:faelmori@gmail.com)
+- GitHub: [faelmori/timecraft](https://github.com/faelmori/timecraft)
+- LinkedIn: [Rafa Mori](https://www.linkedin.com/in/rafa-mori)
