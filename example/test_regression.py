@@ -1,7 +1,6 @@
 import sys
 
-sys.path.append('../../timeseries')
-sys.path.append('../../../src')
+sys.path.append('../../src')
 
 import pandas as pd
 from sklearn.linear_model import LinearRegression

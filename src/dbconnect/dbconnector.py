@@ -4,13 +4,8 @@ sys.path.append('../')
 sys.path.append('../../src')
 
 import os
-import sqlite3
 
-import cx_Oracle
-import mysql.connector
 import pandas as pd
-import psycopg2
-from pymongo import MongoClient
 from sqlalchemy import create_engine
 
 
@@ -23,12 +18,16 @@ class DatabaseConnector:
     def connect(self):
         try:
             if self.db_type == "oracle":
+                import cx_Oracle
+
                 self.connection = cx_Oracle.connect(
                     user=self.credentials.get("username") or os.getenv("ORACLE_USERNAME"),
                     password=self.credentials.get("password") or os.getenv("ORACLE_PASSWORD"),
                     dsn=self.credentials.get("dsn") or os.getenv("ORACLE_DSN")
                 )
             elif self.db_type == "sqlite":
+                import sqlite3
+
                 self.connection = sqlite3.connect(
                     self.credentials.get("db_path") or os.getenv("SQLITE_DB_PATH")
                 )
@@ -44,6 +43,8 @@ class DatabaseConnector:
                 )
                 self.connection = create_engine(conn_string)
             elif self.db_type == "postgres":
+                import psycopg2
+                
                 self.connection = psycopg2.connect(
                     host=self.credentials.get("host") or os.getenv("POSTGRES_HOST"),
                     database=self.credentials.get("database") or os.getenv("POSTGRES_DATABASE"),
@@ -52,6 +53,8 @@ class DatabaseConnector:
                     port=self.credentials.get("port") or os.getenv("POSTGRES_PORT", 5432)
                 )
             elif self.db_type == "mysql":
+                import mysql.connector
+
                 self.connection = mysql.connector.connect(
                     host=self.credentials.get("host") or os.getenv("MYSQL_HOST"),
                     user=self.credentials.get("user") or os.getenv("MYSQL_USER"),
@@ -60,6 +63,8 @@ class DatabaseConnector:
                     port=self.credentials.get("port") or os.getenv("MYSQL_PORT", 3306)
                 )
             elif self.db_type == "mongodb":
+                from pymongo import MongoClient
+
                 self.connection = MongoClient(
                     self.credentials.get("uri") or os.getenv("MONGODB_URI")
                 )

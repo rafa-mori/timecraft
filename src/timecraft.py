@@ -1,7 +1,4 @@
-import sys
-
-sys.path.append('../')
-sys.path.append('../../src')
+#__init__.py
 
 import os
 from concurrent.futures import ProcessPoolExecutor

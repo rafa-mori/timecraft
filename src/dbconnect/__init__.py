@@ -1,2 +1,0 @@
-class DatabaseConnector:
-    pass
