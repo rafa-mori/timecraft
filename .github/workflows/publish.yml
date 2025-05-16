@@ -47,13 +47,17 @@ jobs:
           echo "Version not published"
 
       - name: Package the project
-        run: |
+        run: | 
+          cd ./src
+          if [ -d "./dist" ]; then
+            rm -rf ./dist
+          fi
           python -m build
-            # Check if the build was successful
           if [ $? -ne 0 ]; then
             echo "Build failed"
             exit 1
           fi
+          echo "Build succeeded"
 
       - name: Check for version bump
         run: |
@@ -71,3 +75,7 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
           twine upload dist/*
+          if [ $? -ne 0 ]; then
+            echo "Upload failed"
+            exit 1
+          fi
