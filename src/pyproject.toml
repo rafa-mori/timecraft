@@ -4,12 +4,12 @@ build-backend = "hatchling.build"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["timecraft*", "dbconnect*", "classify*", "regression*"]
+include = ["timecraft-ai*", "dbconnect*", "classify*", "regression*"]
 exclude = ["tests*"]
 
 [project]
-name = "timecraft"
-version = "0.1.0"
+name = "timecraft-ai"
+version = "1.0.0"
 requires-python = ">=3.7"
 authors = [
   { name = "Rafael Mori", email = "faelmori@gmail.com" }
@@ -17,7 +17,7 @@ authors = [
 maintainers = [
   { name = "Rafael Mori", email = "faelmori@gmail.com" }
 ]
-description = "Biblioteca para análise de séries temporais e integração com bancos de dados"
+description = "A Python package for time series analysis and forecasting"
 readme = "README.md"
 license = { text = "MIT" }
 keywords = ["time series", "database", "automation", "forecasting", "data analysis", "regression"]
