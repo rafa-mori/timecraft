@@ -73,38 +73,38 @@ timecraft/
 
 ## ⏰ Scheduled Execution (Scheduler)
 
-TimeCraft agora suporta execução agendada de tarefas, permitindo rodar modelos automaticamente em intervalos definidos, como um cronjob simples.
+TimeCraft now supports scheduled task execution, allowing you to run models automatically at defined intervals, similar to a simple cronjob.
 
-### Como usar
+### How to use
 
-**Via linha de comando:**
+**Via command line:**
 
 ```bash
 python -m timecraft_ai schedule <interval_seconds> <model>
 ```
 
-- `<interval_seconds>`: intervalo em segundos entre execuções (ex: 300 para 5 minutos)
-- `<model>`: tipo do modelo (`timecraft`, `classifier`, `regression`)
+- `<interval_seconds>`: interval in seconds between executions (e.g., 300 for 5 minutes)
+- `<model>`: model type (`timecraft`, `classifier`, `regression`)
 
-**Exemplo:**
+**Example:**
 
 ```bash
 python -m timecraft_ai schedule 600 timecraft
 ```
 
-Isso executa o modelo TimeCraft a cada 10 minutos.
+This will run the TimeCraft model every 10 minutes.
 
-**Via código Python:**
+**Via Python code:**
 
 ```python
 from timecraft_ai import TimeCraftAI, run_scheduled
 
 tc = TimeCraftAI()
 model = tc.create_timecraft_model(data="data/hist_cambio_float.csv", date_column="dt", value_columns=["purchaseValue", "saleValue"], is_csv=True)
-run_scheduled(model.run, interval_seconds=600)  # Executa a cada 10 minutos
+run_scheduled(model.run, interval_seconds=600)  # Runs every 10 minutes
 ```
 
-> O scheduler roda em background e pode ser interrompido com Ctrl+C na CLI.
+> The scheduler runs in the background and can be stopped with Ctrl+C in the CLI.
 
 ---
 
