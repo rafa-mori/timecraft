@@ -1,0 +1,50 @@
+{
+  "title": "Rafa Mori | Portafolio Dev",
+  "meta": {
+    "description": "Rafa Mori - Portafolio de Desarrollador Full Cycle"
+  },
+  "navbar": {
+    "brand": "Desarrollador Full Cycle",
+    "links": {
+      "home": "Inicio",
+      "about": "Sobre Mí",
+      "tech": "Tech Stack",
+      "stats": "Estadísticas de GitHub",
+      "contact": "Contacto"
+    }
+  },
+  "header": {
+    "title": "Rafa Mori"
+  },
+  "about": {
+    "title": "Sobre Mí",
+    "intro": "¡Hola! Soy un Desarrollador Full Cycle apasionado por la tecnología y la innovación. Aquí hay un poco sobre quién soy y lo que hago:",
+    "details": "Líder técnico experimentado con una sólida experiencia en desarrollo de software y arquitectura de sistemas, especializado en soluciones escalables y de alto rendimiento. Experto en Go, Oracle Database, NoSQL, Java, JavaScript, PHP, C# y frameworks modernos. Apasionado por la automatización, entornos containerizados e integraciones de sistemas. Avanzado en inglés, proactivo y siempre buscando impulsar la tecnología."
+  },
+  "tech": {
+    "title": "Tech Stack",
+    "roles": "💻 Desarrollador Full Cycle | DevOps",
+    "frameworks": "🛠️ Frameworks",
+    "tools": "📦 Otras Herramientas"
+  },
+  "stats": {
+    "title": "Estadísticas de GitHub",
+    "contributions": "📈 Contribuciones Oficiales de GitHub",
+    "statistics": "🌟 Estadísticas",
+    "languages": "📊 Lenguajes"
+  },
+  "contact": {
+    "title": "Contacto",
+    "form": {
+      "name": "Nombre",
+      "email": "Correo Electrónico",
+      "message": "Mensaje",
+      "button": "Enviar Mensaje"
+    },
+    "footer": "Siempre estoy abierto a nuevas oportunidades y colaboraciones. Si estás interesado en trabajar conmigo o tienes alguna pregunta, no dudes en ponerte en contacto."
+  },
+  "footer": {
+    "text": "© {year} Rafa Mori. Todos los derechos reservados.",
+    "link": "GitHub Pages"
+  }
+}

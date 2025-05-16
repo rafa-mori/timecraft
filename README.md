@@ -71,6 +71,103 @@ timecraft/
 
 ---
 
+## ⏰ Scheduled Execution (Scheduler)
+
+TimeCraft agora suporta execução agendada de tarefas, permitindo rodar modelos automaticamente em intervalos definidos, como um cronjob simples.
+
+### Como usar
+
+**Via linha de comando:**
+
+```bash
+python -m timecraft_ai schedule <interval_seconds> <model>
+```
+
+- `<interval_seconds>`: intervalo em segundos entre execuções (ex: 300 para 5 minutos)
+- `<model>`: tipo do modelo (`timecraft`, `classifier`, `regression`)
+
+**Exemplo:**
+
+```bash
+python -m timecraft_ai schedule 600 timecraft
+```
+
+Isso executa o modelo TimeCraft a cada 10 minutos.
+
+**Via código Python:**
+
+```python
+from timecraft_ai import TimeCraftAI, run_scheduled
+
+tc = TimeCraftAI()
+model = tc.create_timecraft_model(data="data/hist_cambio_float.csv", date_column="dt", value_columns=["purchaseValue", "saleValue"], is_csv=True)
+run_scheduled(model.run, interval_seconds=600)  # Executa a cada 10 minutos
+```
+
+> O scheduler roda em background e pode ser interrompido com Ctrl+C na CLI.
+
+---
+
+## 🔔 Webhook Notifications
+
+TimeCraft supports sending notifications to webhooks after model runs or analysis. This is useful for automation, monitoring, or integration with other systems (e.g., Slack, Discord, custom APIs).
+
+### How it works
+- Pass a `webhook_url` parameter to any model's `run` or `run_analysis` method.
+- When the process completes, a POST request with a JSON payload is sent to the specified URL.
+- You can also add extra fields to the payload using `webhook_payload_extra`.
+
+**Example:**
+
+```python
+from timecraft_ai import TimeCraftAI
+
+tc = TimeCraftAI()
+model = tc.create_timecraft_model(data="data/hist_cambio_float.csv", date_column="dt", value_columns=["purchaseValue", "saleValue"], is_csv=True)
+model.run(webhook_url="https://your-webhook-endpoint.com/webhook")
+```
+
+**With extra payload:**
+
+```python
+model.run(
+    webhook_url="https://your-webhook-endpoint.com/webhook",
+    webhook_payload_extra={"user": "rafa", "run_type": "nightly"}
+)
+```
+
+**Integrating with Slack:**
+
+1. Create a Slack Incoming Webhook: [Slack Webhooks Guide](https://api.slack.com/messaging/webhooks)
+2. Use the webhook URL in your model:
+
+```python
+model.run(
+    webhook_url="https://hooks.slack.com/services/XXX/YYY/ZZZ",
+    webhook_payload_extra={"text": "TimeCraft model finished!"}
+)
+```
+
+Slack expects a JSON payload with a `text` field. You can customize the message using `webhook_payload_extra`.
+
+**Integrating with Discord:**
+
+1. Create a Discord Webhook: [Discord Webhooks Guide](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
+2. Use the webhook URL in your model:
+
+```python
+model.run(
+    webhook_url="https://discord.com/api/webhooks/XXX/YYY",
+    webhook_payload_extra={"content": "TimeCraft model finished!"}
+)
+```
+
+Discord expects a JSON payload with a `content` field. You can add more fields as needed.
+
+> For both Slack and Discord, you can fully customize the payload using `webhook_payload_extra` to match the platform's requirements.
+
+---
+
 ## 🤝 Contributing
 
 Contributions of all kinds are welcome!

@@ -2,14 +2,45 @@
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.setuptools.packages.find]
-where = ["src"]
-include = ["timecraft-ai*", "dbconnect*", "classify*", "regression*"]
-exclude = ["tests*"]
+[tool.hatch.build]
+packages = ["src/timecraft_ai"]
+include = ["src/timecraft_ai"]
+
+# [tool.hatch.build.hooks]
+# This hook is used to include additional files in the package
+# distribution. You can specify the files to include in the `include` list.
+# The files can be specified using glob patterns or by their absolute paths.
+# The `include` list can also contain directories, in which case all files
+# in the directory will be included.
+
+# [tool.hatch.build.hooks.include]
+# include = ["README.md", "LICENSE", "requirements.txt"]
+
+[tool.hatch.version]
+path = "src/timecraft/__init__.py"
+version = { format = "patch" }
+
+[tool.hatch.envs]
+test = { test = "pytest" }
+[tool.hatch.envs.lint]
+test = { lint = "flake8" }
+[tool.hatch.envs.docs]
+test = { docs = "mkdocs serve" }
+
+[tool.hatch.envs.coverage]
+test = { coverage = "coverage run -m pytest" }
+[tool.hatch.envs.coverage-report]
+test = { coverage-report = "coverage report" }
+[tool.hatch.envs.coverage-html]
+test = { coverage-html = "coverage html" }
+[tool.hatch.envs.coverage-xml]
+test = { coverage-xml = "coverage xml" }
+[tool.hatch.envs.coverage-html-report]
+test = { coverage-html-report = "coverage html" }
 
 [project]
 name = "timecraft-ai"
-version = "1.0.0"
+version = "1.0.1"
 requires-python = ">=3.7"
 authors = [
   { name = "Rafael Mori", email = "faelmori@gmail.com" }

@@ -1,19 +1,26 @@
+# TimeCraft Linear Regression Example
+# This example demonstrates how to use the TimeCraft library to perform time series analysis
+# and linear regression on a dataset containing purchase and sale values.
+# Ensure you have the required libraries installed:
+# pip install timecraft_ai pandas scikit-learn
+
+
 import sys
 
 sys.path.append('../')
 sys.path.append('../src')
 
-from statistics import LinearRegression
+from timecraft_ai import TimeCraftModel
+from timecraft_ai import LinearRegression
+from timecraft_ai import LinearRegressionAnalysis
 
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 import pandas as pd
 
-from src.timeseries.model import TimeSeriesModel
-
-model = TimeSeriesModel(
-    dzata='./data/hist_cambio_float.csv',
+model = TimeCraftModel(
+    data='./data/hist_cambio_float.csv',
     date_column='dt',
     value_columns=['purchaseValue', 'saleValue'],
     is_csv=True,
@@ -45,13 +52,16 @@ model = LinearRegression()
 model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 mse = mean_squared_error(y_test, y_pred)
-print(f'Correlation between purchaseValue and saleValue (Simple Regression): {correlation}')
-print(f'Mean Squared Error: {mse}')
-print(f'Model Coefficients: {model.coef_}')
-print(f'Model Intercept: {model.intercept_}')
+analyze = LinearRegressionAnalysis(data_path='./data/hist_cambio_float.csv')
+analyze.run_analysis()
+print(f'Correlation between purchaseValue and saleValue (Linear Regression): {correlation}')
+print(f'Mean Squared Error (Linear Regression): {mse}')
+print(f'Model Coefficients (Linear Regression): {model.coef_}')
+print(f'Model Intercept (Linear Regression): {model.intercept_}')
 # Output:
-# Correlation between purchaseValue and saleValue (Simple Regression): 0.9999999999999999
-# Mean Squared Error: 0.0
-# Model Coefficients: [1.0]
-# Model Intercept: 0.0
+# Correlation between purchaseValue and saleValue (Linear Regression): 0.9999999999999999
+# Mean Squared Error (Linear Regression): 0.0
+# Model Coefficients (Linear Regression): [1.]
+# Model Intercept (Linear Regression): 0.0
 # ----------------------------------------------------------------------------------------------- #
+

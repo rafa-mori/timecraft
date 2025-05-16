@@ -1,31 +1,27 @@
-import sys
-
-sys.path.append('../')
-sys.path.append('../src')
-
+"""
+Exemplo de uso do pacote timecraft_ai para salvar gráficos.
+Certifique-se de instalar o pacote antes de rodar este script:
+    pip install timecraft_ai
+"""
 from datetime import datetime
-
-from model import TimeSeriesModel  # Import the TimeSeriesModel class
+from timecraft_ai import TimeCraftModel
 
 start_time = datetime.now()
 
-# Create an instance of TimeSeriesModel
-tsm = TimeSeriesModel(
-    data='../data/hist_cambio_float.csv',  # Path to the CSV file
+# Crie uma instância de TimeCraftModel
+tsm = TimeCraftModel(
+    data='data/hist_cambio_float.csv',
     date_column='dt',
     value_columns=['purchaseValue', 'saleValue'],
     is_csv=True,
     periods=30
 )
 
-# Run the model
 tsm.run()
 
-# Save the plots in the desired formats
-plot_types = list(['line', 'scatter', 'bar'])
-formats = list(['html', 'png'])
+plot_types = ['line', 'scatter', 'bar']
+formats = ['html', 'png']
 
-out_dir = tsm.save_plots(output_dir="../output", plot_types=plot_types, formats=formats)
+out_dir = tsm.save_plots(output_dir="output", plot_types=plot_types, formats=formats)
 
-# Print the time taken to run the script
 print("Time taken:", datetime.now() - start_time)

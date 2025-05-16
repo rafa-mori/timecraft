@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from src.timeseries.model import TimeSeriesModel
-from src.dbconnect.dbconnector import DatabaseConnector
+from timecraft_ai import TimeCraftModel
+from timecraft_ai import DatabaseConnector
 from concurrent.futures import ProcessPoolExecutor
 
 def process_product(product_id):
@@ -28,7 +28,7 @@ def process_product(product_id):
             query_template = file.read()
 
         query = query_template.replace("{ product_id }", str(product_id))
-        ts_model = TimeSeriesModel(
+        ts_model = TimeCraftModel(
             db_connector=db_connector,
             query=query,
             date_column="DTNEG",

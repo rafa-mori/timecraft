@@ -1,0 +1,50 @@
+{
+  "title": "Rafa Mori | Dev Portfolio",
+  "meta": {
+    "description": "Rafa Mori - Full Cycle Developer Portfolio"
+  },
+  "navbar": {
+    "brand": "Full Cycle Developer",
+    "links": {
+      "home": "Home",
+      "about": "About Me",
+      "tech": "Tech Stack",
+      "stats": "GitHub Stats",
+      "contact": "Contact"
+    }
+  },
+  "header": {
+    "title": "Rafa Mori"
+  },
+  "about": {
+    "title": "About Me",
+    "intro": "Hello! I am a Full Cycle Developer passionate about technology and innovation. Here are a little bit about who I am and what I do:",
+    "details": "Experienced tech leader with a strong background in software development and system architecture, specializing in high-performance, scalable solutions. Proficient in Go, Oracle Database, NoSQL, Java, JavaScript, PHP, C#, and modern frameworks. Passionate about automation, containerized environments, and seamless system integrations. Advanced in English, proactive, and always eager to push technology forward."
+  },
+  "tech": {
+    "title": "Tech Stack",
+    "roles": "💻 Full Cycle Developer | DevOps",
+    "frameworks": "🛠️ Frameworks",
+    "tools": "📦 Other Tools"
+  },
+  "stats": {
+    "title": "GitHub Stats",
+    "contributions": "📈 GitHub Official Contributions",
+    "statistics": "🌟 Statistics",
+    "languages": "📊 Languages"
+  },
+  "contact": {
+    "title": "Contact",
+    "form": {
+      "name": "Name",
+      "email": "E-mail",
+      "message": "Message",
+      "button": "Send Message"
+    },
+    "footer": "I am always open to new opportunities and collaborations. If you are interested in working with me or have any questions, feel free to reach out!"
+  },
+  "footer": {
+    "text": "© {year} Rafa Mori. All rights reserved.",
+    "link": "GitHub Pages"
+  }
+}
