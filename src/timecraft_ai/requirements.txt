@@ -15,4 +15,4 @@ pymongo
 cx_Oracle
 xarray
 sqlalchemy
-kaleido
+flask
