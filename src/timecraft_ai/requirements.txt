@@ -16,3 +16,6 @@ cx_Oracle
 xarray
 sqlalchemy
 flask
+pyaudio
+vosk
+soundfile
