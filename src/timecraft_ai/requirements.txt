@@ -19,3 +19,4 @@ flask
 pyaudio
 vosk
 soundfile
+pyttsx3

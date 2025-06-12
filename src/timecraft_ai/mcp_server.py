@@ -41,7 +41,20 @@ curl -X POST http://localhost:8000/mcp/plugins/openai/config -H "Content-Type: a
 Obs: Os plugins/LLMs disponíveis podem ser expandidos conforme necessidade.
 """
 
-from typing import Dict, Any
+import logging
+
+# Setup logging configuration for the package
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+logger = logging.getLogger("timecraft_ai")
+
+# __init__.py
+# noinspection PyUnusedFunction
+
+from typing import Any, Dict
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
@@ -58,22 +71,27 @@ PLUGINS_CONFIG: Dict[str, Dict[str, Any]] = {
     # Add more plugins as needed
 }
 
+
 class CommandRequest(BaseModel):
     message: str
+
 
 @app.post("/mcp/command")
 async def mcp_command(req: CommandRequest):
     response = handler.handle(req.message)
     return {"response": response}
 
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
 
 @app.get("/mcp/plugins")
 def list_plugins():
     """Lista todos os plugins/LLMs disponíveis e seu status."""
     return {"plugins": PLUGINS_CONFIG}
+
 
 @app.post("/mcp/plugins/{plugin_name}/enable")
 def enable_plugin(plugin_name: str):
@@ -82,6 +100,7 @@ def enable_plugin(plugin_name: str):
     PLUGINS_CONFIG[plugin_name]["enabled"] = True
     return {"message": f"Plugin '{plugin_name}' ativado."}
 
+
 @app.post("/mcp/plugins/{plugin_name}/disable")
 def disable_plugin(plugin_name: str):
     if plugin_name not in PLUGINS_CONFIG:
@@ -89,8 +108,10 @@ def disable_plugin(plugin_name: str):
     PLUGINS_CONFIG[plugin_name]["enabled"] = False
     return {"message": f"Plugin '{plugin_name}' desativado."}
 
+
 class PluginConfigRequest(BaseModel):
     api_key: str
+
 
 @app.post("/mcp/plugins/{plugin_name}/config")
 def configure_plugin(plugin_name: str, req: PluginConfigRequest):
@@ -98,5 +119,6 @@ def configure_plugin(plugin_name: str, req: PluginConfigRequest):
         raise HTTPException(status_code=404, detail="Plugin não encontrado.")
     PLUGINS_CONFIG[plugin_name]["api_key"] = req.api_key
     return {"message": f"Configuração do plugin '{plugin_name}' atualizada."}
+
 
 # Futuro: endpoints para configuração de plugins/LLMs

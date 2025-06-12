@@ -1,4 +1,18 @@
+import logging
+
+# Setup logging configuration for the package
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+logger = logging.getLogger("timecraft_ai")
+
+# __init__.py
+# noinspection PyUnusedFunction
+
 from fastapi import APIRouter
+
 
 class ChatbotActions:
     def get_historical_data(self) -> str:
@@ -13,4 +27,29 @@ class ChatbotActions:
 
     def generate_insight(self) -> str:
         # Exemplo simples: calcule ou extraia insights dos dados disponíveis.
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
+        return "Exemplo de insight: tendência de alta nos últimos 6 meses."
         return "Exemplo de insight: tendência de alta nos últimos 6 meses."
