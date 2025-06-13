@@ -1,23 +1,25 @@
 """
-Exemplo de uso do pacote timecraft_ai.
-Certifique-se de instalar o pacote antes de rodar este script:
+Example usage of the timecraft_ai package.
+Make sure to install the package before running this script:
     pip install timecraft_ai
 """
+
 from datetime import datetime
+
 from timecraft_ai.timecraft_ai import TimeCraftModel
 
 start_time = datetime.now()
 
-# Crie uma instância de TimeCraftModel
+# Create an instance of TimeCraftModel
 model = TimeCraftModel(
-    data='data/hist_cambio_float.csv',  # Caminho para o arquivo CSV
-    date_column='dt',
-    value_columns=['purchaseValue', 'saleValue'],
+    data="data/hist_cambio_float.csv",  # Path to the CSV file
+    date_column="dt",
+    value_columns=["purchaseValue", "saleValue"],
     is_csv=True,
-    periods=30
+    periods=30,
 )
 
-# Rode o modelo
+# Run the model
 data = model.run()
 
 fcst = model.get_forecast()
@@ -26,4 +28,3 @@ for key, value in fcst.items():
     print(key, value)
 
 print("Time taken:", datetime.now() - start_time)
-

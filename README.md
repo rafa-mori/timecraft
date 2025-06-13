@@ -1,198 +1,214 @@
-# ⏳ TimeCraft
-
-Welcome to **TimeCraft**! This project was created to simplify time series analysis, database integration, and task automation.
-
-[![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) ![Last Commit](https://img.shields.io/github/last-commit/faelmori/timecraft) ![Repo Size](https://img.shields.io/github/repo-size/faelmori/timecraft)
+# TimeCraft Banner
+![TimeCraft Banner](docs/assets/top_banner.png)
 
 ---
 
-## 🚀 Key Features
-
-* 📈 **Time Series Analysis**
-  Robust scripts for modeling, forecasting, and evaluating temporal data.
-
-* 🛢️ **Database Integration**
-  Tools to efficiently connect to and query various database systems.
-
-* ⚙️ **Automation & Notifications**
-  Modules to automate data workflows and send notifications or alerts.
+**An advanced solution for time series analysis, database integration, and task automation, with dynamic notifications and a powerful CLI.**
 
 ---
 
-## 📁 Project Structure
-
-```
-timecraft/
-├── /src/                # Core logic and modules
-├── /docs/               # Documentation files (README, INSTALL, CONTRIBUTING)
-├── /tutorials/          # Step-by-step guides and advanced use cases
-├── /data/               # Sample datasets and generated results
-├── /assets/             # Visual content for outreach and publications
-├── /venv/               # Virtual environment and dependency management
-└── requirements.txt     # Python dependencies
-```
-
----
-
-## 🧭 Getting Started
-
-1. **Clone the repository**:
-
-   ```bash
-   git clone https://github.com/faelmori/timecraft.git
-   cd timecraft
-   ```
-
-2. **Create and activate a virtual environment** *(optional but recommended)*:
-
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-3. **Install the dependencies**:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Explore the tutorials**:
-   Navigate to the `/tutorials` folder for usage examples and best practices.
+## **Table of Contents**
+1. [About the Project](#about-the-project)
+2. [Features](#features)
+3. [Installation](#installation)
+4. [Usage](#usage)
+    - [CLI](#cli)
+    - [Examples](#examples)
+    - [Configuration](#configuration)
+5. [Scheduled Execution](#scheduled-execution)
+6. [Webhook Notifications](#webhook-notifications)
+7. [Roadmap](#roadmap)
+8. [Contributing](#contributing)
+9. [Contact](#contact)
 
 ---
 
-## 📚 Tutorials & Examples
+## **About the Project**
+TimeCraft is a flexible and powerful solution for time series analysis, database integration, and task automation. Developed in **Python**, it offers webhook notification support, scheduled model execution, and an intuitive CLI to streamline data workflows.
 
-| Topic                                               | Description                                                  |
-| --------------------------------------------------- | ------------------------------------------------------------ |
-| [Time Series Forecasting](tutorials/forecasting.md) | Learn how to model and predict future data points.           |
-| [Database Connection](tutorials/database.md)        | Connect to and retrieve data from supported databases.       |
-| [Automation Pipeline](tutorials/automation.md)      | Build and schedule tasks using TimeCraft’s automation tools. |
+**Why TimeCraft?**
+- 📈 **Advanced Analysis**: Robust scripts for modeling, forecasting, and evaluating temporal data.
+- 🛢️ **Simple Integration**: Tools to connect and query multiple database systems.
+- ⚙️ **Automation & Notifications**: Modules to automate data workflows and send alerts.
 
 ---
 
-## ⏰ Scheduled Execution (Scheduler)
+## **Features**
+✨ **Plug-and-Play Models**:
+- ARIMA, Prophet, LSTM, and other ready-to-use models.
+- Easy customization and extension.
 
-TimeCraft now supports scheduled task execution, allowing you to run models automatically at defined intervals, similar to a simple cronjob.
+🔗 **Database Integration**:
+- Efficient connection to different database systems.
+- Scripts for data import and querying.
 
-### How to use
+⏰ **Scheduled Execution**:
+- Schedule automatic model runs (cronjob-like).
+- CLI and Python API for scheduling.
 
-**Via command line:**
+🔔 **Dynamic Notifications**:
+- Send notifications via Webhook (Slack, Discord, custom APIs).
+- Customizable payloads for each platform.
+
+💻 **Powerful CLI**:
+- Simple commands to run models, schedule executions, and monitor tasks.
+- Extensible for new workflows.
+
+---
+
+## **Installation**
+Requirements:
+- **Python** 3.8 or higher.
 
 ```bash
-python -m timecraft_ai schedule <interval_seconds> <model>
+# Clone the repository
+git clone https://github.com/faelmori/timecraft.git
+cd timecraft
+
+# (Optional) Create and activate a virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
 ```
 
-- `<interval_seconds>`: interval in seconds between executions (e.g., 300 for 5 minutes)
-- `<model>`: model type (`timecraft`, `classifier`, `regression`)
+---
 
-**Example:**
+## **Usage**
+
+### CLI
+Example commands with the TimeCraft CLI:
 
 ```bash
+# Run TimeCraft model
+python -m timecraft_ai run --data data/hist_cambio_float.csv --date_column dt --value_columns purchaseValue,saleValue --is_csv
+
+# Schedule automatic execution (every 10 minutes)
 python -m timecraft_ai schedule 600 timecraft
 ```
 
-This will run the TimeCraft model every 10 minutes.
-
-**Via Python code:**
-
-```python
-from timecraft_ai import TimeCraftAI, run_scheduled
-
-tc = TimeCraftAI()
-model = tc.create_timecraft_model(data="data/hist_cambio_float.csv", date_column="dt", value_columns=["purchaseValue", "saleValue"], is_csv=True)
-run_scheduled(model.run, interval_seconds=600)  # Runs every 10 minutes
-```
-
-> The scheduler runs in the background and can be stopped with Ctrl+C in the CLI.
-
----
-
-## 🔔 Webhook Notifications
-
-TimeCraft supports sending notifications to webhooks after model runs or analysis. This is useful for automation, monitoring, or integration with other systems (e.g., Slack, Discord, custom APIs).
-
-### How it works
-- Pass a `webhook_url` parameter to any model's `run` or `run_analysis` method.
-- When the process completes, a POST request with a JSON payload is sent to the specified URL.
-- You can also add extra fields to the payload using `webhook_payload_extra`.
-
-**Example:**
+### **Python Usage Examples**
 
 ```python
 from timecraft_ai import TimeCraftAI
 
 tc = TimeCraftAI()
-model = tc.create_timecraft_model(data="data/hist_cambio_float.csv", date_column="dt", value_columns=["purchaseValue", "saleValue"], is_csv=True)
-model.run(webhook_url="https://your-webhook-endpoint.com/webhook")
+model = tc.create_timecraft_model(
+    data="data/hist_cambio_float.csv",
+    date_column="dt",
+    value_columns=["purchaseValue", "saleValue"],
+    is_csv=True
+)
+model.run()
+```
+
+#### **Scheduled Execution in Python**
+
+```python
+from timecraft_ai import run_scheduled
+run_scheduled(model.run, interval_seconds=600)  # Runs every 10 minutes
+```
+
+---
+
+### **Command and Flag Descriptions**
+- **`--data`**: Path to the data file.
+- **`--date_column`**: Name of the date column.
+- **`--value_columns`**: Value columns to analyze.
+- **`--is_csv`**: Indicates if the file is CSV.
+- **`--model`**: Model type (`timecraft`, `classifier`, `regression`).
+
+---
+
+### **Configuration**
+TimeCraft can be configured via command-line arguments or directly in Python code. For advanced configurations, see the examples in the `/tutorials` folder.
+
+---
+
+## **Scheduled Execution**
+TimeCraft allows you to schedule automatic model runs, similar to a cronjob.
+
+**Via CLI:**
+
+```bash
+python -m timecraft_ai schedule <interval_seconds> <model>
+```
+
+- `<interval_seconds>`: interval between executions (e.g., 600 for 10 minutes)
+- `<model>`: model type (`timecraft`, `classifier`, `regression`)
+
+**Via Python:**
+
+```python
+from timecraft_ai import run_scheduled
+run_scheduled(model.run, interval_seconds=600)
+```
+
+> The scheduler runs in the background and can be stopped with Ctrl+C.
+
+---
+
+## **Webhook Notifications**
+TimeCraft supports sending notifications to webhooks after model runs or analyses. Ideal for automation, monitoring, or integration with other systems (Slack, Discord, custom APIs).
+
+### How it works
+- Pass the `webhook_url` parameter to the `run` or `run_analysis` methods.
+- When finished, a POST with a JSON payload is sent to the URL.
+- Extra fields can be added via `webhook_payload_extra`.
+
+**Example:**
+
+```python
+model.run(webhook_url="https://your-webhook.com/webhook")
 ```
 
 **With extra payload:**
 
 ```python
 model.run(
-    webhook_url="https://your-webhook-endpoint.com/webhook",
+    webhook_url="https://your-webhook.com/webhook",
     webhook_payload_extra={"user": "rafa", "run_type": "nightly"}
 )
 ```
 
-**Integrating with Slack:**
-
-1. Create a Slack Incoming Webhook: [Slack Webhooks Guide](https://api.slack.com/messaging/webhooks)
-2. Use the webhook URL in your model:
+**Slack:**
 
 ```python
 model.run(
     webhook_url="https://hooks.slack.com/services/XXX/YYY/ZZZ",
-    webhook_payload_extra={"text": "TimeCraft model finished!"}
+    webhook_payload_extra={"text": "TimeCraft finished!"}
 )
 ```
 
-Slack expects a JSON payload with a `text` field. You can customize the message using `webhook_payload_extra`.
-
-**Integrating with Discord:**
-
-1. Create a Discord Webhook: [Discord Webhooks Guide](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
-2. Use the webhook URL in your model:
+**Discord:**
 
 ```python
 model.run(
     webhook_url="https://discord.com/api/webhooks/XXX/YYY",
-    webhook_payload_extra={"content": "TimeCraft model finished!"}
+    webhook_payload_extra={"content": "TimeCraft finished!"}
 )
 ```
 
-Discord expects a JSON payload with a `content` field. You can add more fields as needed.
-
-> For both Slack and Discord, you can fully customize the payload using `webhook_payload_extra` to match the platform's requirements.
+> The payload can be customized for each platform using `webhook_payload_extra`.
 
 ---
 
-## 🤝 Contributing
-
-Contributions of all kinds are welcome!
-Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to help improve TimeCraft.
-
----
-
-## 🛣️ Planned Features (Roadmap)
-
-* ✅ Plug-and-play models for ARIMA, Prophet, and LSTM
-* 🚧 Support for cloud-based data sources (e.g., BigQuery, Snowflake)
-* 🔔 Email and webhook notification system
-* 📊 Dashboard interface for visual result presentation (optional module)
+## **Roadmap**
+🔜 **Upcoming Features**:
+- Support for cloud data sources (BigQuery, Snowflake)
+- Email notification system
+- Dashboard for result visualization
 
 ---
 
-## 📄 License
+## **Contributing**
+Contributions are welcome! See the [Contributing Guide](CONTRIBUTING.md) for details.
 
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+---
 
-
-## 📧 Contact
-
-If you have any questions or feedback, please feel free to reach out:
-
-- Email: [faelmori@gmail.com](mailto:faelmori@gmail.com)
-- GitHub: [faelmori/timecraft](https://github.com/faelmori/timecraft)
-- LinkedIn: [Rafa Mori](https://www.linkedin.com/in/rafa-mori)
+## **Contact**
+💌 **Developer**:  
+[Rafael Mori](mailto:faelmori@gmail.com)
+💼 [faelmori/timecraft on GitHub](https://github.com/faelmori/timecraft)
+[LinkedIn: Rafa Mori](https://www.linkedin.com/in/rafa-mori)
