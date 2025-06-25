@@ -20,3 +20,4 @@ pyaudio
 vosk
 soundfile
 pyttsx3
+uvicorn

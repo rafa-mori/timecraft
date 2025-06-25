@@ -7,13 +7,16 @@ This package provides a set of tools for time series analysis and forecasting.
 It includes functionalities for data preprocessing, model training, and evaluation.
 It also provides a simple interface for saving and loading models, as well as generating
 plots for visualizing the results.
+
+New AI Features:
+- AudioProcessor: Audio capture and speech transcription
+- ChatbotActions: Data analysis actions for chatbot
+- HotwordDetector: Wake word detection
+- VoiceSynthesizer: Text-to-speech synthesis
+- MCPCommandHandler: Command processing for MCP protocol
 """
-# AudioProcessor,
-from .audio_processor import AudioProcessor
-from .chatbot_actions import ChatbotActions
-from .chatbot_msgset import ChatbotMsgSetHandler
-from .cli import main
-from .hotword_detector import HotwordDetector
+
+# Imports principais - Core TimeCraft
 from .timecraft_ai import (
     ClassifierModel,
     DatabaseConnector,
@@ -25,14 +28,32 @@ from .timecraft_ai import (
     main,
 )
 
-# VoiceSynthesizer,
-# HotwordDetector,
-# ChatbotMsgSetHandler,
-# MCPCommandHandler,
-# VoiceCommandHandler,
-# HotwordCommandHandler,
+# Imports dos novos módulos de AI - com tratamento de erro
+try:
+    from .audio_processor import AudioProcessor
+    from .chatbot_actions import ChatbotActions
+    from .chatbot_msgset import ChatbotMsgSetHandler
+    from .hotword_detector import HotwordDetector
+    from .mcp_command_handler import MCPCommandHandler
+    from .voice_synthesizer import VoiceSynthesizer
+
+    AI_MODULES_AVAILABLE = True
+except ImportError as e:
+    import warnings
+
+    warnings.warn(f"Módulos de AI não disponíveis (dependências faltando): {e}")
+    AI_MODULES_AVAILABLE = False
+
+    # Classes dummy para não quebrar imports
+    AudioProcessor = None
+    ChatbotActions = None
+    ChatbotMsgSetHandler = None
+    HotwordDetector = None
+    MCPCommandHandler = None
+    VoiceSynthesizer = None
 
 __all__ = [
+    # Core TimeCraft
     "TimeCraftAI",
     "TimeCraftModel",
     "DatabaseConnector",
@@ -41,6 +62,15 @@ __all__ = [
     "RandomForestClassifier",
     "ClassifierModel",
     "main",
+    # AI Modules
+    "AudioProcessor",
+    "ChatbotActions",
+    "ChatbotMsgSetHandler",
+    "HotwordDetector",
+    "MCPCommandHandler",
+    "VoiceSynthesizer",
+    # Meta
+    "AI_MODULES_AVAILABLE",
 ]
 
 __version__ = "0.1.0"

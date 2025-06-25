@@ -42,7 +42,6 @@ test = { coverage-html-report = "coverage html" }
 name = "timecraft-ai"
 version = "1.0.1"
 requires-python = ">=3.11.1"
-python_full_version = "3.11.1"
 authors = [
   { name = "Rafael Mori", email = "faelmori@gmail.com" }
 ]
@@ -53,13 +52,6 @@ description = "A Python package for time series analysis and forecasting"
 readme = "README.md"
 license = { text = "MIT" }
 keywords = ["time series", "database", "automation", "forecasting", "data analysis", "regression"]
-classifiers = [
-  "Development Status :: 3 - Alpha",
-  "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
-  "Programming Language :: Python :: 3",
-  "Operating System :: OS Independent"
-]
 
 dependencies = [
   "numpy>=1.21.0",
