@@ -1,24 +1,6 @@
-import logging
-
-# Setup logging configuration for the package
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-)
-logger = logging.getLogger("timecraft_ai")
-
-# __init__.py
-# noinspection PyUnusedFunction
-
 import json
+import logging
 import os
-
-try:
-    import requests
-except ImportError:
-    requests = None
-
 import threading
 import time
 from concurrent.futures import ProcessPoolExecutor
@@ -34,6 +16,19 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import accuracy_score, mean_squared_error
 from sklearn.model_selection import train_test_split
 from sqlalchemy import create_engine
+
+try:
+    import requests
+except ImportError:
+    requests = None
+
+# Setup logging configuration for the package
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+logger = logging.getLogger("timecraft_ai")
 
 
 def notify_webhook(webhook_url, payload):
@@ -1140,4 +1135,5 @@ Commands:
         except KeyboardInterrupt:
             print("\nScheduler stopped.")
     else:
+        main()
         main()

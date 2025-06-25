@@ -17,6 +17,8 @@ New AI Features:
 """
 
 # Imports principais - Core TimeCraft
+import logging
+
 from .timecraft_ai import (
     ClassifierModel,
     DatabaseConnector,
@@ -99,6 +101,16 @@ __keywords__ = [
     "prophet",
     "linear regression",
     "random forest",
+    "audio processing",
+    "chatbot",
+    "hands-free",
+    "voice synthesis",
+    "mcp protocol",
+    "llm",
+    "large language model",
+    "gpt",
+    "openai",
+    "chatbot actions",
 ]
 
 __install_requires__ = [
@@ -113,6 +125,7 @@ __install_requires__ = [
     "jinja2",
     "kaleido",
 ]
+
 __extras_require__ = {
     "dev": [
         "cx_Oracle",
@@ -126,6 +139,9 @@ __extras_require__ = {
         "pymongo",
         "cx_Oracle",
         "xarray",
+        "uvicorn",
+        "fastapi",
+        "pyaudio",
     ],
     "docs": [
         "sphinx",
@@ -140,3 +156,12 @@ __classifiers__ = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+
+
+def setup_logging():
+    """Configura o logging para o pacote."""
+    logging.basicConfig(level=logging.INFO)
+    logging.getLogger("timecraft").addHandler(logging.NullHandler())
+
+
+setup_logging()

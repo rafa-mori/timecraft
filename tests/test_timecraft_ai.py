@@ -1,7 +1,11 @@
 import unittest
 from unittest.mock import MagicMock, patch
+
 import pandas as pd
-from src.timecraft_ai.timecraft_ai import TimeCraftModel, ClassifierModel, LinearRegressionAnalysis, DatabaseConnector
+
+from ..src.timecraft_ai import (ClassifierModel, DatabaseConnector,
+                                LinearRegressionAnalysis, TimeCraftModel)
+
 
 class TestTimeCraftModel(unittest.TestCase):
     def setUp(self):
@@ -62,6 +66,10 @@ class TestLinearRegressionAnalysis(unittest.TestCase):
 class TestDatabaseConnector(unittest.TestCase):
     def test_init(self):
         db = DatabaseConnector(db_type='sqlite', db_path=':memory:')
+        self.assertEqual(db.db_type, 'sqlite')
+
+if __name__ == '__main__':
+    unittest.main()
         self.assertEqual(db.db_type, 'sqlite')
 
 if __name__ == '__main__':

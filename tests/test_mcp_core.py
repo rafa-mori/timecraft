@@ -6,10 +6,8 @@ sys.path.append("src")
 import pytest
 
 # MCPCommandHandler
-from timecraft_ai.mcp_command_handler import MCPCommandHandler
-
 # ChatbotMsgSetHandler
-from timecraft_ai.timecraft_ai.chatbot_msgset import ChatbotMsgSetHandler
+from ..src.timecraft_ai import ChatbotMsgSetHandler, MCPCommandHandler
 
 # Dummy classes for testing
 

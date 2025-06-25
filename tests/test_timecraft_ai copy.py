@@ -27,7 +27,7 @@ import sys
 # Adiciona o diretório src ao path para imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
-from .src.timecraft_ai import (
+from ..src.timecraft_ai import (
     AudioProcessor,
     ChatbotActions,
     HotwordDetector,

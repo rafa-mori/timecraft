@@ -15,7 +15,11 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 # pip install timecraft_ai pandas scikit-learn
-from timecraft_ai import LinearRegression, LinearRegressionAnalysis, TimeCraftModel
+from ..src.timecraft_ai import (
+    LinearRegression,
+    LinearRegressionAnalysis,
+    TimeCraftModel,
+)
 
 model = TimeCraftModel(
     data="./data/hist_cambio_float.csv",
@@ -67,6 +71,7 @@ print(f"Model Intercept (Linear Regression): {model.intercept_}")
 # Mean Squared Error (Linear Regression): 0.0
 # Model Coefficients (Linear Regression): [1.]
 # Model Intercept (Linear Regression): 0.0
+# ----------------------------------------------------------------------------------------------- #
 # ----------------------------------------------------------------------------------------------- #
 # ----------------------------------------------------------------------------------------------- #
 # ----------------------------------------------------------------------------------------------- #
