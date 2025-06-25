@@ -27,7 +27,7 @@ import sys
 # Adiciona o diretório src ao path para imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
-from ..src.timecraft_ai import (
+from ..timecraft_ai import (
     AudioProcessor,
     ChatbotActions,
     HotwordDetector,
@@ -139,7 +139,7 @@ def run_server_mode():
     try:
         import uvicorn
 
-        from .src.timecraft_ai.mcp_server import app
+        from ..timecraft_ai.mcp_server import app
 
         uvicorn.run(app, host="0.0.0.0", port=8000)
     except ImportError:

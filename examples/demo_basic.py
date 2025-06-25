@@ -1,18 +1,36 @@
 #!/usr/bin/env python3
 """
-🎯 TimeCraft AI - Demonstração Funcional
-=======================================
+🎯 TimeCraft - Demonstração Funcional
+====================================
 
-Este script demonstra as funcionalidades do TimeCraft AI que estão funcionando.
+Este script demonstra as funcionalidades do TimeCraft que estão funcionando.
 Inclui testes de chatbot, síntese de voz e servidor web.
+
+Pode ser executado tanto em ambiente de desenvolvimento quanto com package instalado.
 """
 
 import argparse
 import os
 import sys
 
-# Adiciona o diretório src ao path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
+# Try to import from installed package first, fallback to dev environment
+try:
+    import timecraft
+
+    DEV_MODE = False
+    print("📦 Usando TimeCraft instalado como package")
+except ImportError:
+    # Development mode - add src to path
+    src_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "src")
+    if os.path.exists(src_path):
+        sys.path.insert(0, src_path)
+        import timecraft
+
+        DEV_MODE = True
+        print("🔧 Usando TimeCraft em modo desenvolvimento")
+    else:
+        print("❌ TimeCraft não encontrado. Instale com: pip install -e .")
+        sys.exit(1)
 
 
 def test_chatbot():
@@ -20,9 +38,11 @@ def test_chatbot():
     print("\n🤖 === TESTE DO CHATBOT ===")
 
     try:
-        from .src.timecraft_ai.mcp_command_handler import MCPCommandHandler
+        if not timecraft.AI_AVAILABLE:
+            print("⚠️ Módulos de AI não disponíveis")
+            return
 
-        handler = MCPCommandHandler()
+        handler = timecraft.MCPCommandHandler()
 
         comandos_teste = [
             "me mostre o histórico",
@@ -48,9 +68,11 @@ def test_voice_synthesis():
     print("\n🔊 === TESTE DE SÍNTESE DE VOZ ===")
 
     try:
-        from .src.timecraft_ai.voice_synthesizer import VoiceSynthesizer
+        if not timecraft.AI_AVAILABLE:
+            print("⚠️ Módulos de AI não disponíveis")
+            return
 
-        synthesizer = VoiceSynthesizer()
+        synthesizer = timecraft.VoiceSynthesizer()
 
         frases_teste = [
             "Olá! Eu sou o TimeCraft AI.",
@@ -75,7 +97,11 @@ def test_server():
     print("\n🌐 === TESTE DO SERVIDOR WEB ===")
 
     try:
-        from .src.timecraft_ai.mcp_server import app
+        if not timecraft.SERVER_AVAILABLE:
+            print("⚠️ Servidor MCP não disponível")
+            return
+
+        app = timecraft.mcp_server_app
 
         print("✅ Servidor FastAPI criado com sucesso!")
         print("📋 Endpoints disponíveis:")
@@ -139,11 +165,12 @@ def test_full_integration():
     print("\n🔗 === TESTE DE INTEGRAÇÃO ===")
 
     try:
-        from .src.timecraft_ai.mcp_command_handler import MCPCommandHandler
-        from .src.timecraft_ai.voice_synthesizer import VoiceSynthesizer
+        if not timecraft.AI_AVAILABLE:
+            print("⚠️ Módulos de AI não disponíveis")
+            return
 
-        handler = MCPCommandHandler()
-        synthesizer = VoiceSynthesizer()
+        handler = timecraft.MCPCommandHandler()
+        synthesizer = timecraft.VoiceSynthesizer()
 
         comandos_teste = [
             "me mostre o histórico",

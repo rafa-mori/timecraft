@@ -57,57 +57,102 @@ TimeCraft is a flexible and powerful solution for time series analysis, database
 ---
 
 ## **Installation**
-Requirements:
-- **Python** 3.8 or higher.
+
+### 📦 **Quick Installation (Recommended)**
+
+```bash
+# Install TimeCraft with core features
+pip install timecraft
+
+# Or install with all features (AI, Web Server)
+pip install timecraft[all]
+```
+
+### 🔧 **Development Installation**
 
 ```bash
 # Clone the repository
 git clone https://github.com/rafa-mori/timecraft.git
 cd timecraft
 
-# (Optional) Create and activate a virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# Quick setup with development script
+./dev.sh setup
 
-# Install dependencies
-pip install -r requirements.txt
+# Or manual setup
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -e .
+```
+
+### 🎯 **Optional Features**
+
+```bash
+# AI features (voice, chatbot, audio processing)
+pip install timecraft[ai]
+
+# Web server and API features
+pip install timecraft[web]
+
+# Database connectors (PostgreSQL, MySQL, etc.)
+pip install timecraft[db]
+
+# Development tools
+pip install timecraft[dev]
 ```
 
 ---
 
 ## **Usage**
 
-### CLI
-Example commands with the TimeCraft CLI:
+### 🐍 **Python Usage (Recommended)**
+
+```python
+import timecraft
+
+# Check available features
+print(f"AI available: {timecraft.AI_AVAILABLE}")
+print(f"Version: {timecraft.__version__}")
+
+# Create and use TimeCraft model
+model = timecraft.TimeCraftAI()
+data = model.load_data("data/hist_cambio.csv")
+forecasts = model.forecast(data, periods=30)
+
+# If AI features are available
+if timecraft.AI_AVAILABLE:
+    chatbot = timecraft.ChatbotActions()
+    response = chatbot.process_query("Analyze my data")
+```
+
+### 🖥️ **CLI Usage**
 
 ```bash
-# Run TimeCraft model
-python -m timecraft_ai run --data data/hist_cambio_float.csv --date_column dt --value_columns purchaseValue,saleValue --is_csv
+# Run quick test
+python examples/quick_test.py
 
-# Schedule automatic execution (every 10 minutes)
-python -m timecraft_ai schedule 600 timecraft
+# Run demo
+python examples/demo_basic.py
+
+# Development mode
+./dev.sh test
 ```
 
-### **Python Usage Examples**
+### 📊 **Advanced Examples**
 
 ```python
-from timecraft_ai import TimeCraftAI
+import timecraft
 
-tc = TimeCraftAI()
-model = tc.create_timecraft_model(
-    data="data/hist_cambio_float.csv",
-    date_column="dt",
-    value_columns=["purchaseValue", "saleValue"],
-    is_csv=True
-)
-model.run()
-```
+# Database connection
+db = timecraft.DatabaseConnector()
+data = db.query("SELECT * FROM timeseries_data")
 
-#### **Scheduled Execution in Python**
+# Machine learning models
+lr = timecraft.LinearRegression()
+lr.fit(X_train, y_train)
 
-```python
-from timecraft_ai import run_scheduled
-run_scheduled(model.run, interval_seconds=600)  # Runs every 10 minutes
+# Forecasting with Prophet (if available)
+model = timecraft.TimeCraftAI()
+forecasts = model.forecast_prophet(data)
 ```
 
 ---
