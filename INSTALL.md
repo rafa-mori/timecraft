@@ -31,11 +31,13 @@ pip install -e .
 ## 🎯 Recursos Opcionais
 
 ### Recursos de AI (Voz, Chatbot, Processamento de Áudio)
+
 ```bash
 pip install timecraft[ai]
 ```
 
 **Dependências incluídas:**
+
 - `pyaudio` - Captura e processamento de áudio
 - `SpeechRecognition` - Reconhecimento de fala
 - `pyttsx3` - Síntese de voz
@@ -43,31 +45,37 @@ pip install timecraft[ai]
 - `fastapi` - API web
 
 ### Servidor Web e API
+
 ```bash
 pip install timecraft[web]
 ```
 
 **Dependências incluídas:**
+
 - `fastapi` - Framework web moderno
 - `uvicorn` - Servidor ASGI
 - `pydantic` - Validação de dados
 
 ### Conectores de Banco de Dados
+
 ```bash
 pip install timecraft[db]
 ```
 
 **Dependências incluídas:**
+
 - `psycopg2` - PostgreSQL
 - `pymysql` - MySQL
 - `pyodbc` - SQL Server
 
 ### Ferramentas de Desenvolvimento
+
 ```bash
 pip install timecraft[dev]
 ```
 
 **Dependências incluídas:**
+
 - `pytest` - Testes
 - `black` - Formatação de código
 - `flake8` - Linting
@@ -166,17 +174,20 @@ O TimeCraft inclui um script de desenvolvimento que facilita o trabalho:
 ### Dependências do Sistema (para recursos AI)
 
 **Ubuntu/Debian:**
+
 ```bash
 sudo apt-get update
 sudo apt-get install portaudio19-dev python3-pyaudio
 ```
 
 **macOS:**
+
 ```bash
 brew install portaudio
 ```
 
 **Windows:**
+
 ```bash
 # PyAudio será instalado automaticamente via pip
 ```

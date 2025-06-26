@@ -5,7 +5,7 @@
 ### Sistema Operacional
 
 - ✅ Linux (Ubuntu/Debian recomendado)
-- ✅ macOS 
+- ✅ macOS
 - ✅ Windows 10/11
 
 ### Python
@@ -196,7 +196,7 @@ python test_timecraft_ai.py --mode server
 ```
 
 - Inicia servidor web na porta 8000
-- Acesse: http://localhost:8000/docs
+- Acesse: <http://localhost:8000/docs>
 
 ### 3. Modo Voz Contínua
 
