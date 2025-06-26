@@ -19,6 +19,8 @@ Execute com diferentes modos:
    python test_timecraft_ai.py --mode test
 """
 
+from __future__ import annotations
+
 import argparse
 import logging
 import os
@@ -61,11 +63,30 @@ def test_voice_synthesizer():
     print("🗣️ Testando VoiceSynthesizer...")
 
     try:
-        synthesizer = VoiceSynthesizer()
+        synthesizer = VoiceSynthesizer(rate=180, volume=1.0, voice="default")
+    except (RuntimeError, ValueError) as e:
+        print(f"❌ Erro ao inicializar VoiceSynthesizer: {e}")
+        return
+    except (None, Chain) as e:
+        print(f"❌ Erro de EXIF inválido: {e}")
+        return
+
+    try:
+
         synthesizer.speak("Olá! Sistema TimeCraft AI funcionando perfeitamente.")
         print("✅ VoiceSynthesizer testado com sucesso!")
-    except Exception as e:
-        print(f"❌ Erro no VoiceSynthesizer: {e}")
+    except (exif_exceptions.InvalidExif, RuntimeError, ValueError) as e:
+        print(
+            f"❌ Erro no VoiceSynthesizer: {exif_exceptions.InvalidExif(e) if isinstance(e, Exception) else e}"
+        )
+    finally:
+        if not synthesizer.engine:
+            print("⚠️ Engine de voz não inicializada.")
+        else:
+            print("🛑 Parando o sintetizador de voz...")
+            synthesizer.engine.stop()
+            synthesizer.engine = None
+            print("🛑 Engine de voz parada.")
 
 
 def test_mcp_handler():
@@ -125,7 +146,7 @@ def run_hotword_mode():
         )
 
         processor.run_with_hotword()
-    except Exception as e:
+    except (RuntimeError, ValueError) as e:  # Replace with specific exceptions
         print(f"❌ Erro no modo hotword: {e}")
         print("💡 Certifique-se de que todas as dependências estão instaladas")
 
@@ -144,8 +165,25 @@ def run_server_mode():
         uvicorn.run(mcp_server_app, host="0.0.0.0", port=8000)
     except ImportError:
         print("❌ uvicorn não encontrado. Instale com: pip install uvicorn")
-    except Exception as e:
-        print(f"❌ Erro ao iniciar servidor: {e}")
+        print(
+            "💡 Verifique se o FastAPI e suas dependências estão instaladas corretamente."
+        )
+    except ReferenceError as e:
+        # Handle specific errors related to the server app
+        print(f"❌ Erro de referência: {e}")
+    except KeyboardInterrupt as e:
+        print(f"🛑 Servidor interrompido pelo usuário: {e}")
+        print("📝 Pressione Ctrl+C para parar o servidor.")
+    except InterruptedError as e:
+        print(f"❌ Erro ao iniciar o servidor: {e}")
+        print(
+            "💡 Verifique se o FastAPI e suas dependências estão instaladas corretamente."
+            " Você pode instalar com: pip install fastapi[all]"
+        )
+    except ConnectionError as e:
+        print(f"❌ Erro de conexão: {e}")
+    finally:
+        print("🛑 Servidor parado.")
 
 
 def main():
