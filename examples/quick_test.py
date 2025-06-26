@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-TimeCraft - Quick Installation Test
-==================================
+TimeCraft AI - Quick Installation Test
+=====================================
 
-Teste rápido para verificar se o TimeCraft está funcionando corretamente.
+Teste rápido para verificar se o TimeCraft AI está funcionando corretamente.
 """
 
 import os
@@ -11,98 +11,86 @@ import sys
 
 # Try to import from installed package first, fallback to dev environment
 try:
-    import timecraft
+    import timecraft_ai
 
     DEV_MODE = False
-    print("📦 Usando TimeCraft instalado como package")
+    print("📦 Usando TimeCraft AI instalado como package")
 except ImportError:
     # Development mode - add src to path
     src_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "src")
     if os.path.exists(src_path):
         sys.path.insert(0, src_path)
-        import timecraft
+        import timecraft_ai
 
         DEV_MODE = True
-        print("🔧 Usando TimeCraft em modo desenvolvimento")
+        print("🔧 Usando TimeCraft AI em modo desenvolvimento")
     else:
-        print("❌ TimeCraft não encontrado. Instale com: pip install -e .")
+        print("❌ TimeCraft AI não encontrado. Instale com: make install-dev")
         sys.exit(1)
 
 
 def main():
-    print("🎯 TimeCraft - Teste de Instalação")
+    print("🎯 TimeCraft AI - Teste de Instalação")
     print("=" * 40)
-
-    # Basic information
-    print(f"📦 Versão: {timecraft.__version__}")
-    print(f"👤 Autor: {timecraft.__author__}")
-    print(f"📧 Email: {timecraft.__email__}")
-    print(f"📄 Licença: {timecraft.__license__}")
+    print(f"📦 Versão: {timecraft_ai.__version__}")
+    print(f"👤 Autor: {timecraft_ai.__author__}")
+    print(f"📧 Email: {timecraft_ai.__email__}")
+    print(f"📄 Licença: {timecraft_ai.__license__}")
     print(f"🔧 Modo: {'Desenvolvimento' if DEV_MODE else 'Produção'}")
+    print()
 
-    # Feature availability
-    print("\n🔍 Disponibilidade de Recursos:")
-    print(f"  🤖 AI Modules: {'✅' if timecraft.AI_AVAILABLE else '❌'}")
-    print(f"  🌐 MCP Server: {'✅' if timecraft.SERVER_AVAILABLE else '❌'}")
+    print("🔍 Disponibilidade de Recursos:")
+    print(f"  🤖 AI Modules: {'✅' if timecraft_ai.AI_AVAILABLE else '❌'}")
+    print(f"  🌐 MCP Server: {'✅' if timecraft_ai.SERVER_AVAILABLE else '❌'}")
+    print()
 
-    # Core functionality test
-    print("\n🧪 Testando Funcionalidades Core:")
+    print("🧪 Testando Funcionalidades Core:")
     try:
-        # Test core classes
-        print(f"  ✅ TimeCraftAI: {type(timecraft.TimeCraftAI).__name__}")
-        print(f"  ✅ DatabaseConnector: {type(timecraft.DatabaseConnector).__name__}")
-        print(f"  ✅ LinearRegression: {type(timecraft.LinearRegression).__name__}")
+        # Testar classes principais
+        print(f"  ✅ TimeCraftAI: {type(timecraft_ai.TimeCraftAI).__name__}")
+        print(
+            f"  ✅ DatabaseConnector: {type(timecraft_ai.DatabaseConnector).__name__}"
+        )
+        print(f"  ✅ LinearRegression: {type(timecraft_ai.LinearRegression).__name__}")
 
-        # Test core instantiation
-        ai = timecraft.TimeCraftAI()
-        print(f"  ✅ TimeCraftAI criado: {type(ai).__name__}")
+        # Criar instância para testar
+        tc = timecraft_ai.TimeCraftAI()
+        print(f"  ✅ TimeCraftAI criado: {tc.__class__.__name__}")
 
     except Exception as e:
-        print(f"  ❌ Erro no core: {e}")
+        print(f"  ❌ Erro ao testar funcionalidades: {e}")
+        return False
 
-    # AI functionality test (if available)
-    if timecraft.AI_AVAILABLE:
-        print("\n🤖 Testando Funcionalidades AI:")
-        try:
-            actions = timecraft.ChatbotActions()
-            print(f"  ✅ ChatbotActions criado: {type(actions).__name__}")
+    print()
 
-            # Test basic chatbot function
-            result = actions.get_historical_data()
-            print(f"  ✅ Teste histórico: {result[:50]}...")
+    # Verificar recursos AI
+    if not timecraft_ai.AI_AVAILABLE:
+        print("⚠️ Módulos AI não disponíveis (dependências faltando)")
+        print("  💡 Para instalar: make install-ai")
 
-            handler = timecraft.MCPCommandHandler()
-            response = handler.handle("teste")
-            print(f"  ✅ MCP Handler: {response[:50]}...")
+    if not timecraft_ai.SERVER_AVAILABLE:
+        print("⚠️ Servidor MCP não disponível")
+        print("  💡 Para instalar: pip install fastapi uvicorn")
 
-        except Exception as e:
-            print(f"  ❌ Erro no AI: {e}")
+    print()
+    print("🎉 Teste de instalação concluído!")
+
+    if DEV_MODE:
+        print()
+        print("💡 Comandos de desenvolvimento disponíveis:")
+        print("  📥 Instalar: make install-dev")
+        print("  🧪 Testar: make test-fast")
+        print("  🎮 Demo: make demo")
     else:
-        print("\n⚠️ Módulos AI não disponíveis (dependências faltando)")
-        print("  💡 Para instalar: pip install timecraft[ai]")
+        print()
+        print("💡 Recomendações de Instalação:")
+        print("  📥 Para recursos de AI: pip install timecraft_ai[ai]")
+        print("  📥 Para servidor web: pip install timecraft_ai[web]")
+        print("  📥 Para tudo: pip install timecraft_ai[all]")
 
-    # Server test (if available)
-    if timecraft.SERVER_AVAILABLE:
-        print("\n🌐 Testando Servidor MCP:")
-        try:
-            app = timecraft.mcp_server_app
-            print(f"  ✅ MCP Server disponível: {type(app).__name__}")
-        except Exception as e:
-            print(f"  ❌ Erro no servidor: {e}")
-    else:
-        print("\n⚠️ Servidor MCP não disponível")
-        print("  💡 Para instalar: pip install timecraft[web]")
-
-    print("\n🎉 Teste de instalação concluído!")
-
-    # Installation recommendations
-    print("\n💡 Recomendações de Instalação:")
-    if not timecraft.AI_AVAILABLE:
-        print("  📥 Para recursos de AI: pip install timecraft[ai]")
-    if not timecraft.SERVER_AVAILABLE:
-        print("  📥 Para servidor web: pip install timecraft[web]")
-    print("  📥 Para tudo: pip install timecraft[all]")
+    return True
 
 
 if __name__ == "__main__":
-    main()
+    success = main()
+    sys.exit(0 if success else 1)

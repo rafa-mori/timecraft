@@ -7,7 +7,7 @@ import pytest
 
 # MCPCommandHandler
 # ChatbotMsgSetHandler
-from ..src.timecraft_ai import ChatbotMsgSetHandler, MCPCommandHandler
+from ..timecraft_ai import ChatbotMsgSetHandler, MCPCommandHandler
 
 # Dummy classes for testing
 

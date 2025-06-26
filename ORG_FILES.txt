@@ -1,0 +1,52 @@
+.
+
+├── .gitignore                    # Necessário...
+├── .github             
+│   ├── workflows
+│   │   ├── scan.yml              # Workflow de CI, análise de código estático
+│   │   ├── test.yml              # Workflow de CI, testes automatizados
+│   │   └── release.yml           # Principal workflow de CI/CD, publicação no PyPI
+│   │
+│   ├── PULL_REQUEST_TEMPLATE.md  # Compliance OpenSource Initiative (boas práticas)
+│   ├── FUNDING.yml               # Boas práticas, ajuda a manter o projeto
+│   └── ISSUE_TEMPLATE
+│       ├── bug_report.md         # Compliance OpenSource Initiative
+│       └── feature_request.md    # Compliance OpenSource Initiative (boas práticas)
+│
+├── CODE_OF_CONDUCT.md            # Compliance OpenSource Initiative
+├── NOTICE.md                     # Compliance OpenSource Initiative
+├── INSTALL.md                    # Compliance OpenSource Initiative
+├── README.md                     # Compliance OpenSource Initiative
+├── LICENSE                       # Compliance OpenSource Initiative
+│
+├── __init__.py                   # Opcional, só para permitir execução/importação da raiz do projeto mais fácil sem empacotar ou instalar o package
+├── requirements.txt              # Necessário para o PyPI, mas não obrigatório (já está no pyproject.toml, aqui é para facilitar)
+├── playground.py                 # Opcional, para testes rápidos e experimentação
+│
+├── docs                          # Documentação do projeto
+│   └── ...
+├── examples                      # Exemplos de uso do package
+│   └── ...
+│
+├── setup.py                      # Para compatibilidade com versões antigas do Python ou para quem não usa Makefile
+├── Makefile                      # Centralização de vários fluxos de trabalho, como instalação, testes, linting, etc.
+│
+├── src
+│   ├── __init__.py               # Opcional, só para permitir execução/importação da raiz do package mais fácil sem empacotar ou instalar o package
+│   │
+│   ├── tests                     # Testes do package
+│   │   ├── __init__.py
+│   │   └── ...
+│   │
+│   ├── timecraft_ai              # Package principal do projeto
+│   │   ├── __init__.py
+│   │   ├── README.md   # Optional (facilita, vai para o PyPI sem esforços)
+│   │   ├── LICENSE     # Optional (facilita, vai para o PyPI sem esforços)
+│   │   ├── icon.png    # Optional (facilita, vai para o PyPI sem esforços)
+│   │   └── ...
+│   │
+│   ├── pyproject.toml            # Necessário para o PyPI, define as dependências e metadados do package
+│   └── setup.cfg                 # Opcional, para configurações adicionais do package e ferramentas de desenvolvimento
+│
+└── dist                          # Diretório de distribuição, onde os pacotes empacotados são gerados (não precisa ser versionado)
+    └── ...

@@ -30,7 +30,7 @@ class HotwordDetector:
     """
 
     def __init__(
-        self, keyword: str = "mcp", sensitivity: float = 0.7, access_key: str = None
+        self, keyword: str = "mcp", sensitivity: float = 0.7, access_key: str = ""
     ):
         self.keyword = keyword
         self.sensitivity = sensitivity

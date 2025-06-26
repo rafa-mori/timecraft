@@ -26,15 +26,31 @@ import sys
 
 # Try to import from installed package first, fallback to dev environment
 try:
-    import timecraft
+    from ..src.timecraft_ai import (
+        AudioProcessor,
+        ChatbotActions,
+        HotwordDetector,
+        MCPCommandHandler,
+        VoiceSynthesizer,
+    )
+    from ..src.timecraft_ai import mcp_server_app as mcp_server
+
     DEV_MODE = False
     print("📦 Usando TimeCraft instalado como package")
 except ImportError:
     # Development mode - add src to path
-    src_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'src')
+    src_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "src")
     if os.path.exists(src_path):
         sys.path.insert(0, src_path)
-        import timecraft
+        from ..src.timecraft_ai import (
+            AudioProcessor,
+            ChatbotActions,
+            HotwordDetector,
+            MCPCommandHandler,
+            VoiceSynthesizer,
+        )
+        from ..src.timecraft_ai import mcp_server_app as mcp_server
+
         DEV_MODE = True
         print("🔧 Usando TimeCraft em modo desenvolvimento")
     else:
@@ -53,13 +69,9 @@ logger = logging.getLogger("timecraft_test")
 def test_chatbot_actions():
     """Testa as ações do chatbot."""
     print("🧪 Testando ChatbotActions...")
-    
-    if not timecraft.AI_AVAILABLE:
-        print("⚠️ Módulos de AI não disponíveis")
-        return
-    
-    actions = timecraft.ChatbotActions()
-    
+
+    actions = ChatbotActions()
+
     print("📊 Dados históricos:", actions.get_historical_data())
     print("🔮 Previsão:", actions.run_forecast())
     print("💡 Insight:", actions.generate_insight())
@@ -69,13 +81,9 @@ def test_chatbot_actions():
 def test_voice_synthesizer():
     """Testa o sintetizador de voz."""
     print("🗣️ Testando VoiceSynthesizer...")
-    
-    if not timecraft.AI_AVAILABLE:
-        print("⚠️ Módulos de AI não disponíveis")
-        return
-    
+
     try:
-        synthesizer = timecraft.VoiceSynthesizer()
+        synthesizer = VoiceSynthesizer()
         synthesizer.speak("Olá! Sistema TimeCraft funcionando perfeitamente.")
         print("✅ VoiceSynthesizer testado com sucesso!")
     except Exception as e:
@@ -85,20 +93,16 @@ def test_voice_synthesizer():
 def test_mcp_handler():
     """Testa o handler de comandos MCP."""
     print("🤖 Testando MCPCommandHandler...")
-    
-    if not timecraft.AI_AVAILABLE:
-        print("⚠️ Módulos de AI não disponíveis")
-        return
-    
-    handler = timecraft.MCPCommandHandler()
-    
+
+    handler = MCPCommandHandler()
+
     test_commands = [
         "me mostre o histórico",
         "execute uma previsão",
         "gere insights dos dados",
-        "comando desconhecido"
+        "comando desconhecido",
     ]
-    
+
     for cmd in test_commands:
         response = handler.handle(cmd)
         print(f"📝 Comando: '{cmd}' → Resposta: '{response}'")
@@ -109,19 +113,12 @@ def run_voice_mode():
     print("🎤 Iniciando modo de voz contínua...")
     print("💡 Dica: Fale comandos como 'histórico', 'previsão' ou 'insights'")
     print("🛑 Pressione Ctrl+C para parar")
-    
-    if not timecraft.AI_AVAILABLE:
-        print("⚠️ Módulos de AI não disponíveis")
-        return
-    
-    handler = timecraft.MCPCommandHandler()
-    synthesizer = timecraft.VoiceSynthesizer()
-    
-    processor = timecraft.AudioProcessor(
-        command_handler=handler,
-        voice_synthesizer=synthesizer
-    )
-    
+
+    handler = MCPCommandHandler()
+    synthesizer = VoiceSynthesizer()
+
+    processor = AudioProcessor(command_handler=handler, voice_synthesizer=synthesizer)
+
     processor.listen_and_transcribe()
 
 
@@ -130,29 +127,25 @@ def run_hotword_mode():
     print("🔍 Iniciando modo hotword...")
     print("💡 Dica: Diga 'MCP' e depois seu comando")
     print("🛑 Pressione Ctrl+C para parar")
-    
-    if not timecraft.AI_AVAILABLE:
-        print("⚠️ Módulos de AI não disponíveis")
-        return
-    
+
     # Verifica se a chave do Picovoice está configurada
     if not os.getenv("PICOVOICE_ACCESS_KEY"):
         print("⚠️ ATENÇÃO: Chave do Picovoice não configurada!")
         print("📝 Configure com: export PICOVOICE_ACCESS_KEY='sua_chave'")
         print("🌐 Obtenha uma chave gratuita em: https://picovoice.ai/")
         return
-    
+
     try:
-        handler = timecraft.MCPCommandHandler()
-        synthesizer = timecraft.VoiceSynthesizer()
-        hotword = timecraft.HotwordDetector(keyword="mcp")
-        
-        processor = timecraft.AudioProcessor(
+        handler = MCPCommandHandler()
+        synthesizer = VoiceSynthesizer()
+        hotword = HotwordDetector(keyword="mcp")
+
+        processor = AudioProcessor(
             command_handler=handler,
             voice_synthesizer=synthesizer,
-            hotword_detector=hotword
+            hotword_detector=hotword,
         )
-        
+
         processor.run_with_hotword()
     except Exception as e:
         print(f"❌ Erro no modo hotword: {e}")
@@ -164,15 +157,11 @@ def run_server_mode():
     print("🚀 Iniciando servidor FastAPI...")
     print("🌐 Acesse: http://localhost:8000/health")
     print("📖 Documentação: http://localhost:8000/docs")
-    
-    if not timecraft.SERVER_AVAILABLE:
-        print("⚠️ Servidor MCP não disponível")
-        return
-    
+
     try:
         import uvicorn
-        
-        uvicorn.run(timecraft.mcp_server_app, host="0.0.0.0", port=8000)
+
+        uvicorn.run(mcp_server, host="0.0.0.0", port=8000)
     except ImportError:
         print("❌ uvicorn não encontrado. Instale com: pip install uvicorn")
     except Exception as e:
@@ -180,24 +169,24 @@ def run_server_mode():
 
 
 def main():
-    parser = argparse.ArgumentParser(description="TimeCraft - Sistema de Teste Avançado")
+    parser = argparse.ArgumentParser(
+        description="TimeCraft - Sistema de Teste Avançado"
+    )
     parser.add_argument(
         "--mode",
         choices=["test", "voice", "hotword", "server"],
         default="test",
-        help="Modo de execução"
+        help="Modo de execução",
     )
-    
+
     args = parser.parse_args()
-    
+
     print("=" * 50)
     print("🎯 TimeCraft - Sistema de Teste Avançado")
     print(f"📋 Modo: {args.mode}")
     print(f"🔧 Ambiente: {'Desenvolvimento' if DEV_MODE else 'Produção'}")
-    print(f"🤖 AI Disponível: {'✅' if timecraft.AI_AVAILABLE else '❌'}")
-    print(f"🌐 Servidor Disponível: {'✅' if timecraft.SERVER_AVAILABLE else '❌'}")
     print("=" * 50)
-    
+
     if args.mode == "test":
         print("🧪 Executando testes básicos...")
         test_chatbot_actions()
@@ -205,16 +194,16 @@ def main():
         test_voice_synthesizer()
         print()
         test_mcp_handler()
-        
+
     elif args.mode == "voice":
         run_voice_mode()
-        
+
     elif args.mode == "hotword":
         run_hotword_mode()
-        
+
     elif args.mode == "server":
         run_server_mode()
-    
+
     print("\n✅ Finalizado!")
 
 

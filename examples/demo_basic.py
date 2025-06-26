@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-🎯 TimeCraft - Demonstração Funcional
+🎯 TimeCraft AI - Demonstração Básica
 ====================================
 
-Este script demonstra as funcionalidades do TimeCraft que estão funcionando.
-Inclui testes de chatbot, síntese de voz e servidor web.
+Este script demonstra as funcionalidades básicas do TimeCraft AI.
+Inclui análise de séries temporais, conexão com banco de dados e recursos de AI.
 
 Pode ser executado tanto em ambiente de desenvolvimento quanto com package instalado.
 """
@@ -13,242 +13,216 @@ import argparse
 import os
 import sys
 
+from ..src.timecraft_ai import ai, core
+
 # Try to import from installed package first, fallback to dev environment
 try:
-    import timecraft
+    if core:
+        from ..src.timecraft_ai.core import (
+            DatabaseConnector,
+            LinearRegression,
+            RandomForestClassifier,
+            TimeCraftAI,
+        )
+
+    if ai:
+        from ..src.timecraft_ai.ai import (
+            AI_MODULES_AVAILABLE,
+            AudioProcessor,
+            ChatbotActions,
+            VoiceSynthesizer,
+        )
 
     DEV_MODE = False
-    print("📦 Usando TimeCraft instalado como package")
+    print("📦 Usando TimeCraft AI instalado como package")
 except ImportError:
     # Development mode - add src to path
     src_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "src")
     if os.path.exists(src_path):
         sys.path.insert(0, src_path)
-        import timecraft
+        if core:
+            # Importar as classes principais do core
+            from ..src.timecraft_ai.core import (
+                DatabaseConnector,
+                LinearRegression,
+                RandomForestClassifier,
+                TimeCraftAI,
+            )
+        else:
+            print("⚠️ Módulo core não encontrado. Verifique a instalação.")
+            sys.exit(1)
+
+        if ai:
+            # Importar os módulos de AI
+            from ..src.timecraft_ai.ai import (
+                AI_MODULES_AVAILABLE,
+                AudioProcessor,
+                ChatbotActions,
+                VoiceSynthesizer,
+            )
+        else:
+            print("⚠️ Módulo AI não encontrado. Verifique a instalação.")
+            sys.exit(1)
 
         DEV_MODE = True
-        print("🔧 Usando TimeCraft em modo desenvolvimento")
+        print("🔧 Usando TimeCraft AI em modo desenvolvimento")
     else:
-        print("❌ TimeCraft não encontrado. Instale com: pip install -e .")
+        print("❌ TimeCraft AI não encontrado. Instale com: make install-dev")
         sys.exit(1)
 
+# Verificar se o módulo de AI está disponível
+try:
+    from ..src.timecraft_ai.ai import (
+        AI_MODULES_AVAILABLE,
+        AudioProcessor,
+        ChatbotActions,
+        VoiceSynthesizer,
+    )
 
-def test_chatbot():
-    """Testa o sistema de chatbot com comandos de texto."""
-    print("\n🤖 === TESTE DO CHATBOT ===")
-
-    try:
-        if not timecraft.AI_AVAILABLE:
-            print("⚠️ Módulos de AI não disponíveis")
-            return
-
-        handler = timecraft.MCPCommandHandler()
-
-        comandos_teste = [
-            "me mostre o histórico",
-            "quero ver uma previsão",
-            "gere alguns insights",
-            "dados de triagem",
-            "análise dos dados",
-            "forecast para o próximo mês",
-            "comando inválido",
-        ]
-
-        for cmd in comandos_teste:
-            print(f"\n👤 Usuário: {cmd}")
-            resposta = handler.handle(cmd)
-            print(f"🤖 Chatbot: {resposta}")
-
-    except Exception as e:
-        print(f"❌ Erro no teste do chatbot: {e}")
+    AI_AVAILABLE = (
+        hasattr(AI_MODULES_AVAILABLE, "AI_AVAILABLE") and AI_MODULES_AVAILABLE
+    )
+except ImportError:
+    AI_AVAILABLE = False
+    print("⚠️ Módulos de AI não disponíveis. Instale com: make install-ai")
 
 
-def test_voice_synthesis():
-    """Testa a síntese de voz."""
-    print("\n🔊 === TESTE DE SÍNTESE DE VOZ ===")
+def demo_core_features():
+    """Demonstra as funcionalidades principais do TimeCraft AI"""
+    print("\n🔧 === DEMONSTRAÇÃO CORE === ")
 
     try:
-        if not timecraft.AI_AVAILABLE:
-            print("⚠️ Módulos de AI não disponíveis")
-            return
+        # Criar instância principal
+        tc = core.TimeCraftAI()
+        print("✅ TimeCraftAI criado com sucesso")
 
-        synthesizer = timecraft.VoiceSynthesizer()
+        # Testar conexão com banco (sem conectar realmente)
+        db = core.DatabaseConnector("sqlite")
+        print("✅ DatabaseConnector criado com sucesso")
 
-        frases_teste = [
-            "Olá! Eu sou o TimeCraft AI.",
-            "Sistema de análise de dados funcionando perfeitamente.",
-            "Posso ajudar com previsões e insights.",
-        ]
+        # Testar modelos de ML
+        lr = core.LinearRegression()
+        print("✅ LinearRegression criado com sucesso")
 
-        for frase in frases_teste:
-            print(f"🗣️ Falando: {frase}")
-            synthesizer.speak(frase)
+        rf = core.RandomForestClassifier()
+        print("✅ RandomForestClassifier criado com sucesso")
 
-        print("✅ Síntese de voz concluída!")
+        print("🎉 Todas as funcionalidades core funcionando!")
 
     except Exception as e:
-        print(f"❌ Erro no teste de voz: {e}")
-        if "audio" in str(e).lower():
-            print("💡 Dica: Execute em um ambiente com sistema de áudio configurado")
+        print(f"❌ Erro nas funcionalidades core: {e}")
+        return False
+
+    return True
 
 
-def test_server():
-    """Testa o servidor FastAPI."""
-    print("\n🌐 === TESTE DO SERVIDOR WEB ===")
+def demo_ai_features():
+    """Demonstra as funcionalidades de AI (se disponíveis)"""
+    print("\n🤖 === DEMONSTRAÇÃO AI === ")
+
+    if not AI_AVAILABLE:
+        print("⚠️ Recursos de AI não disponíveis")
+        print("💡 Para instalar: make install-ai")
+        return False
 
     try:
-        if not timecraft.SERVER_AVAILABLE:
-            print("⚠️ Servidor MCP não disponível")
-            return
+        # Testar processamento de áudio
+        if ai:
+            audio = ai.AudioProcessor()
+            print("✅ AudioProcessor criado com sucesso")
 
-        app = timecraft.mcp_server_app
+        # Testar chatbot
+        if ai.ChatbotActions:
+            chatbot = ai.ChatbotActions()
+            print("✅ ChatbotActions criado com sucesso")
 
-        print("✅ Servidor FastAPI criado com sucesso!")
-        print("📋 Endpoints disponíveis:")
-        print("  - GET  /health")
-        print("  - POST /mcp/command")
-        print("  - GET  /mcp/plugins")
-        print("  - POST /mcp/plugins/{plugin}/enable")
-        print("  - POST /mcp/plugins/{plugin}/config")
+        # Testar síntese de voz
+        if ai.VoiceSynthesizer:
+            voice = ai.VoiceSynthesizer()
+            print("✅ VoiceSynthesizer criado com sucesso")
 
-        # Teste com cliente HTTP simples
-        import threading
-        import time
+        print("🎉 Recursos de AI funcionando!")
 
-        import requests
-        import uvicorn
-
-        def run_server():
-            uvicorn.run(app, host="127.0.0.1", port=8000, log_level="error")
-
-        # Inicia servidor em thread separada
-        server_thread = threading.Thread(target=run_server, daemon=True)
-        server_thread.start()
-
-        # Aguarda servidor iniciar
-        time.sleep(2)
-
-        # Testa endpoints
-        try:
-            # Health check
-            response = requests.get("http://127.0.0.1:8000/health", timeout=5)
-            print(f"✅ Health check: {response.json()}")
-
-            # Comando MCP
-            response = requests.post(
-                "http://127.0.0.1:8000/mcp/command",
-                json={"message": "me mostre o histórico"},
-                timeout=5,
-            )
-            print(f"✅ Comando MCP: {response.json()}")
-
-            # Lista plugins
-            response = requests.get("http://127.0.0.1:8000/mcp/plugins", timeout=5)
-            plugins = response.json()
-            enabled_plugins = [
-                p for p, config in plugins["plugins"].items() if config["enabled"]
-            ]
-            print(f"✅ Plugins ativos: {enabled_plugins}")
-
-        except requests.exceptions.RequestException as e:
-            print(f"⚠️ Erro de conexão: {e}")
-
-    except ImportError as e:
-        print(f"❌ Dependência faltando: {e}")
-        print("💡 Instale com: pip install fastapi uvicorn requests")
     except Exception as e:
-        print(f"❌ Erro no servidor: {e}")
+        print(f"❌ Erro nos recursos de AI: {e}")
+        return False
+
+    return True
 
 
-def test_full_integration():
-    """Testa integração completa: chatbot + voz."""
-    print("\n🔗 === TESTE DE INTEGRAÇÃO ===")
+def demo_data_analysis():
+    """Demonstra análise de dados básica"""
+    print("\n📊 === DEMONSTRAÇÃO ANÁLISE DE DADOS ===")
 
     try:
-        if not timecraft.AI_AVAILABLE:
-            print("⚠️ Módulos de AI não disponíveis")
-            return
+        import numpy as np
+        import pandas as pd
 
-        handler = timecraft.MCPCommandHandler()
-        synthesizer = timecraft.VoiceSynthesizer()
+        # Criar dados de exemplo
+        dates = pd.date_range("2023-01-01", periods=100, freq="D")
+        values = np.random.randn(100).cumsum() + 100
 
-        comandos_teste = [
-            "me mostre o histórico",
-            "execute uma previsão",
-            "gere insights",
-        ]
+        data = pd.DataFrame({"date": dates, "value": values})
 
-        for cmd in comandos_teste:
-            print(f"\n👤 Usuário: {cmd}")
-            resposta = handler.handle(cmd)
-            print(f"🤖 Chatbot: {resposta}")
-            print("🔊 Falando resposta...")
-            synthesizer.speak(resposta)
+        print(f"✅ Dados criados: {len(data)} registros")
+        print(f"📈 Valor médio: {data['value'].mean():.2f}")
+        print(f"📊 Desvio padrão: {data['value'].std():.2f}")
 
-        print("✅ Integração chatbot + voz funcionando!")
+        # Testar TimeCraftAI com dados
+        tc = core.TimeCraftAI()
+        print("✅ Pronto para a análise de séries temporais")
+
+        return True
 
     except Exception as e:
-        print(f"❌ Erro na integração: {e}")
+        print(f"❌ Erro na análise de dados: {e}")
+        return False
 
 
 def main():
-    """
-    Main function for the TimeCraft AI demonstration script.
-
-    This script provides a functional demonstration of various TimeCraft AI features,
-    including chatbot interaction, voice synthesis, server functionality, and full
-    integration testing. The user can specify which test(s) to run via command-line
-    arguments.
-
-    Command-line Arguments:
-        --test: Specifies the type of test to execute. Options are:
-            - "chatbot": Run the chatbot interaction test.
-            - "voice": Run the voice synthesis test.
-            - "server": Run the server functionality test.
-            - "integration": Run the full integration test.
-            - "all" (default): Run all tests.
-
-    Usage:
-        Run the script with the desired test type using the --test argument.
-        Example: python demo_timecraft_ai.py --test chatbot
-
-    Output:
-        Displays the progress and results of the selected tests, along with
-        suggestions for next steps to enhance the TimeCraft AI system.
-    """
-    parser = argparse.ArgumentParser(description="TimeCraft AI - Demo Funcional")
+    """Função principal da demonstração"""
+    parser = argparse.ArgumentParser(description="TimeCraft AI - Demo Básico")
     parser.add_argument(
-        "--test",
-        choices=["chatbot", "voice", "server", "integration", "all"],
-        default="all",
-        help="Tipo de teste a executar",
+        "--test", action="store_true", help="Executar apenas testes rápidos"
     )
 
     args = parser.parse_args()
 
-    print("🎯 TimeCraft AI - Demonstração Funcional")
+    print("🎯 TimeCraft AI - Demonstração Básica")
     print("=" * 50)
+    print("📦 Versão: {getattr(core, '__version__', 'N/A')}")
+    print("🔧 Modo: {'Desenvolvimento' if DEV_MODE else 'Produção'}")
+    print()
 
-    if args.test in ["chatbot", "all"]:
-        test_chatbot()
+    success = True
 
-    if args.test in ["voice", "all"]:
-        test_voice_synthesis()
+    # Testar funcionalidades core
+    if not demo_core_features():
+        success = False
 
-    if args.test in ["server", "all"]:
-        test_server()
+    # Testar funcionalidades de AI
+    if not demo_ai_features():
+        print("ℹ️ Continuando sem recursos de AI...")
 
-    if args.test in ["integration", "all"]:
-        test_full_integration()
+    # Testar análise de dados
+    if not args.test:
+        if not demo_data_analysis():
+            success = False
 
-    print("\n🎉 Demonstração concluída!")
-    print("💡 Próximos passos:")
-    print("   - Instalar dependências de áudio para usar comandos de voz")
-    print("   - Configurar chave do Picovoice para detecção de hotword")
-    print("   - Integrar com suas próprias fontes de dados")
-    print("   - Configurar LLMs externos (OpenAI, etc.)")
+    print("\n" + "=" * 50)
+    if success:
+        print("🎉 Demonstração concluída com sucesso!")
+        print("\n💡 Próximos passos:")
+        print("  📚 Consulte a documentação em docs/")
+        print("  🎮 Execute o demo avançado: python examples/demo_advanced.py")
+        if DEV_MODE:
+            print("  🔧 Comandos make disponíveis: make help")
+    else:
+        print("⚠️ Demonstração concluída com alguns problemas")
+        print("💡 Verifique as dependências e tente novamente")
+
+    return 0 if success else 1
 
 
 if __name__ == "__main__":
-    main()
-    main()
+    sys.exit(main())

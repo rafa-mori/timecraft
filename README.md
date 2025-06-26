@@ -1,5 +1,4 @@
-# TimeCraft Banner
-![TimeCraft Banner](docs/assets/top_banner.png)
+# ![TimeCraft Banner](docs/assets/top_banner.png)
 
 ---
 
@@ -8,12 +7,13 @@
 ---
 
 ## **Table of Contents**
+
 1. [About the Project](#about-the-project)
 2. [Features](#features)
 3. [Installation](#installation)
 4. [Usage](#usage)
-    - [CLI](#cli)
-    - [Examples](#examples)
+    - [CLI](#️-cli-usage)
+    - [Examples](#-advanced-examples)
     - [Configuration](#configuration)
 5. [Scheduled Execution](#scheduled-execution)
 6. [Webhook Notifications](#webhook-notifications)
@@ -24,9 +24,11 @@
 ---
 
 ## **About the Project**
+
 TimeCraft is a flexible and powerful solution for time series analysis, database integration, and task automation. Developed in **Python**, it offers webhook notification support, scheduled model execution, and an intuitive CLI to streamline data workflows.
 
 **Why TimeCraft?**
+
 - 📈 **Advanced Analysis**: Robust scripts for modeling, forecasting, and evaluating temporal data.
 - 🛢️ **Simple Integration**: Tools to connect and query multiple database systems.
 - ⚙️ **Automation & Notifications**: Modules to automate data workflows and send alerts.
@@ -34,23 +36,29 @@ TimeCraft is a flexible and powerful solution for time series analysis, database
 ---
 
 ## **Features**
+
 ✨ **Plug-and-Play Models**:
+
 - ARIMA, Prophet, LSTM, and other ready-to-use models.
 - Easy customization and extension.
 
 🔗 **Database Integration**:
+
 - Efficient connection to different database systems.
 - Scripts for data import and querying.
 
 ⏰ **Scheduled Execution**:
+
 - Schedule automatic model runs (cronjob-like).
 - CLI and Python API for scheduling.
 
 🔔 **Dynamic Notifications**:
+
 - Send notifications via Webhook (Slack, Discord, custom APIs).
 - Customizable payloads for each platform.
 
 💻 **Powerful CLI**:
+
 - Simple commands to run models, schedule executions, and monitor tasks.
 - Extensible for new workflows.
 
@@ -158,6 +166,7 @@ forecasts = model.forecast_prophet(data)
 ---
 
 ### **Command and Flag Descriptions**
+
 - **`--data`**: Path to the data file.
 - **`--date_column`**: Name of the date column.
 - **`--value_columns`**: Value columns to analyze.
@@ -167,11 +176,13 @@ forecasts = model.forecast_prophet(data)
 ---
 
 ### **Configuration**
+
 TimeCraft can be configured via command-line arguments or directly in Python code. For advanced configurations, see the examples in the `/tutorials` folder.
 
 ---
 
 ## **Scheduled Execution**
+
 TimeCraft allows you to schedule automatic model runs, similar to a cronjob.
 
 **Via CLI:**
@@ -195,9 +206,11 @@ run_scheduled(model.run, interval_seconds=600)
 ---
 
 ## **Webhook Notifications**
+
 TimeCraft supports sending notifications to webhooks after model runs or analyses. Ideal for automation, monitoring, or integration with other systems (Slack, Discord, custom APIs).
 
 ### How it works
+
 - Pass the `webhook_url` parameter to the `run` or `run_analysis` methods.
 - When finished, a POST with a JSON payload is sent to the URL.
 - Extra fields can be added via `webhook_payload_extra`.
@@ -240,7 +253,9 @@ model.run(
 ---
 
 ## **Roadmap**
+
 🔜 **Upcoming Features**:
+
 - Support for cloud data sources (BigQuery, Snowflake)
 - Email notification system
 - Dashboard for result visualization
@@ -248,11 +263,13 @@ model.run(
 ---
 
 ## **Contributing**
+
 Contributions are welcome! See the [Contributing Guide](CONTRIBUTING.md) for details.
 
 ---
 
 ## **Contact**
+
 💌 **Developer**:  
 [Rafael Mori](mailto:faelmori@gmail.com)
 💼 [faelmori/timecraft on GitHub](https://github.com/rafa-mori/timecraft)

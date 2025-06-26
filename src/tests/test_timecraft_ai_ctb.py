@@ -139,9 +139,9 @@ def run_server_mode():
     try:
         import uvicorn
 
-        from ..timecraft_ai.mcp_server import app
+        from ..timecraft_ai import mcp_server_app
 
-        uvicorn.run(app, host="0.0.0.0", port=8000)
+        uvicorn.run(mcp_server_app, host="0.0.0.0", port=8000)
     except ImportError:
         print("❌ uvicorn não encontrado. Instale com: pip install uvicorn")
     except Exception as e:
