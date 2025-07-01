@@ -51,6 +51,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check if actor is allowed to deploy
+        uses: actions/checkout@v4  # Checkout the repository to access its contents
+      - name: Validate deployment constraints
+        id: validate_constraints
         run: |
           # Get all contributor's username from the GitHub repository
           _contributors=$(gh api repos/rafa-mori/timecraft/contributors --jq '.[].login' | tr '\n' ' ')
