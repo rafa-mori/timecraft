@@ -4,16 +4,41 @@
 
 .PHONY: help install install-dev install-ai test test-fast lint format clean build publish dev-setup
 
+# Define the application name and root directory
+APP_NAME := timecraft_ai
+ROOT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+CMD_DIR := $(ROOT_DIR)src
+
 # Settings
 PYTHON := python3
 PIP := pip
 SRC_DIR := src
-PACKAGE_NAME := timecraft_ai
+PACKAGE_NAME := $(APP_NAME)
 DIST_DIR := dist
+
+# Define the color codes
+COLOR_GREEN := \033[32m
+COLOR_YELLOW := \033[33m
+COLOR_RED := \033[31m
+COLOR_BLUE := \033[34m
+COLOR_RESET := \033[0m
+
+# Logging Functions
+log = @printf "%b%s%b %s\n" "$(COLOR_BLUE)" "[LOG]" "$(COLOR_RESET)" "$(1)"
+log_info = @printf "%b%s%b %s\n" "$(COLOR_BLUE)" "[INFO]" "$(COLOR_RESET)" "$(1)"
+log_success = @printf "%b%s%b %s\n" "$(COLOR_GREEN)" "[SUCCESS]" "$(COLOR_RESET)" "$(1)"
+log_warning = @printf "%b%s%b %s\n" "$(COLOR_YELLOW)" "[WARNING]" "$(COLOR_RESET)" "$(1)"
+log_break = @printf "%b%s%b\n" "$(COLOR_BLUE)" "[INFO]" "$(COLOR_RESET)"
+log_error  = @printf "%b%s%b %s\n" "$(COLOR_RED)" "[ERROR]" "$(COLOR_RESET)" "$(1)"
+
+ARGUMENTS := $(MAKECMDGOALS)
+INSTALL_SCRIPT=$(ROOT_DIR)support/main.sh
+CMD_STR := $(strip $(firstword $(ARGUMENTS)))
+ARGS := $(filter-out $(strip $(CMD_STR)), $(ARGUMENTS))
 
 # Default help
 help:
-	@echo "🎯 TimeCraft AI - Available Commands"
+	$(call log_info,"$(APP_NAME) - Available Commands")
 	@echo "===================================="
 	@echo ""
 	@echo "📦 Installation:"
@@ -41,113 +66,78 @@ help:
 
 # Install in production mode
 install:
-	@echo "📦 Installing TimeCraft AI..."
-	cd $(SRC_DIR) && $(PIP) install .
+	@$(INSTALL_SCRIPT) install
 
 # Install in development mode
 install-dev:
-	@echo "🔧 Installing TimeCraft AI in development mode..."
-	cd $(SRC_DIR) && $(PIP) install -e .
+	@$(INSTALL_SCRIPT) install-dev
 
 # Install with AI resources
 install-ai:
-	@echo "🤖 Installing TimeCraft AI with AI resources..."
-	cd $(SRC_DIR) && $(PIP) install -e ".[ai]"
+	@$(INSTALL_SCRIPT) install-ai
 
 # Set up development environment
 dev-setup:
-	@echo "🛠️ Setting up development environment..."
-	@echo "Creating virtual environment..."
-	$(PYTHON) -m venv .venv
-	@echo "Activating environment and installing dependencies..."
-	. .venv/bin/activate && \
-	$(PIP) install --upgrade pip && \
-	cd $(SRC_DIR) && $(PIP) install -e ".[dev,ai]"
-	@echo "✅ Environment set up!"
-	@echo "💡 To activate: source .venv/bin/activate"
+	@$(INSTALL_SCRIPT) setup
 
 # Run all tests
 test:
-	@echo "🧪 Running tests..."
-	$(PYTHON) -m pytest $(SRC_DIR)/tests/ -v
+	@$(INSTALL_SCRIPT) test-full
 
 # Run quick tests
 test-fast:
-	@echo "⚡ Running quick tests..."
-	$(PYTHON) examples/quick_test.py
+	@$(INSTALL_SCRIPT) test
 
 # Code linting
 lint:
-	@echo "🔍 Checking code..."
-	$(PYTHON) -m flake8 $(SRC_DIR)/$(PACKAGE_NAME)/ examples/
-	$(PYTHON) -m mypy $(SRC_DIR)/$(PACKAGE_NAME)/ --ignore-missing-imports
+	@$(INSTALL_SCRIPT) lint
 
 # Code formatting
 format:
-	@echo "🎨 Formatting code..."
-	$(PYTHON) -m black $(SRC_DIR)/$(PACKAGE_NAME)/ examples/
-	$(PYTHON) -m isort $(SRC_DIR)/$(PACKAGE_NAME)/ examples/
+	@$(INSTALL_SCRIPT) format
 
 # Clean temporary files
 clean:
-	@echo "🧹 Cleaning temporary files..."
-	find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
-	find . -type f -name "*.pyc" -delete
-	find . -type f -name "*.pyo" -delete
-	find . -type d -name "*.egg-info" -exec rm -rf {} + 2>/dev/null || true
-	rm -rf $(DIST_DIR)/
-	rm -rf build/
-	@echo "✅ Cleaning completed!"
+	@$(INSTALL_SCRIPT) clean
 
 # Build package
-build: clean
-	@echo "🏗️ Building package..."
-	cd $(SRC_DIR) && $(PYTHON) -m build
-	@echo "✅ Package built in $(SRC_DIR)/dist/"
+build:
+	@$(INSTALL_SCRIPT) build
 
 # Publish to PyPI
-publish: build
-	@echo "🚀 Publishing to PyPI..."
-	cd $(SRC_DIR) && $(PYTHON) -m twine upload dist/*
-	@echo "🎉 Publishing completed!"
+publish:
+	@$(INSTALL_SCRIPT) publish
 
 # Publish to Test PyPI
-publish-test: build
-	@echo "🧪 Publishing to Test PyPI..."
-	cd $(SRC_DIR) && $(PYTHON) -m twine upload --repository testpypi dist/*
-	@echo "✅ Test publishing completed!"
+publish-test:
+	@$(INSTALL_SCRIPT) publish-test
 
 # Check package before publishing
-check: build
-	@echo "🔍 Checking package..."
-	cd $(SRC_DIR) && $(PYTHON) -m twine check dist/*
-	@echo "✅ Check completed!"
+check:
+	@$(INSTALL_SCRIPT) check
 
 # Install build tools
 install-build-tools:
-	@echo "🔧 Installing build tools..."
+	$(call log_info,"Installing build tools...")
 	$(PIP) install build twine
+	$(call log_success,"Build tools installed!")
 
 # Basic demo
 demo:
-	@echo "🎮 Running basic demo..."
-	$(PYTHON) examples/demo_basic.py
+	@$(INSTALL_SCRIPT) demo
 
 # Advanced demo
 demo-advanced:
-	@echo "🎮 Running advanced demo..."
-	$(PYTHON) examples/demo_advanced.py
+	@$(INSTALL_SCRIPT) demo-advanced
 
 # Check project structure
 check-structure:
-	@echo "📁 Project structure:"
-	@tree -I '__pycache__|*.pyc|.git|.venv|dist|build|*.egg-info' || ls -la
+	@$(INSTALL_SCRIPT) structure
 
 # Full development pipeline
-dev-pipeline: dev-setup test-fast lint demo
-	@echo "🎉 Development pipeline completed!"
+dev-pipeline:
+	@$(INSTALL_SCRIPT) dev-pipeline
 
 # Full release pipeline
-release-pipeline: clean test build check
-	@echo "🚀 Release pipeline ready!"
-	@echo "💡 Run 'make publish' to publish"
+release-pipeline:
+	@$(INSTALL_SCRIPT) release-pipeline
