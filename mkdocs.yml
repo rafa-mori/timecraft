@@ -34,7 +34,7 @@ markdown_extensions:
   - tables
 nav:
   - Home: index.md
-  - README: README.md
+  - README: README.en.md
   - README pt-BR: README.pt-BR.md
   - License: LICENSE
   - Code of Conduct: CODE_OF_CONDUCT.md
