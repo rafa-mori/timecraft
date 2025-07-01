@@ -1,9 +1,9 @@
-# TimeCraft AI - Dependências Principais
+# TimeCraft AI - Main Dependencies
 # =====================================
-# Este arquivo facilita a instalação das dependências principais
-# As dependências completas estão definidas em src/pyproject.toml
+# This file facilitates the installation of the main dependencies
+# The complete dependencies are defined in src/pyproject.toml
 
-# Dependências principais (sempre necessárias)
+# Main dependencies (always required)
 numpy>=1.21.0
 pandas>=1.5.0
 matplotlib>=3.4.0
@@ -15,7 +15,7 @@ sqlalchemy>=1.4.0
 fastapi>=0.104.0
 uvicorn[standard]>=0.24.0
 
-# Dependências opcionais (instale conforme necessário)
+# Optional dependencies (install as needed)
 mkdocs
 mkdocs-material
 mkdocs-include-markdown-plugin
@@ -28,8 +28,9 @@ mkdocs-material-extensions
 
 
 
-# Para instalação completa com AI:
+# For full installation with AI:
 # pip install -e src/[ai]
 
-# Para desenvolvimento:
+# For development:
 # pip install -e src/[dev]
+

@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-We actively support the following versions of TimeCraft with security updates:
+We actively support the following versions of TimeCraft AI with security updates:
 
 | Version | Supported          | End of Support |
 | ------- | ------------------ | -------------- |
@@ -47,12 +47,12 @@ When using TimeCraft, please follow these security best practices:
 
 ## Reporting a Vulnerability
 
-We take security vulnerabilities seriously. If you discover a security vulnerability in TimeCraft, please follow these steps:
+We take security vulnerabilities seriously. If you discover a security vulnerability in TimeCraft AI, please follow these steps:
 
 ### How to Report
 
 1. **Do NOT create a public GitHub issue** for security vulnerabilities
-2. **Email us directly** at [faelmori@gmail.com](mailto:faelmori@gmail.com) with the subject line: "TimeCraft Security Vulnerability"
+2. **Email us directly** at [faelmori@gmail.com](mailto:faelmori@gmail.com) with the subject line: "TimeCraft AI Security Vulnerability"
 3. **Include the following information**:
    - A clear description of the vulnerability
    - Steps to reproduce the issue

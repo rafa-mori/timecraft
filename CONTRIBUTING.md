@@ -1,6 +1,6 @@
-# Contributing to TimeCraft
+# Contributing to TimeCraft AI
 
-Thank you for your interest in contributing to TimeCraft! We welcome contributions from everyone and appreciate your efforts to improve this project.
+Thank you for your interest in contributing to TimeCraft AI! We welcome contributions from everyone and appreciate your efforts to improve this project.
 
 ## Table of Contents
 
@@ -31,7 +31,7 @@ This project and everyone participating in it is governed by our [Code of Conduc
 
 ## How to Contribute
 
-There are many ways to contribute to TimeCraft:
+There are many ways to contribute to TimeCraft AI, including:
 
 - **Bug Reports**: Help us identify and fix bugs
 - **Feature Requests**: Suggest new features or improvements
@@ -75,7 +75,7 @@ There are many ways to contribute to TimeCraft:
 
 5. **Verify installation**:
    ```bash
-   python -m timecraft --help
+   python -m timecraft_ai --help
    ```
 
 ## Coding Standards
@@ -277,8 +277,8 @@ Contributors will be recognized in:
 
 ## License
 
-By contributing to TimeCraft, you agree that your contributions will be licensed under the [MIT License](LICENSE).
+By contributing to TimeCraft AI, you agree that your contributions will be licensed under the [MIT License](LICENSE).
 
 ---
 
-Thank you for contributing to TimeCraft! Your efforts help make this project better for everyone.
+Thank you for contributing to TimeCraft AI! Your efforts help make this project better for everyone.

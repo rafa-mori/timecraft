@@ -1,0 +1,34 @@
+name: "Bug Report"
+description: "Report a bug or issue with the project"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to report a bug. Please fill out the details below.
+  - type: input
+    id: title
+    attributes:
+      label: "Bug Title"
+      description: "Provide a short and descriptive title for the bug"
+      placeholder: "Bug title"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: "Bug Description"
+      description: "Provide a detailed description of the bug"
+      placeholder: "Describe the bug in detail"
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: "Severity"
+      description: "How severe is the bug?"
+      options:
+        - "Low"
+        - "Medium"
+        - "High"
+    validations:
+      required: true

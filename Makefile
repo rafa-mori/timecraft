@@ -1,153 +1,153 @@
 # TimeCraft AI - Makefile
 # =====================
-# Centralização de fluxos de trabalho para desenvolvimento, testes e distribuição
+# Centralization of workflows for development, testing, and distribution
 
 .PHONY: help install install-dev install-ai test test-fast lint format clean build publish dev-setup
 
-# Configurações
+# Settings
 PYTHON := python3
 PIP := pip
 SRC_DIR := src
 PACKAGE_NAME := timecraft_ai
 DIST_DIR := dist
 
-# Ajuda padrão
+# Default help
 help:
-	@echo "🎯 TimeCraft AI - Comandos Disponíveis"
+	@echo "🎯 TimeCraft AI - Available Commands"
 	@echo "===================================="
 	@echo ""
-	@echo "📦 Instalação:"
-	@echo "  install      - Instalar package em modo produção"
-	@echo "  install-dev  - Instalar em modo desenvolvimento"
-	@echo "  install-ai   - Instalar com recursos de AI"
+	@echo "📦 Installation:"
+	@echo "  install      - Install package in production mode"
+	@echo "  install-dev  - Install in development mode"
+	@echo "  install-ai   - Install with AI resources"
 	@echo ""
-	@echo "🧪 Testes:"
-	@echo "  test         - Executar todos os testes"
-	@echo "  test-fast    - Executar testes rápidos"
+	@echo "🧪 Testing:"
+	@echo "  test         - Run all tests"
+	@echo "  test-fast    - Run quick tests"
 	@echo ""
-	@echo "🔧 Desenvolvimento:"
-	@echo "  dev-setup    - Configurar ambiente de desenvolvimento"
-	@echo "  lint         - Verificar código com linting"
-	@echo "  format       - Formatar código"
-	@echo "  clean        - Limpar arquivos temporários"
+	@echo "🔧 Development:"
+	@echo "  dev-setup    - Set up development environment"
+	@echo "  lint         - Check code with linting"
+	@echo "  format       - Format code"
+	@echo "  clean        - Clean temporary files"
 	@echo ""
-	@echo "🚀 Distribuição:"
-	@echo "  build        - Construir package"
-	@echo "  publish      - Publicar no PyPI"
+	@echo "🚀 Distribution:"
+	@echo "  build        - Build package"
+	@echo "  publish      - Publish to PyPI"
 	@echo ""
-	@echo "💡 Exemplos:"
+	@echo "💡 Examples:"
 	@echo "  make dev-setup && make test"
 	@echo "  make build && make publish"
 
-# Instalação em modo produção
+# Install in production mode
 install:
-	@echo "📦 Instalando TimeCraft AI..."
+	@echo "📦 Installing TimeCraft AI..."
 	cd $(SRC_DIR) && $(PIP) install .
 
-# Instalação em modo desenvolvimento
+# Install in development mode
 install-dev:
-	@echo "🔧 Instalando TimeCraft AI em modo desenvolvimento..."
+	@echo "🔧 Installing TimeCraft AI in development mode..."
 	cd $(SRC_DIR) && $(PIP) install -e .
 
-# Instalação com recursos de AI
+# Install with AI resources
 install-ai:
-	@echo "🤖 Instalando TimeCraft AI com recursos de AI..."
+	@echo "🤖 Installing TimeCraft AI with AI resources..."
 	cd $(SRC_DIR) && $(PIP) install -e ".[ai]"
 
-# Configurar ambiente de desenvolvimento
+# Set up development environment
 dev-setup:
-	@echo "🛠️ Configurando ambiente de desenvolvimento..."
-	@echo "Criando ambiente virtual..."
+	@echo "🛠️ Setting up development environment..."
+	@echo "Creating virtual environment..."
 	$(PYTHON) -m venv .venv
-	@echo "Ativando ambiente e instalando dependências..."
+	@echo "Activating environment and installing dependencies..."
 	. .venv/bin/activate && \
 	$(PIP) install --upgrade pip && \
 	cd $(SRC_DIR) && $(PIP) install -e ".[dev,ai]"
-	@echo "✅ Ambiente configurado!"
-	@echo "💡 Para ativar: source .venv/bin/activate"
+	@echo "✅ Environment set up!"
+	@echo "💡 To activate: source .venv/bin/activate"
 
-# Executar todos os testes
+# Run all tests
 test:
-	@echo "🧪 Executando testes..."
+	@echo "🧪 Running tests..."
 	$(PYTHON) -m pytest $(SRC_DIR)/tests/ -v
 
-# Executar testes rápidos
+# Run quick tests
 test-fast:
-	@echo "⚡ Executando testes rápidos..."
+	@echo "⚡ Running quick tests..."
 	$(PYTHON) examples/quick_test.py
 
-# Linting do código
+# Code linting
 lint:
-	@echo "🔍 Verificando código..."
+	@echo "🔍 Checking code..."
 	$(PYTHON) -m flake8 $(SRC_DIR)/$(PACKAGE_NAME)/ examples/
 	$(PYTHON) -m mypy $(SRC_DIR)/$(PACKAGE_NAME)/ --ignore-missing-imports
 
-# Formatação do código
+# Code formatting
 format:
-	@echo "🎨 Formatando código..."
+	@echo "🎨 Formatting code..."
 	$(PYTHON) -m black $(SRC_DIR)/$(PACKAGE_NAME)/ examples/
 	$(PYTHON) -m isort $(SRC_DIR)/$(PACKAGE_NAME)/ examples/
 
-# Limpar arquivos temporários
+# Clean temporary files
 clean:
-	@echo "🧹 Limpando arquivos temporários..."
+	@echo "🧹 Cleaning temporary files..."
 	find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
 	find . -type f -name "*.pyc" -delete
 	find . -type f -name "*.pyo" -delete
 	find . -type d -name "*.egg-info" -exec rm -rf {} + 2>/dev/null || true
 	rm -rf $(DIST_DIR)/
 	rm -rf build/
-	@echo "✅ Limpeza concluída!"
+	@echo "✅ Cleaning completed!"
 
-# Construir package
+# Build package
 build: clean
-	@echo "🏗️ Construindo package..."
+	@echo "🏗️ Building package..."
 	cd $(SRC_DIR) && $(PYTHON) -m build
-	@echo "✅ Package construído em $(SRC_DIR)/dist/"
+	@echo "✅ Package built in $(SRC_DIR)/dist/"
 
-# Publicar no PyPI
+# Publish to PyPI
 publish: build
-	@echo "🚀 Publicando no PyPI..."
+	@echo "🚀 Publishing to PyPI..."
 	cd $(SRC_DIR) && $(PYTHON) -m twine upload dist/*
-	@echo "🎉 Publicação concluída!"
+	@echo "🎉 Publishing completed!"
 
-# Publicar no Test PyPI
+# Publish to Test PyPI
 publish-test: build
-	@echo "🧪 Publicando no Test PyPI..."
+	@echo "🧪 Publishing to Test PyPI..."
 	cd $(SRC_DIR) && $(PYTHON) -m twine upload --repository testpypi dist/*
-	@echo "✅ Publicação de teste concluída!"
+	@echo "✅ Test publishing completed!"
 
-# Verificar package antes da publicação
+# Check package before publishing
 check: build
-	@echo "🔍 Verificando package..."
+	@echo "🔍 Checking package..."
 	cd $(SRC_DIR) && $(PYTHON) -m twine check dist/*
-	@echo "✅ Verificação concluída!"
+	@echo "✅ Check completed!"
 
-# Instalar ferramentas de build
+# Install build tools
 install-build-tools:
-	@echo "🔧 Instalando ferramentas de build..."
+	@echo "🔧 Installing build tools..."
 	$(PIP) install build twine
 
-# Demo básico
+# Basic demo
 demo:
-	@echo "🎮 Executando demo básico..."
+	@echo "🎮 Running basic demo..."
 	$(PYTHON) examples/demo_basic.py
 
-# Demo avançado
+# Advanced demo
 demo-advanced:
-	@echo "🎮 Executando demo avançado..."
+	@echo "🎮 Running advanced demo..."
 	$(PYTHON) examples/demo_advanced.py
 
-# Verificar estrutura do projeto
+# Check project structure
 check-structure:
-	@echo "📁 Estrutura do projeto:"
+	@echo "📁 Project structure:"
 	@tree -I '__pycache__|*.pyc|.git|.venv|dist|build|*.egg-info' || ls -la
 
-# Pipeline completa de desenvolvimento
+# Full development pipeline
 dev-pipeline: dev-setup test-fast lint demo
-	@echo "🎉 Pipeline de desenvolvimento concluída!"
+	@echo "🎉 Development pipeline completed!"
 
-# Pipeline completa de release
+# Full release pipeline
 release-pipeline: clean test build check
-	@echo "🚀 Pipeline de release pronta!"
-	@echo "💡 Execute 'make publish' para publicar"
+	@echo "🚀 Release pipeline ready!"
+	@echo "💡 Run 'make publish' to publish"
