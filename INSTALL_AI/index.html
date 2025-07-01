@@ -6,11 +6,19 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
+        <meta name="description" content="Advanced time series analysis, database integration, and task automation with dynamic notifications and powerful CLI">
+      
+      
+        <meta name="author" content="Rafael Mori">
       
       
         <link rel="canonical" href="https://rafa-mori.github.io/timecraft/INSTALL_AI/">
       
       
+        <link rel="prev" href="../INSTALL/">
+      
+      
+        <link rel="next" href="../README.pt-BR/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -18,7 +26,7 @@
     
     
       
-        <title>🔧 TimeCraft AI - Guia de Instalação e Configuração - TimeCraft</title>
+        <title>AI Integration - TimeCraft</title>
       
     
     
@@ -47,6 +55,16 @@
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config",""),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
 
     
     
@@ -77,6 +95,10 @@
       
     </div>
     
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
     
       
 
@@ -104,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              🔧 TimeCraft AI - Guia de Instalação e Configuração
+              AI Integration
             
           </span>
         </div>
@@ -135,11 +157,18 @@
       </label>
       <nav class="md-search__options" aria-label="Search">
         
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
         <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
       </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
       
     </form>
     <div class="md-search__output">
@@ -156,6 +185,18 @@
 </div>
       
     
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rafa-mori/timecraft" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rafa-mori/timecraft
+  </div>
+</a>
+      </div>
     
   </nav>
   
@@ -188,18 +229,33 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../README.en/" class="md-tabs__link">
-        
+  
+    
+    
+      
+  
   
   
     
   
-  README
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../README.en/" class="md-tabs__link">
+          
+  
+  
+  Documentation
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
+  
+
+    
   
 
       
@@ -208,17 +264,18 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../README.pt-BR/" class="md-tabs__link">
-        
-  
-  
     
+    
+      <li class="md-tabs__item">
+        <a href="../CONTRIBUTING.md" class="md-tabs__link">
+          
   
-  README pt-BR
+  
+  Community
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
@@ -227,74 +284,18 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../LICENSE" class="md-tabs__link">
-        
-  
-  
     
-  
-  License
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../CODE_OF_CONDUCT/" class="md-tabs__link">
-        
-  
-  
     
+      <li class="md-tabs__item">
+        <a href="../LICENSE" class="md-tabs__link">
+          
   
-  Code of Conduct
+  
+  Project Info
 
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../CONTRIBUTING.md" class="md-tabs__link">
-        
-  
-  
+        </a>
+      </li>
     
-  
-  Contributing
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../CHANGELOG.md" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Changelog
-
-      </a>
-    </li>
   
 
       
@@ -335,6 +336,18 @@
     TimeCraft
   </label>
   
+    <div class="md-nav__source">
+      <a href="https://github.com/rafa-mori/timecraft" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rafa-mori/timecraft
+  </div>
+</a>
+    </div>
+  
   <ul class="md-nav__list" data-md-scrollfix>
     
       
@@ -363,6 +376,102 @@
       
   
   
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Documentation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
   
   
     <li class="md-nav__item">
@@ -380,9 +489,564 @@
     </li>
   
 
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../INSTALL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    AI Integration
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    AI Integration
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pre-requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Pré-requisitos
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📋 Pré-requisitos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sistema-operacional" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sistema Operacional
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python" class="md-nav__link">
+    <span class="md-ellipsis">
+      Python
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hardware
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#instalacao-rapida" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Instalação Rápida
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Instalação Rápida">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-clonar-o-repositorio" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Clonar o repositório
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-criar-ambiente-virtual" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Criar ambiente virtual
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-instalar-dependencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Instalar dependências
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-baixar-modelo-de-voz-vosk" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Baixar modelo de voz (Vosk)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-configurar-chave-do-picovoice-opcional" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Configurar chave do Picovoice (opcional)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-testar-instalacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Testar instalação
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracao-de-audio" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎤 Configuração de Áudio
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎤 Configuração de Áudio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linux-ubuntudebian" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linux (Ubuntu/Debian)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#macos" class="md-nav__link">
+    <span class="md-ellipsis">
+      macOS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      Windows
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solucao-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔧 Solução de Problemas
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Solução de Problemas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#erro-no-module-named-pyaudio" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Erro: &ldquo;No module named &lsquo;pyaudio&rsquo;&rdquo;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#erro-unable-to-import-pvporcupine" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Erro: &ldquo;Unable to import &lsquo;pvporcupine&rsquo;&rdquo;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#erro-alsa-lib-pcm_dsnoopc-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Erro: &ldquo;ALSA lib pcm_dsnoop.c&rdquo; (Linux)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#erro-access-denied-microfone" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Erro: &ldquo;Access denied&rdquo; (microfone)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#erro-model-file-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Erro: &ldquo;Model file not found&rdquo;
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modos-de-uso" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Modos de Uso
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Modos de Uso">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-teste-basico" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Teste Básico
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-servidor-fastapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Servidor FastAPI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-modo-voz-continua" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Modo Voz Contínua
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-modo-hotword" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Modo Hotword
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌐 API Endpoints
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌐 API Endpoints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#health-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Health Check
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enviar-comando" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enviar Comando
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listar-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      Listar Plugins
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ativar-plugin-openai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ativar Plugin OpenAI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configurar-api-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configurar API Key
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#desenvolvimento" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔬 Desenvolvimento
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔬 Desenvolvimento">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#estrutura-de-arquivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Estrutura de Arquivos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adicionar-novos-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adicionar Novos Comandos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integrar-llms-externos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integrar LLMs Externos
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#suporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      📞 Suporte
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📞 Suporte">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logs-e-debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logs e Debug
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contato" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contato
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#licenca" class="md-nav__link">
+    <span class="md-ellipsis">
+      📄 Licença
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
     
       
       
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    User Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            User Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
   
   
   
@@ -393,12 +1057,28 @@
   
   
   <span class="md-ellipsis">
-    README pt-BR
+    README (Portuguese)
     
   </span>
   
 
       </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -409,46 +1089,47 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../LICENSE" class="md-nav__link">
+    
+    
+    
+    
+      
+      
         
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
-    License
+    Community
     
   </span>
   
 
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../CODE_OF_CONDUCT/" class="md-nav__link">
+            <span class="md-nav__icon md-icon"></span>
+          </label>
         
-  
-  
-  <span class="md-ellipsis">
-    Code of Conduct
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Community
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
   
   
   
@@ -468,9 +1149,200 @@
     </li>
   
 
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CODE_OF_CONDUCT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code of Conduct
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SUPPORT.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Support
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AUTHORS.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authors
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
     
       
       
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Project Info
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Project Info
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LICENSE" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    License
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../NOTICE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Notice
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SECURITY.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security Policy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
   
   
   
@@ -490,6 +1362,14 @@
     </li>
   
 
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
     
   </ul>
 </nav>
@@ -504,7 +1384,9 @@
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
   
   
   
@@ -513,7 +1395,7 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      Table of contents
+      On this page
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
@@ -940,6 +1822,9 @@
                   
 
 
+  
+  
+
 
 <h1 id="timecraft-ai-guia-de-instalacao-e-configuracao">🔧 TimeCraft AI - Guia de Instalação e Configuração<a class="headerlink" href="#timecraft-ai-guia-de-instalacao-e-configuracao" title="Permanent link">&para;</a></h1>
 <h2 id="pre-requisitos">📋 Pré-requisitos<a class="headerlink" href="#pre-requisitos" title="Permanent link">&para;</a></h2>
@@ -963,156 +1848,139 @@
 <hr />
 <h2 id="instalacao-rapida">🚀 Instalação Rápida<a class="headerlink" href="#instalacao-rapida" title="Permanent link">&para;</a></h2>
 <h3 id="1-clonar-o-repositorio">1. Clonar o repositório<a class="headerlink" href="#1-clonar-o-repositorio" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/seu-usuario/timecraft.git
-<span class="nb">cd</span><span class="w"> </span>timecraft
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/seu-usuario/timecraft.git
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>timecraft
 </code></pre></div>
-
 <h3 id="2-criar-ambiente-virtual">2. Criar ambiente virtual<a class="headerlink" href="#2-criar-ambiente-virtual" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
-<span class="nb">source</span><span class="w"> </span>venv/bin/activate<span class="w">  </span><span class="c1"># Linux/macOS</span>
-<span class="c1"># ou</span>
-venv<span class="se">\S</span>cripts<span class="se">\a</span>ctivate<span class="w">     </span><span class="c1"># Windows</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">source</span><span class="w"> </span>venv/bin/activate<span class="w">  </span><span class="c1"># Linux/macOS</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># ou</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>venv<span class="se">\S</span>cripts<span class="se">\a</span>ctivate<span class="w">     </span><span class="c1"># Windows</span>
 </code></pre></div>
-
 <h3 id="3-instalar-dependencias">3. Instalar dependências<a class="headerlink" href="#3-instalar-dependencias" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements-ai.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements-ai.txt
 </code></pre></div>
-
 <h3 id="4-baixar-modelo-de-voz-vosk">4. Baixar modelo de voz (Vosk)<a class="headerlink" href="#4-baixar-modelo-de-voz-vosk" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Português (recomendado)</span>
-mkdir<span class="w"> </span>-p<span class="w"> </span>models
-<span class="nb">cd</span><span class="w"> </span>models
-wget<span class="w"> </span>https://alphacephei.com/vosk/models/vosk-model-small-pt-0.3.zip
-unzip<span class="w"> </span>vosk-model-small-pt-0.3.zip
-mv<span class="w"> </span>vosk-model-small-pt-0.3<span class="w"> </span>vosk-model-small-pt
-<span class="nb">cd</span><span class="w"> </span>..
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Português (recomendado)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>models
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">cd</span><span class="w"> </span>models
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>wget<span class="w"> </span>https://alphacephei.com/vosk/models/vosk-model-small-pt-0.3.zip
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>unzip<span class="w"> </span>vosk-model-small-pt-0.3.zip
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>mv<span class="w"> </span>vosk-model-small-pt-0.3<span class="w"> </span>vosk-model-small-pt
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">cd</span><span class="w"> </span>..
 </code></pre></div>
-
 <h3 id="5-configurar-chave-do-picovoice-opcional">5. Configurar chave do Picovoice (opcional)<a class="headerlink" href="#5-configurar-chave-do-picovoice-opcional" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Obtenha uma chave gratuita em: https://picovoice.ai/</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">PICOVOICE_ACCESS_KEY</span><span class="o">=</span><span class="s2">&quot;sua_chave_aqui&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Obtenha uma chave gratuita em: https://picovoice.ai/</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PICOVOICE_ACCESS_KEY</span><span class="o">=</span><span class="s2">&quot;sua_chave_aqui&quot;</span>
 </code></pre></div>
-
 <h3 id="6-testar-instalacao">6. Testar instalação<a class="headerlink" href="#6-testar-instalacao" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>test_timecraft_ai.py<span class="w"> </span>--mode<span class="w"> </span><span class="nb">test</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>python<span class="w"> </span>test_timecraft_ai.py<span class="w"> </span>--mode<span class="w"> </span><span class="nb">test</span>
 </code></pre></div>
-
 <hr />
 <h2 id="configuracao-de-audio">🎤 Configuração de Áudio<a class="headerlink" href="#configuracao-de-audio" title="Permanent link">&para;</a></h2>
 <h3 id="linux-ubuntudebian">Linux (Ubuntu/Debian)<a class="headerlink" href="#linux-ubuntudebian" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Instalar dependências de áudio</span>
-sudo<span class="w"> </span>apt<span class="w"> </span>update
-sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>portaudio19-dev<span class="w"> </span>python3-pyaudio<span class="w"> </span>alsa-utils
-
-<span class="c1"># Testar microfone</span>
-arecord<span class="w"> </span>-l<span class="w">  </span><span class="c1"># Listar dispositivos de gravação</span>
-aplay<span class="w"> </span>-l<span class="w">    </span><span class="c1"># Listar dispositivos de reprodução</span>
-
-<span class="c1"># Ajustar volume</span>
-alsamixer
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Instalar dependências de áudio</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>apt<span class="w"> </span>update
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>portaudio19-dev<span class="w"> </span>python3-pyaudio<span class="w"> </span>alsa-utils
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Testar microfone</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>arecord<span class="w"> </span>-l<span class="w">  </span><span class="c1"># Listar dispositivos de gravação</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>aplay<span class="w"> </span>-l<span class="w">    </span><span class="c1"># Listar dispositivos de reprodução</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Ajustar volume</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>alsamixer
 </code></pre></div>
-
 <h3 id="macos">macOS<a class="headerlink" href="#macos" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Instalar PortAudio via Homebrew</span>
-brew<span class="w"> </span>install<span class="w"> </span>portaudio
-
-<span class="c1"># Verificar permissões de microfone</span>
-<span class="c1"># Vá em: System Preferences &gt; Security &amp; Privacy &gt; Privacy &gt; Microphone</span>
-<span class="c1"># Adicione seu terminal/IDE à lista</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Instalar PortAudio via Homebrew</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>brew<span class="w"> </span>install<span class="w"> </span>portaudio
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Verificar permissões de microfone</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Vá em: System Preferences &gt; Security &amp; Privacy &gt; Privacy &gt; Microphone</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Adicione seu terminal/IDE à lista</span>
 </code></pre></div>
-
 <h3 id="windows">Windows<a class="headerlink" href="#windows" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Instalar Microsoft C++ Build Tools se necessário</span>
-<span class="c1"># Baixe de: https://visualstudio.microsoft.com/visual-cpp-build-tools/</span>
-
-<span class="c1"># Verificar dispositivos de áudio</span>
-<span class="c1"># Painel de Controle &gt; Som &gt; Gravação/Reprodução</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Instalar Microsoft C++ Build Tools se necessário</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Baixe de: https://visualstudio.microsoft.com/visual-cpp-build-tools/</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Verificar dispositivos de áudio</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Painel de Controle &gt; Som &gt; Gravação/Reprodução</span>
 </code></pre></div>
-
 <hr />
 <h2 id="solucao-de-problemas">🔧 Solução de Problemas<a class="headerlink" href="#solucao-de-problemas" title="Permanent link">&para;</a></h2>
 <h3 id="erro-no-module-named-pyaudio">❌ Erro: &ldquo;No module named &lsquo;pyaudio&rsquo;&rdquo;<a class="headerlink" href="#erro-no-module-named-pyaudio" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Linux</span>
-sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>portaudio19-dev
-pip<span class="w"> </span>install<span class="w"> </span>pyaudio
-
-<span class="c1"># Windows</span>
-pip<span class="w"> </span>install<span class="w"> </span>pipwin
-pipwin<span class="w"> </span>install<span class="w"> </span>pyaudio
-
-<span class="c1"># macOS</span>
-brew<span class="w"> </span>install<span class="w"> </span>portaudio
-pip<span class="w"> </span>install<span class="w"> </span>pyaudio
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Linux</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>portaudio19-dev
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>pip<span class="w"> </span>install<span class="w"> </span>pyaudio
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Windows</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>pip<span class="w"> </span>install<span class="w"> </span>pipwin
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>pipwin<span class="w"> </span>install<span class="w"> </span>pyaudio
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># macOS</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>brew<span class="w"> </span>install<span class="w"> </span>portaudio
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>pip<span class="w"> </span>install<span class="w"> </span>pyaudio
 </code></pre></div>
-
 <h3 id="erro-unable-to-import-pvporcupine">❌ Erro: &ldquo;Unable to import &lsquo;pvporcupine&rsquo;&rdquo;<a class="headerlink" href="#erro-unable-to-import-pvporcupine" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Instalar Picovoice</span>
-pip<span class="w"> </span>install<span class="w"> </span>pvporcupine
-
-<span class="c1"># Configurar chave de API</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">PICOVOICE_ACCESS_KEY</span><span class="o">=</span><span class="s2">&quot;sua_chave&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Instalar Picovoice</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>pip<span class="w"> </span>install<span class="w"> </span>pvporcupine
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Configurar chave de API</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PICOVOICE_ACCESS_KEY</span><span class="o">=</span><span class="s2">&quot;sua_chave&quot;</span>
 </code></pre></div>
-
 <h3 id="erro-alsa-lib-pcm_dsnoopc-linux">❌ Erro: &ldquo;ALSA lib pcm_dsnoop.c&rdquo; (Linux)<a class="headerlink" href="#erro-alsa-lib-pcm_dsnoopc-linux" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Adicionar ao ~/.bashrc ou ~/.zshrc:</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">ALSA_PCM_CARD</span><span class="o">=</span><span class="m">0</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">ALSA_PCM_DEVICE</span><span class="o">=</span><span class="m">0</span>
-
-<span class="c1"># Ou executar com:</span>
-<span class="nv">ALSA_PCM_CARD</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">ALSA_PCM_DEVICE</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>python<span class="w"> </span>test_timecraft_ai.py
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Adicionar ao ~/.bashrc ou ~/.zshrc:</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ALSA_PCM_CARD</span><span class="o">=</span><span class="m">0</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ALSA_PCM_DEVICE</span><span class="o">=</span><span class="m">0</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Ou executar com:</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nv">ALSA_PCM_CARD</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">ALSA_PCM_DEVICE</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>python<span class="w"> </span>test_timecraft_ai.py
 </code></pre></div>
-
 <h3 id="erro-access-denied-microfone">❌ Erro: &ldquo;Access denied&rdquo; (microfone)<a class="headerlink" href="#erro-access-denied-microfone" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>macOS</strong>: System Preferences &gt; Security &amp; Privacy &gt; Privacy &gt; Microphone</li>
 <li><strong>Windows</strong>: Settings &gt; Privacy &gt; Microphone</li>
 <li><strong>Linux</strong>: Verificar se o usuário está no grupo &lsquo;audio&rsquo;</li>
 </ul>
-<p><code>bash
-  sudo usermod -a -G audio $USER
-  # Reiniciar sessão</code></p>
-<h3 id="erro-model-file-not-found">❌ Erro: &ldquo;Model file not found&rdquo;<a class="headerlink" href="#erro-model-file-not-found" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Verificar se o modelo foi baixado corretamente</span>
-ls<span class="w"> </span>-la<span class="w"> </span>models/vosk-model-small-pt/
-
-<span class="c1"># Re-baixar se necessário</span>
-<span class="nb">cd</span><span class="w"> </span>models
-rm<span class="w"> </span>-rf<span class="w"> </span>vosk-model-small-pt*
-wget<span class="w"> </span>https://alphacephei.com/vosk/models/vosk-model-small-pt-0.3.zip
-unzip<span class="w"> </span>vosk-model-small-pt-0.3.zip
-mv<span class="w"> </span>vosk-model-small-pt-0.3<span class="w"> </span>vosk-model-small-pt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>sudo<span class="w"> </span>usermod<span class="w"> </span>-a<span class="w"> </span>-G<span class="w"> </span>audio<span class="w"> </span><span class="nv">$USER</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Reiniciar sessão</span>
 </code></pre></div>
-
+<h3 id="erro-model-file-not-found">❌ Erro: &ldquo;Model file not found&rdquo;<a class="headerlink" href="#erro-model-file-not-found" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Verificar se o modelo foi baixado corretamente</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>models/vosk-model-small-pt/
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Re-baixar se necessário</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nb">cd</span><span class="w"> </span>models
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>rm<span class="w"> </span>-rf<span class="w"> </span>vosk-model-small-pt*
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>wget<span class="w"> </span>https://alphacephei.com/vosk/models/vosk-model-small-pt-0.3.zip
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>unzip<span class="w"> </span>vosk-model-small-pt-0.3.zip
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>mv<span class="w"> </span>vosk-model-small-pt-0.3<span class="w"> </span>vosk-model-small-pt
+</code></pre></div>
 <hr />
 <h2 id="modos-de-uso">🎯 Modos de Uso<a class="headerlink" href="#modos-de-uso" title="Permanent link">&para;</a></h2>
 <h3 id="1-teste-basico">1. Teste Básico<a class="headerlink" href="#1-teste-basico" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>test_timecraft_ai.py<span class="w"> </span>--mode<span class="w"> </span><span class="nb">test</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>python<span class="w"> </span>test_timecraft_ai.py<span class="w"> </span>--mode<span class="w"> </span><span class="nb">test</span>
 </code></pre></div>
-
 <ul>
 <li>Testa todas as funcionalidades básicas</li>
 <li>Não requer microfone/áudio</li>
 </ul>
 <h3 id="2-servidor-fastapi">2. Servidor FastAPI<a class="headerlink" href="#2-servidor-fastapi" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>test_timecraft_ai.py<span class="w"> </span>--mode<span class="w"> </span>server
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>python<span class="w"> </span>test_timecraft_ai.py<span class="w"> </span>--mode<span class="w"> </span>server
 </code></pre></div>
-
 <ul>
 <li>Inicia servidor web na porta 8000</li>
 <li>Acesse: <a href="http://localhost:8000/docs">http://localhost:8000/docs</a></li>
 </ul>
 <h3 id="3-modo-voz-continua">3. Modo Voz Contínua<a class="headerlink" href="#3-modo-voz-continua" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>test_timecraft_ai.py<span class="w"> </span>--mode<span class="w"> </span>voice
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>python<span class="w"> </span>test_timecraft_ai.py<span class="w"> </span>--mode<span class="w"> </span>voice
 </code></pre></div>
-
 <ul>
 <li>Escuta continuamente</li>
 <li>Fale comandos como: &ldquo;histórico&rdquo;, &ldquo;previsão&rdquo;, &ldquo;insights&rdquo;</li>
 </ul>
 <h3 id="4-modo-hotword">4. Modo Hotword<a class="headerlink" href="#4-modo-hotword" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>test_timecraft_ai.py<span class="w"> </span>--mode<span class="w"> </span>hotword
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>python<span class="w"> </span>test_timecraft_ai.py<span class="w"> </span>--mode<span class="w"> </span>hotword
 </code></pre></div>
-
 <ul>
 <li>Aguarda palavra-chave &ldquo;MCP&rdquo;</li>
 <li>Depois fale seu comando</li>
@@ -1120,44 +1988,38 @@ mv<span class="w"> </span>vosk-model-small-pt-0.3<span class="w"> </span>vosk-mo
 <hr />
 <h2 id="api-endpoints">🌐 API Endpoints<a class="headerlink" href="#api-endpoints" title="Permanent link">&para;</a></h2>
 <h3 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>curl<span class="w"> </span>http://localhost:8000/health
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>curl<span class="w"> </span>http://localhost:8000/health
 </code></pre></div>
-
 <h3 id="enviar-comando">Enviar Comando<a class="headerlink" href="#enviar-comando" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/mcp/command<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;message&quot;: &quot;me mostre o histórico&quot;}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/mcp/command<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;message&quot;: &quot;me mostre o histórico&quot;}&#39;</span>
 </code></pre></div>
-
 <h3 id="listar-plugins">Listar Plugins<a class="headerlink" href="#listar-plugins" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>curl<span class="w"> </span>http://localhost:8000/mcp/plugins
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>curl<span class="w"> </span>http://localhost:8000/mcp/plugins
 </code></pre></div>
-
 <h3 id="ativar-plugin-openai">Ativar Plugin OpenAI<a class="headerlink" href="#ativar-plugin-openai" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/mcp/plugins/openai/enable
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/mcp/plugins/openai/enable
 </code></pre></div>
-
 <h3 id="configurar-api-key">Configurar API Key<a class="headerlink" href="#configurar-api-key" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/mcp/plugins/openai/config<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;api_key&quot;: &quot;sua_chave_openai&quot;}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/mcp/plugins/openai/config<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;api_key&quot;: &quot;sua_chave_openai&quot;}&#39;</span>
 </code></pre></div>
-
 <hr />
 <h2 id="desenvolvimento">🔬 Desenvolvimento<a class="headerlink" href="#desenvolvimento" title="Permanent link">&para;</a></h2>
 <h3 id="estrutura-de-arquivos">Estrutura de Arquivos<a class="headerlink" href="#estrutura-de-arquivos" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>src/timecraft_ai/
-├── __init__.py
-├── audio_processor.py      # Captura e transcrição de áudio
-├── chatbot_actions.py      # Ações do chatbot (dados, previsões)
-├── chatbot_msgset.py       # Handler de mensagens
-├── chatbot_timecraft.py    # API Flask alternativa
-├── hotword_detector.py     # Detecção de palavra-chave
-├── mcp_command_handler.py  # Handler central de comandos
-├── mcp_server.py          # Servidor FastAPI principal
-└── voice_synthesizer.py   # Síntese de voz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>src/timecraft_ai/
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>├── __init__.py
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>├── audio_processor.py      # Captura e transcrição de áudio
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>├── chatbot_actions.py      # Ações do chatbot (dados, previsões)
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>├── chatbot_msgset.py       # Handler de mensagens
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>├── chatbot_timecraft.py    # API Flask alternativa
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>├── hotword_detector.py     # Detecção de palavra-chave
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>├── mcp_command_handler.py  # Handler central de comandos
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>├── mcp_server.py          # Servidor FastAPI principal
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>└── voice_synthesizer.py   # Síntese de voz
 </code></pre></div>
-
 <h3 id="adicionar-novos-comandos">Adicionar Novos Comandos<a class="headerlink" href="#adicionar-novos-comandos" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Edite <code>chatbot_actions.py</code> - adicione novos métodos</li>
@@ -1173,16 +2035,15 @@ mv<span class="w"> </span>vosk-model-small-pt-0.3<span class="w"> </span>vosk-mo
 <hr />
 <h2 id="suporte">📞 Suporte<a class="headerlink" href="#suporte" title="Permanent link">&para;</a></h2>
 <h3 id="logs-e-debug">Logs e Debug<a class="headerlink" href="#logs-e-debug" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Executar com logs detalhados</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span>/srv/apps/KUBEX/timecraft/src
-python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<span class="s2">import logging</span>
-<span class="s2">logging.basicConfig(level=logging.DEBUG)</span>
-<span class="s2">from timecraft_ai.audio_processor import AudioProcessor</span>
-<span class="s2"># ... seu código de teste</span>
-<span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Executar com logs detalhados</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span>/srv/apps/KUBEX/timecraft/src
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="s2">import logging</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="s2">logging.basicConfig(level=logging.DEBUG)</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="s2">from timecraft_ai.audio_processor import AudioProcessor</span>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="s2"># ... seu código de teste</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="s2">&quot;</span>
 </code></pre></div>
-
 <h3 id="contato">Contato<a class="headerlink" href="#contato" title="Permanent link">&para;</a></h3>
 <ul>
 <li>📧 Email: <a href="mailto://faelmori@gmail.com"><a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#102;&#97;&#101;&#108;&#109;&#111;&#114;&#105;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;">&#102;&#97;&#101;&#108;&#109;&#111;&#114;&#105;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</a></a></li>
@@ -1199,7 +2060,30 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;<
 
 
 
+  
+    
+  
+  
 
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="July 1, 2025 03:51:22 -03">July 1, 2025 03:51:22</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+  
 
 
 
@@ -1240,10 +2124,7 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;<
     
     
     
-      
-      
-    
-    <a href="https://github.com/rafa-mori/timecraft" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+    <a href="https://github.com/rafa-mori/timecraft" target="_blank" rel="noopener" title="TimeCraft on GitHub" class="md-social__link">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
     </a>
   
@@ -1251,10 +2132,7 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;<
     
     
     
-      
-      
-    
-    <a href="https://www.linkedin.com/in/rafa-mori/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+    <a href="https://www.linkedin.com/in/rafa-mori/" target="_blank" rel="noopener" title="Rafael Mori on LinkedIn" class="md-social__link">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5m282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
     </a>
   
@@ -1262,10 +2140,7 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;<
     
     
     
-      
-      
-    
-    <a href="https://twitter.com/faelOmori" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+    <a href="https://twitter.com/faelOmori" target="_blank" rel="noopener" title="Rafael Mori on Twitter" class="md-social__link">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253"/></svg>
     </a>
   
@@ -1283,7 +2158,7 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;<
     
     
       
-      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.top", "navigation.instant", "navigation.expand", "navigation.sections", "navigation.tracking", "navigation.tabs.sticky", "navigation.tabs.sticky.scroll", {"navigation.tabs.sticky.scroll.offset": 64}, {"navigation.tabs.sticky.scroll.offset.mobile": 0}, {"navigation.tabs.sticky.scroll.offset.desktop": 64}, {"navigation.tabs.sticky.scroll.offset.tablet": 64}], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.top", "navigation.instant", "navigation.expand", "navigation.sections", "navigation.tracking", "navigation.tabs.sticky", "navigation.tabs.sticky.scroll", {"navigation.tabs.sticky.scroll.offset": 64}, {"navigation.tabs.sticky.scroll.offset.mobile": 0}, {"navigation.tabs.sticky.scroll.offset.desktop": 64}, {"navigation.tabs.sticky.scroll.offset.tablet": 64}, "search.highlight", "search.share", "search.suggest"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
