@@ -1,8 +1,16 @@
-# ![TimeCraft Banner](assets/top_banner.png)
+# ![TimeCraft AI Banner](assets/top_banner.png)
 
 ---
 
 **An advanced solution for time series analysis, database integration, and task automation, with dynamic notifications and a powerful CLI.**
+
+---
+
+[![Build](https://github.com/rafa-mori/timecraft/actions/workflows/publish.yml/badge.svg)](https://github.com/rafa-mori/timecraft/actions/workflows/publish.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python Version](https://img.shields.io/badge/python-%3E=3.11-blue)](https://www.python.org/)
+[![PyPI](https://img.shields.io/pypi/v/timecraft?color=blue)](https://pypi.org/project/timecraft-ai/)
+[![Releases](https://img.shields.io/github/v/release/rafa-mori/timecraft?include_prereleases)](https://github.com/rafa-mori/timecraft/releases)
 
 ---
 
@@ -25,9 +33,9 @@
 
 ## **About the Project**
 
-TimeCraft is a flexible and powerful solution for time series analysis, database integration, and task automation. Developed in **Python**, it offers webhook notification support, scheduled model execution, and an intuitive CLI to streamline data workflows.
+TimeCraft AI is a flexible and powerful solution for time series analysis, database integration, and task automation. Developed in **Python**, it offers webhook notification support, scheduled model execution, and an intuitive CLI to streamline data workflows.
 
-**Why TimeCraft?**
+**Why TimeCraft AI?**
 
 - 📈 **Advanced Analysis**: Robust scripts for modeling, forecasting, and evaluating temporal data.
 - 🛢️ **Simple Integration**: Tools to connect and query multiple database systems.
@@ -69,11 +77,8 @@ TimeCraft is a flexible and powerful solution for time series analysis, database
 ### 📦 **Quick Installation (Recommended)**
 
 ```bash
-# Install TimeCraft with core features
-pip install timecraft
-
-# Or install with all features (AI, Web Server)
-pip install timecraft[all]
+# Install TimeCraft AI with core features
+pip install timecraft_ai
 ```
 
 ### 🔧 **Development Installation**
@@ -96,16 +101,7 @@ pip install -e .
 
 ```bash
 # AI features (voice, chatbot, audio processing)
-pip install timecraft[ai]
-
-# Web server and API features
-pip install timecraft[web]
-
-# Database connectors (PostgreSQL, MySQL, etc.)
-pip install timecraft[db]
-
-# Development tools
-pip install timecraft[dev]
+pip install timecraft_ai
 ```
 
 ---
@@ -115,7 +111,7 @@ pip install timecraft[dev]
 ### 🐍 **Python Usage (Recommended)**
 
 ```python
-import timecraft
+import timecraft_ai as timecraft
 
 # Check available features
 print(f"AI available: {timecraft.AI_AVAILABLE}")
@@ -148,7 +144,7 @@ python examples/demo_basic.py
 ### 📊 **Advanced Examples**
 
 ```python
-import timecraft
+import timecraft_ai as timecraft
 
 # Database connection
 db = timecraft.DatabaseConnector()
@@ -171,19 +167,19 @@ forecasts = model.forecast_prophet(data)
 - **`--date_column`**: Name of the date column.
 - **`--value_columns`**: Value columns to analyze.
 - **`--is_csv`**: Indicates if the file is CSV.
-- **`--model`**: Model type (`timecraft`, `classifier`, `regression`).
+- **`--model`**: Model type (`timecraft_ai`, `classifier`, `regression`).
 
 ---
 
 ### **Configuration**
 
-TimeCraft can be configured via command-line arguments or directly in Python code. For advanced configurations, see the examples in the `/tutorials` folder.
+TimeCraft AI can be configured via command-line arguments or directly in Python code. For advanced configurations, see the examples in the `/tutorials` folder.
 
 ---
 
 ## **Scheduled Execution**
 
-TimeCraft allows you to schedule automatic model runs, similar to a cronjob.
+TimeCraft AI allows you to schedule automatic model runs, similar to a cronjob.
 
 **Via CLI:**
 
@@ -192,7 +188,7 @@ python -m timecraft_ai schedule <interval_seconds> <model>
 ```
 
 - `<interval_seconds>`: interval between executions (e.g., 600 for 10 minutes)
-- `<model>`: model type (`timecraft`, `classifier`, `regression`)
+- `<model>`: model type (`timecraft_ai`, `classifier`, `regression`)
 
 **Via Python:**
 
@@ -207,7 +203,7 @@ run_scheduled(model.run, interval_seconds=600)
 
 ## **Webhook Notifications**
 
-TimeCraft supports sending notifications to webhooks after model runs or analyses. Ideal for automation, monitoring, or integration with other systems (Slack, Discord, custom APIs).
+TimeCraft AI supports sending notifications to webhooks after model runs or analyses. Ideal for automation, monitoring, or integration with other systems (Slack, Discord, custom APIs).
 
 ### How it works
 

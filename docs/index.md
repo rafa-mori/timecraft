@@ -1,12 +1,12 @@
-# ![TimeCraft](assets/top_banner.png)
+# ![TimeCraft AI](assets/top_banner.png)
 
-## Welcome to TimeCraft
+## Welcome to TimeCraft AI Documentation
 
 ---
 
 **An advanced solution for time series analysis, database integration, and task automation, with dynamic notifications and a powerful CLI.**
 
-TimeCraft is designed to streamline your workflow by integrating time series data with databases, automating tasks, and providing real-time notifications. It features a robust command-line interface (CLI) for efficient management and execution of tasks.
+TimeCraft AI is designed to streamline your workflow by integrating time series data with databases, automating tasks, and providing real-time notifications. It features a robust command-line interface (CLI) for efficient management and execution of tasks.
 
 ---
 

@@ -1,4 +1,4 @@
-site_name: TimeCraft
+site_name: TimeCraft AI
 site_url: https://rafa-mori.github.io/timecraft/
 site_description: 'Advanced time series analysis, database integration, and task automation with dynamic notifications and powerful CLI'
 site_author: 'Rafael Mori'
@@ -53,8 +53,8 @@ markdown_extensions:
   - pymdownx.caret
   - pymdownx.details
   - pymdownx.emoji:
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      emoji_index: "material.extensions.emoji.twemoji"
+      emoji_generator: !!null
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
@@ -69,7 +69,7 @@ markdown_extensions:
       custom_fences:
         - name: mermaid
           class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format
+          format: pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.tasklist:
@@ -100,7 +100,7 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/rafa-mori/timecraft
-      name: TimeCraft on GitHub
+      name: TimeCraft AI on GitHub
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/rafa-mori/
       name: Rafael Mori on LinkedIn
@@ -111,7 +111,7 @@ extra:
     provider: mike
   analytics:
     provider: google
-    property: !ENV [G-7HLY17F3DK, ""]
+    property: ${G-7HLY17F3DK}
 
 plugins:
   - search:

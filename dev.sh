@@ -1,120 +1,120 @@
 #!/bin/bash
 # TimeCraft Development Setup Script
 # ==================================
-# Este script facilita o setup e teste do TimeCraft em diferentes modos
+# This script facilitates the setup and testing of TimeCraft in different modes
 
 set -e
 
 VENV_NAME="timecraft_dev"
 PYTHON_CMD="python3"
 
-echo "🎯 TimeCraft - Ferramenta de Desenvolvimento"
-echo "============================================="
+echo "🎯 TimeCraft AI - Development Tool"
+echo "================================="
 
 show_help() {
-    echo "Uso: $0 [comando]"
-    echo ""
-    echo "Comandos disponíveis:"
-    echo "  setup       - Criar ambiente virtual e instalar dependências"
-    echo "  test        - Executar testes rápidos"
-    echo "  install     - Instalar em modo editável"
-    echo "  clean       - Limpar ambiente virtual"
-    echo "  run-demo    - Executar demo básico"
-    echo "  help        - Mostrar esta ajuda"
-    exit 0
+  echo "Usage: $0 [command]"
+  echo ""
+  echo "Available commands:"
+  echo "  setup       - Create virtual environment and install dependencies"
+  echo "  test        - Run quick tests"
+  echo "  install     - Install in editable mode"
+  echo "  clean       - Clean virtual environment"
+  echo "  run-demo    - Run basic demo"
+  echo "  help        - Show this help"
+  exit 0
 }
 
 setup_venv() {
-    echo "🔧 Configurando ambiente virtual..."
-    
-    if [ -d "$VENV_NAME" ]; then
-        echo "⚠️  Ambiente virtual já existe. Use 'clean' para remover."
-        return 0
-    fi
-    
-    $PYTHON_CMD -m venv $VENV_NAME
-    source $VENV_NAME/bin/activate
-    
-    echo "📦 Instalando dependências..."
-    pip install --upgrade pip
-    pip install -e .
-    
-    echo "✅ Ambiente configurado com sucesso!"
-    echo "💡 Para ativar: source $VENV_NAME/bin/activate"
+  echo "🔧 Setting up virtual environment..."
+  
+  if [ -d "$VENV_NAME" ]; then
+    echo "⚠️  Virtual environment already exists. Use 'clean' to remove it."
+    return 0
+  fi
+  
+  $PYTHON_CMD -m venv $VENV_NAME
+  source $VENV_NAME/bin/activate
+  
+  echo "📦 Installing dependencies..."
+  pip install --upgrade pip
+  pip install -e .
+  
+  echo "✅ Environment successfully set up!"
+  echo "💡 To activate: source $VENV_NAME/bin/activate"
 }
 
 run_tests() {
-    echo "🧪 Executando testes..."
-    
-    if [ -d "$VENV_NAME" ]; then
-        source $VENV_NAME/bin/activate
-        echo "📦 Testando em ambiente virtual"
-    else
-        echo "🔧 Testando em modo desenvolvimento"
-    fi
-    
-    python examples/quick_test.py
+  echo "🧪 Running tests..."
+  
+  if [ -d "$VENV_NAME" ]; then
+    source $VENV_NAME/bin/activate
+    echo "📦 Testing in virtual environment"
+  else
+    echo "🔧 Testing in development mode"
+  fi
+  
+  python examples/quick_test.py
 }
 
 install_editable() {
-    echo "📦 Instalando TimeCraft em modo editável..."
-    
-    if [ ! -d "$VENV_NAME" ]; then
-        echo "❌ Ambiente virtual não encontrado. Execute 'setup' primeiro."
-        exit 1
-    fi
-    
-    source $VENV_NAME/bin/activate
-    pip install -e .
-    echo "✅ Instalação concluída!"
+  echo "📦 Installing TimeCraft AI in editable mode..."
+
+  if [ ! -d "$VENV_NAME" ]; then
+    echo "❌ Virtual environment not found. Run 'setup' first."
+    exit 1
+  fi
+  
+  source $VENV_NAME/bin/activate
+  pip install -e .
+  echo "✅ Installation completed!"
 }
 
 clean_env() {
-    echo "🧹 Limpando ambiente virtual..."
-    if [ -d "$VENV_NAME" ]; then
-        rm -rf $VENV_NAME
-        echo "✅ Ambiente removido!"
-    else
-        echo "ℹ️  Nenhum ambiente para limpar."
-    fi
+  echo "🧹 Cleaning virtual environment..."
+  if [ -d "$VENV_NAME" ]; then
+    rm -rf $VENV_NAME
+    echo "✅ Environment removed!"
+  else
+    echo "ℹ️  No environment to clean."
+  fi
 }
 
 run_demo() {
-    echo "🎮 Executando demo..."
-    
-    if [ -d "$VENV_NAME" ]; then
-        source $VENV_NAME/bin/activate
-        echo "📦 Executando em ambiente virtual"
-    else
-        echo "🔧 Executando em modo desenvolvimento"
-    fi
-    
-    python examples/demo_basic.py --test
+  echo "🎮 Running demo..."
+  
+  if [ -d "$VENV_NAME" ]; then
+    source $VENV_NAME/bin/activate
+    echo "📦 Running in virtual environment"
+  else
+    echo "🔧 Running in development mode"
+  fi
+  
+  python examples/demo_basic.py --test
 }
 
-# Processar argumentos
+# Process arguments
 case "${1:-help}" in
-    setup)
-        setup_venv
-        ;;
-    test)
-        run_tests
-        ;;
-    install)
-        install_editable
-        ;;
-    clean)
-        clean_env
-        ;;
-    run-demo)
-        run_demo
-        ;;
-    help|--help|-h)
-        show_help
-        ;;
-    *)
-        echo "❌ Comando desconhecido: $1"
-        echo "Use '$0 help' para ver os comandos disponíveis."
-        exit 1
-        ;;
+  setup)
+    setup_venv
+    ;;
+  test)
+    run_tests
+    ;;
+  install)
+    install_editable
+    ;;
+  clean)
+    clean_env
+    ;;
+  run-demo)
+    run_demo
+    ;;
+  help|--help|-h)
+    show_help
+    ;;
+  *)
+    echo "❌ Unknown command: $1"
+    echo "Use '$0 help' to see available commands."
+    exit 1
+    ;;
 esac

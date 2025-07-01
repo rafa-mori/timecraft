@@ -1,5 +1,5 @@
-# TimeCraft AI - Dependências para módulos de voz e chatbot
-# Para instalar: pip install -r requirements-ai.txt
+# TimeCraft AI - Dependencies for voice and chatbot modules
+# To install: pip install -r requirements-ai.txt
 
 # === CORE DEPENDENCIES ===
 fastapi>=0.104.0

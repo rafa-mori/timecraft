@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "timecraft_ai"
-version = "1.1.0"
+version = "1.1.1"
 requires-python = ">=3.11"
 authors = [
     { name = "Rafael Mori", email = "faelmori@gmail.com" }
