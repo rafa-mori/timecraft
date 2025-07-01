@@ -3,8 +3,9 @@ name: Publish to PyPI
 on:
   push:
     tags:
-        - NoPublishForNow
-    #   - "v*.*.*"  
+    #   - NoPublishForNow
+       - "v*.*.*"  
+  workflow_dispatch:
 
 jobs:
   deploy:
