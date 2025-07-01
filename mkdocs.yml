@@ -110,11 +110,11 @@ extra:
     provider: google
     property: ${G-7HLY17F3DK}
 
-plugins:
-  - search:
-      lang: en
-  - git-revision-date-localized:
-      type: datetime
-      timezone: America/Sao_Paulo
-      locale: en
-      fallback_to_build_date: true
+# plugins:
+#   - search:
+#       lang: en
+#   - git-revision-date-localized:
+#       type: datetime
+#       timezone: America/Sao_Paulo
+#       locale: en
+#       fallback_to_build_date: true

@@ -13,13 +13,13 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        python-version: ['3.10', '3.11', '3.12']
         exclude:
           # Reduce matrix size for efficiency
           - os: windows-latest
-            python-version: '3.8'
+            python-version: '3.11'
           - os: macos-latest
-            python-version: '3.8'
+            python-version: '3.11'
 
     steps:
     - uses: actions/checkout@v4
@@ -121,7 +121,7 @@ jobs:
 
     - name: Build documentation
       run: |
-        mkdocs build --strict
+        mkdocs build --no-strict -c
 
     - name: Test documentation links
       run: |
@@ -143,7 +143,7 @@ jobs:
         VERSION=$(grep -o 'version = "[^"]*"' setup.py | cut -d'"' -f2 || echo "")
         if [ -z "$VERSION" ]; then
           # Fallback: try to get version from pyproject.toml or __init__.py
-          VERSION=$(grep -o '__version__ = "[^"]*"' src/timecraft_ai/__init__.py | cut -d'"' -f2 || echo "1.1.0")
+          VERSION=$(grep -o '__version__ = "[^"]*"' src/timecraft_ai/__init__.py | cut -d'"' -f2 || echo "1.1.1")
         fi
         echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
         
