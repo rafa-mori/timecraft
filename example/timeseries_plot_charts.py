@@ -1,6 +1,6 @@
 """
-Example usage of the timecraft_ai package to save time series charts.
-Make sure to install the package before running this script:
+Exemplo de uso do pacote timecraft_ai para salvar gráficos de séries temporais.
+Certifique-se de instalar o pacote antes de rodar este script:
     pip install timecraft_ai
 """
 from datetime import datetime

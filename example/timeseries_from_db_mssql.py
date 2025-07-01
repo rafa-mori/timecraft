@@ -5,10 +5,10 @@ from timecraft_ai import DatabaseConnector
 from concurrent.futures import ProcessPoolExecutor
 
 def process_product(product_id):
-    print(f"Processing product {product_id}...")
+    print(f"Processando produto {product_id}...")
 
 
-    """Process a specific product."""
+    """Processa um produto específico."""
     db_connector = DatabaseConnector(
         db_type="mssql",
         username="sankhya",
@@ -22,8 +22,8 @@ def process_product(product_id):
     db_connector.connect()
 
     try:
-        # HERE COMES THE QUERY THAT WILL FETCH THE DATA USED TO TRAIN THE MODEL
-        # BE IT STOCK, PRICE, EXCHANGE RATE, ETC. (RELATED TO THE PRODUCTS FROM THE QUERY BELOW)
+        # AQUI VEM A QUERY QUE VAI BUSCAR OS DADOS QUE VAI SER USADO NO TREINAMENTO DO MODELO
+        # SEJA ESTOQUE, PREÇO, CÂMBIO, ETC (RELATIVOS AOS PRODUTOS DA CONSULTA ABAIXO, ÓBVIO)
         with open("../data/EST_X_PROD_X_DATE-MSSQL.sql.j2", "r") as file:
             query_template = file.read()
 
@@ -39,7 +39,7 @@ def process_product(product_id):
 
         ts_model.run()
 
-        print(f"Forecast for product {product_id} completed.")
+        print(f"Previsão para o produto {product_id} concluída.")
 
         try:
             output_file = f"output/products_stock/forecast_estoque_{product_id}.csv"
@@ -53,16 +53,16 @@ def process_product(product_id):
 
             return None
         except Exception as e:
-            print(f"Error saving forecasts for product {product_id}: {e}")
+            print(f"Erro ao salvar previsões para o produto {product_id}: {e}")
             return None
 
     except Exception as e:
-        print(f"Error processing product {product_id}: {e}")
+        print(f"Erro no processamento do produto {product_id}: {e}")
         return None
 
 
 def get_product_ids():
-    """Get the IDs of active products from the database."""
+    """Obtém os IDs dos produtos ativos do banco de dados."""
     query_products = (
         "SELECT P.CODPROD "
         "FROM SANKHYA.TGFPRO P "
@@ -86,7 +86,7 @@ def get_product_ids():
     try:
         return products_df["CODPROD"].tolist()
     except Exception as e:
-        print(f"Error retrieving product IDs: {e}")
+        print(f"Erro ao obter IDs dos produtos: {e}")
         return []
 
 
@@ -94,4 +94,4 @@ if __name__ == "__main__":
     with ProcessPoolExecutor(max_workers=4) as executor:
         executor.map(process_product, get_product_ids())
 
-    print("Processing completed.")
+    print("Processamento concluído.")
