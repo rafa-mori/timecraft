@@ -20,7 +20,6 @@
 7. [Roadmap](#roadmap)
 8. [Contributing](#contributing)
 9. [Contact](#contact)
-10. [Documentation](#documentation)
 
 ---
 
@@ -208,13 +207,8 @@ Contributions are welcome! See the [Contributing Guide](CONTRIBUTING.md) for det
 
 ---
 
-## **Documentation**
-The full documentation is available on our [GitHub Pages site](https://faelmori.github.io/timecraft/).
-
----
-
 ## **Contact**
-💌 **Developer**:
+💌 **Developer**:  
 [Rafael Mori](mailto:faelmori@gmail.com)
 💼 [faelmori/timecraft on GitHub](https://github.com/faelmori/timecraft)
 [LinkedIn: Rafa Mori](https://www.linkedin.com/in/rafa-mori)
