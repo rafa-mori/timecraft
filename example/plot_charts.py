@@ -1,6 +1,6 @@
 """
-Exemplo de uso do pacote timecraft_ai para salvar gráficos.
-Certifique-se de instalar o pacote antes de rodar este script:
+Example usage of the timecraft_ai package for saving charts.
+Make sure to install the package before running this script:
     pip install timecraft_ai
 """
 from datetime import datetime
@@ -8,7 +8,7 @@ from timecraft_ai import TimeCraftModel
 
 start_time = datetime.now()
 
-# Crie uma instância de TimeCraftModel
+# Create a TimeCraftModel instance
 tsm = TimeCraftModel(
     data='data/hist_cambio_float.csv',
     date_column='dt',

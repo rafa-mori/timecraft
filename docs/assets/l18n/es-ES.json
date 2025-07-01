@@ -1,50 +1,50 @@
 {
-  "title": "Rafa Mori | Portafolio Dev",
+  "title": "Rafa Mori | Dev Portfolio",
   "meta": {
-    "description": "Rafa Mori - Portafolio de Desarrollador Full Cycle"
+    "description": "Rafa Mori - Full Cycle Developer Portfolio"
   },
   "navbar": {
-    "brand": "Desarrollador Full Cycle",
+    "brand": "Full Cycle Developer",
     "links": {
-      "home": "Inicio",
-      "about": "Sobre Mí",
+      "home": "Home",
+      "about": "About Me",
       "tech": "Tech Stack",
-      "stats": "Estadísticas de GitHub",
-      "contact": "Contacto"
+      "stats": "GitHub Stats",
+      "contact": "Contact"
     }
   },
   "header": {
     "title": "Rafa Mori"
   },
   "about": {
-    "title": "Sobre Mí",
-    "intro": "¡Hola! Soy un Desarrollador Full Cycle apasionado por la tecnología y la innovación. Aquí hay un poco sobre quién soy y lo que hago:",
-    "details": "Líder técnico experimentado con una sólida experiencia en desarrollo de software y arquitectura de sistemas, especializado en soluciones escalables y de alto rendimiento. Experto en Go, Oracle Database, NoSQL, Java, JavaScript, PHP, C# y frameworks modernos. Apasionado por la automatización, entornos containerizados e integraciones de sistemas. Avanzado en inglés, proactivo y siempre buscando impulsar la tecnología."
+    "title": "About Me",
+    "intro": "Hello! I am a Full Cycle Developer passionate about technology and innovation. Here are a little bit about who I am and what I do:",
+    "details": "Experienced tech leader with a strong background in software development and system architecture, specializing in high-performance, scalable solutions. Proficient in Go, Oracle Database, NoSQL, Java, JavaScript, PHP, C#, and modern frameworks. Passionate about automation, containerized environments, and seamless system integrations. Advanced in English, proactive, and always eager to push technology forward."
   },
   "tech": {
     "title": "Tech Stack",
-    "roles": "💻 Desarrollador Full Cycle | DevOps",
+    "roles": "💻 Full Cycle Developer | DevOps",
     "frameworks": "🛠️ Frameworks",
-    "tools": "📦 Otras Herramientas"
+    "tools": "📦 Other Tools"
   },
   "stats": {
-    "title": "Estadísticas de GitHub",
-    "contributions": "📈 Contribuciones Oficiales de GitHub",
-    "statistics": "🌟 Estadísticas",
-    "languages": "📊 Lenguajes"
+    "title": "GitHub Stats",
+    "contributions": "📈 GitHub Official Contributions",
+    "statistics": "🌟 Statistics",
+    "languages": "📊 Languages"
   },
   "contact": {
-    "title": "Contacto",
+    "title": "Contact",
     "form": {
-      "name": "Nombre",
-      "email": "Correo Electrónico",
-      "message": "Mensaje",
-      "button": "Enviar Mensaje"
+      "name": "Name",
+      "email": "E-mail",
+      "message": "Message",
+      "button": "Send Message"
     },
-    "footer": "Siempre estoy abierto a nuevas oportunidades y colaboraciones. Si estás interesado en trabajar conmigo o tienes alguna pregunta, no dudes en ponerte en contacto."
+    "footer": "I am always open to new opportunities and collaborations. If you are interested in working with me or have any questions, feel free to reach out!"
   },
   "footer": {
-    "text": "© {year} Rafa Mori. Todos los derechos reservados.",
+    "text": "© {year} Rafa Mori. All rights reserved.",
     "link": "GitHub Pages"
   }
 }

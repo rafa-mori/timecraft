@@ -38,7 +38,7 @@ print(f'Model Intercept (Prophet): {model.get_intercept()}')
 # Model Coefficients (Prophet): [1.0]
 # Model Intercept (Prophet): 0.0
 # ----------------------------------------------------------------------------------------------- #
-# Usando Regressão Linear
+# Using Linear Regression
 
 data = pd.read_csv('./data/hist_cambio_float.csv')
 data = pd.DataFrame(data, columns=['purchaseValue', 'saleValue', 'dt'])
