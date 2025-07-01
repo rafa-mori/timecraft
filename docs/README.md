@@ -147,7 +147,7 @@ model.run(
 
 ## 🤝 Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+See [CONTRIBUTING.md](/CONTRIBUTING.md) for guidelines.
 
 ---
 
@@ -159,7 +159,7 @@ Full documentation is available on [GitHub Pages](<https://rafa-mori.github.io/t
 
 ## 📄 License
 
-[MIT License](<https://opensource.org/licenses/MIT>)
+[MIT License](<https://github.com/rafa-mori/timecraft/blob/f46f53ce78207b78a51b8dfaabcbd613c8c18aa3/LICENSE>)
 
 ---
 
