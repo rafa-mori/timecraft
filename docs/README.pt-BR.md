@@ -6,6 +6,14 @@
 
 ---
 
+[![Build](https://github.com/rafa-mori/timecraft/actions/workflows/publish.yml/badge.svg)](https://github.com/rafa-mori/timecraft/actions/workflows/publish.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python Version](https://img.shields.io/badge/python-%3E=3.11-blue)](https://www.python.org/)
+[![PyPI](https://img.shields.io/pypi/v/timecraft?color=blue)](https://pypi.org/project/timecraft-ai/)
+[![Releases](https://img.shields.io/github/v/release/rafa-mori/timecraft?include_prereleases)](https://github.com/rafa-mori/timecraft/releases)
+
+---
+
 ## 📖 Tabela de Conteúdos
 
 1. [Sobre o Projeto](#sobre-o-projeto)
