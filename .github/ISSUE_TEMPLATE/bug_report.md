@@ -55,7 +55,7 @@ Paste relevant log output here
 
 ## Configuration
 
-**TimeCraft Configuration:**
+**TimeCraft AI Configuration:**
 ```yaml
 # Paste your configuration here (remove any sensitive information)
 ```

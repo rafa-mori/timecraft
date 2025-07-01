@@ -46,6 +46,8 @@ jobs:
     - name: Install AI dependencies (non-Windows)
       if: matrix.os != 'windows-latest'
       run: |
+        sudo apt-get update
+        sudo apt-get install -y portaudio19-dev python3-pyaudio alsa-utils
         pip install -r requirements-ai.txt
       continue-on-error: true
 
@@ -141,7 +143,7 @@ jobs:
         VERSION=$(grep -o 'version = "[^"]*"' setup.py | cut -d'"' -f2 || echo "")
         if [ -z "$VERSION" ]; then
           # Fallback: try to get version from pyproject.toml or __init__.py
-          VERSION=$(grep -o '__version__ = "[^"]*"' src/timecraft/__init__.py | cut -d'"' -f2 || echo "1.1.0")
+          VERSION=$(grep -o '__version__ = "[^"]*"' src/timecraft_ai/__init__.py | cut -d'"' -f2 || echo "1.1.0")
         fi
         echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
         
