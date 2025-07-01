@@ -1,3 +1,3 @@
 # Welcome to TimeCraft
 
-For complete documentation, see [README](README.md) or the [Portuguese version](README.pt-BR.md).
+For complete documentation, see [README](/docs/README.md) or the [Portuguese version](/docs/README.pt-BR.md).
