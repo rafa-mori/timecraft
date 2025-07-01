@@ -1,0 +1,132 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Documents
+*.md text eol=lf
+*.txt text eol=lf
+*.rst text eol=lf
+
+# Configuration files
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.cfg text eol=lf
+*.conf text eol=lf
+*.ini text eol=lf
+
+# Python files
+*.py text eol=lf
+*.pyx text eol=lf
+*.pyi text eol=lf
+
+# Shell scripts
+*.sh text eol=lf
+*.bash text eol=lf
+*.zsh text eol=lf
+
+# Web files
+*.html text eol=lf
+*.htm text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+
+# Docker files
+Dockerfile text eol=lf
+*.dockerfile text eol=lf
+docker-compose*.yml text eol=lf
+
+# CI/CD files
+.gitignore text eol=lf
+.gitattributes text eol=lf
+.github/**/* text eol=lf
+
+# Jupyter notebooks
+*.ipynb text eol=lf
+
+# Data files (mark as binary to prevent conflicts)
+*.csv binary
+*.tsv binary
+*.dat binary
+*.db binary
+*.sqlite binary
+*.sqlite3 binary
+
+# Archives
+*.zip binary
+*.tar binary
+*.tar.gz binary
+*.tar.bz2 binary
+*.7z binary
+*.rar binary
+
+# Images
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.svg binary
+*.ico binary
+*.webp binary
+
+# Fonts
+*.woff binary
+*.woff2 binary
+*.eot binary
+*.ttf binary
+*.otf binary
+
+# Audio/Video
+*.mp3 binary
+*.mp4 binary
+*.avi binary
+*.mov binary
+*.wav binary
+
+# Compiled files
+*.pyc binary
+*.pyo binary
+*.pyd binary
+*.so binary
+*.dll binary
+*.exe binary
+
+# Virtual environments (should be in .gitignore anyway)
+venv/** binary
+.venv/** binary
+env/** binary
+.env/** binary
+
+# IDE files
+*.swp binary
+*.swo binary
+*~ binary
+
+# Git attributes for better diffs
+*.py diff=python
+*.md diff
+*.txt diff
+*.yml diff
+*.yaml diff
+*.json diff
+
+# Export-ignore patterns (excluded from archives)
+.git* export-ignore
+.github/ export-ignore
+tests/ export-ignore
+docs/build/ export-ignore
+*.pyc export-ignore
+__pycache__/ export-ignore
+.pytest_cache/ export-ignore
+.coverage export-ignore
+htmlcov/ export-ignore
+.tox/ export-ignore
+.venv/ export-ignore
+venv/ export-ignore
+env/ export-ignore
+.env export-ignore
+.DS_Store export-ignore
+Thumbs.db export-ignore
