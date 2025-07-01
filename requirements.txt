@@ -25,6 +25,7 @@ mkdocs-awesome-pages-plugin
 mkdocs-git-revision-date-localized-plugin
 mkdocs-mermaid2-plugin
 mkdocs-material-extensions
+mkdocs-redirects
 
 
 

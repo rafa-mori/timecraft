@@ -1,6 +1,6 @@
 # Support
 
-Thank you for using TimeCraft! This document explains how to get help and support for the project.
+Thank you for using TimeCraft AI! This document explains how to get help and support for the project.
 
 ## Documentation
 
@@ -20,11 +20,12 @@ For general questions, usage help, and community discussions:
 **[GitHub Discussions](https://github.com/rafa-mori/timecraft/discussions)**
 
 This is the best place to:
+
 - Ask usage questions
 - Share ideas and feedback
 - Get help from the community
 - Discuss best practices
-- Show off your projects using TimeCraft
+- Show off your projects using TimeCraft AI
 
 ### 2. GitHub Issues
 
@@ -33,12 +34,14 @@ For specific problems, bugs, or feature requests:
 **[GitHub Issues](https://github.com/rafa-mori/timecraft/issues)**
 
 Please use issues for:
+
 - Bug reports
 - Feature requests
 - Documentation issues
 - Specific technical problems
 
 **Before creating an issue:**
+
 - Search existing issues to avoid duplicates
 - Use the appropriate issue template
 - Provide clear, detailed information
@@ -51,6 +54,7 @@ For private matters, security issues, or urgent concerns:
 **Email**: [faelmori@gmail.com](mailto:faelmori@gmail.com)
 
 Please use email only for:
+
 - Security vulnerability reports
 - Private/confidential matters
 - Urgent issues that can't wait for community response
@@ -73,23 +77,27 @@ We aim to respond to:
 To get the best help quickly, please:
 
 ### 1. Be Specific
+
 - Describe exactly what you're trying to do
 - Explain what you expected to happen
 - Describe what actually happened
 
 ### 2. Provide Context
+
 - Your operating system (Linux, macOS, Windows)
 - Python version
-- TimeCraft version
+- TimeCraft AI version
 - Installation method (pip, source, etc.)
 
 ### 3. Include Examples
+
 - Share relevant code snippets
 - Include configuration files (remove sensitive data)
 - Provide error messages and logs
 - Share command outputs
 
 ### 4. Use Proper Formatting
+
 - Use code blocks for code and logs
 - Use markdown formatting for clarity
 - Include screenshots if helpful
@@ -98,13 +106,13 @@ To get the best help quickly, please:
 
 ```markdown
 ## Problem
-I'm trying to configure TimeCraft to connect to my PostgreSQL database, but I'm getting a connection error.
+I'm trying to configure TimeCraft AI to connect to my PostgreSQL database, but I'm getting a connection error.
 
 ## Environment
 - OS: Ubuntu 20.04
 - Python: 3.9.7
-- TimeCraft: 1.1.0
-- Installation: pip install timecraft
+- TimeCraft AI: 1.1.0
+- Installation: pip install timecraft_ai
 
 ## Configuration
 ```yaml
@@ -117,15 +125,16 @@ database:
 ```
 
 ## Error Message
-```
+
+```plaintext
 ConnectionError: could not connect to server: Connection refused
 ```
 
 ## What I've Tried
+
 1. Verified PostgreSQL is running
 2. Checked firewall settings
 3. Tested connection with psql command
-```
 
 ## Community Guidelines
 
@@ -144,12 +153,12 @@ Consider contributing back to help others:
 - **Answer questions** in discussions and issues
 - **Improve documentation** based on your experience
 - **Report bugs** you discover
-- **Share examples** of how you use TimeCraft
+- **Share examples** of how you use TimeCraft AI
 - **Contribute code** if you fix issues yourself
 
 ## Professional Support
 
-Currently, TimeCraft is maintained by volunteers. For enterprise or professional support needs, please contact [faelmori@gmail.com](mailto:faelmori@gmail.com) to discuss options.
+Currently, TimeCraft AI is maintained by volunteers. For enterprise or professional support needs, please contact [faelmori@gmail.com](mailto:faelmori@gmail.com) to discuss options.
 
 ## Security Issues
 
@@ -166,4 +175,4 @@ For security vulnerabilities, please follow our [Security Policy](SECURITY.md). 
 - 🤝 [Contributing Guide](CONTRIBUTING.md)
 - 🔒 [Security Policy](SECURITY.md)
 
-Thank you for being part of the TimeCraft community!
+Thank you for being part of the TimeCraft AI community!

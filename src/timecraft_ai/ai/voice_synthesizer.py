@@ -1,4 +1,13 @@
+from __future__ import annotations  # For forward references in type hints
+
 import logging
+import sys
+
+# Ensure the package exif is in the Python path
+if __name__ == "__main__":
+    sys.path.append(
+        ".."
+    )  # Adjust the path as necessary to include the parent directory
 
 import pyttsx3
 

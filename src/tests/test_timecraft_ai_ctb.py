@@ -64,29 +64,27 @@ def test_voice_synthesizer():
 
     try:
         synthesizer = VoiceSynthesizer(rate=180, volume=1.0, voice="default")
+        try:
+            synthesizer.speak("Olá! Sistema TimeCraft AI funcionando perfeitamente.")
+            print("✅ VoiceSynthesizer testado com sucesso!")
+        except (RuntimeError, ValueError) as e:
+            print(f"❌ Erro no VoiceSynthesizer: {e}")
+        finally:
+            if not synthesizer.engine:
+                print("⚠️ Engine de voz não inicializada.")
+            else:
+                print("🛑 Parando o sintetizador de voz...")
+                synthesizer.engine.stop()
+                synthesizer.engine = None
+                print("🛑 Engine de voz parada.")
     except (RuntimeError, ValueError) as e:
         print(f"❌ Erro ao inicializar VoiceSynthesizer: {e}")
         return
-    except (None, Chain) as e:
-        print(f"❌ Erro de EXIF inválido: {e}")
+    except ImportError as e:
+        print(f"❌ Erro de importação: {e}")
+    except Exception as e:
+        print(f"❌ Erro inesperado: {e}")
         return
-
-    try:
-
-        synthesizer.speak("Olá! Sistema TimeCraft AI funcionando perfeitamente.")
-        print("✅ VoiceSynthesizer testado com sucesso!")
-    except (exif_exceptions.InvalidExif, RuntimeError, ValueError) as e:
-        print(
-            f"❌ Erro no VoiceSynthesizer: {exif_exceptions.InvalidExif(e) if isinstance(e, Exception) else e}"
-        )
-    finally:
-        if not synthesizer.engine:
-            print("⚠️ Engine de voz não inicializada.")
-        else:
-            print("🛑 Parando o sintetizador de voz...")
-            synthesizer.engine.stop()
-            synthesizer.engine = None
-            print("🛑 Engine de voz parada.")
 
 
 def test_mcp_handler():
