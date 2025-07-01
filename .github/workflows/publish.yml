@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Ensure we have all tags and history
-          
+
       - name: Validate deploy constraints
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -105,7 +105,7 @@ jobs:
 
       - name: Compare with previous tag
         run: |
-          git fetch --tags
+          git fetch --tags --force --prune
           current_version=${VERSION}
           previous_tag=$(git tag --sort=-creatordate | grep '^v' | grep -v "v$current_version" | head -n1)
           previous_version=${previous_tag#v}
