@@ -33,7 +33,7 @@ jobs:
       # Instalação das dependências (via requirements.txt se existir, senão apenas mkdocs)
       - name: Instalar dependências
         run: |
-          apt-get update && apt-get install -y portaudio19-dev
+          sudo apt-get update && sudo apt-get install -y portaudio19-dev
           if [ -f src/timecraft_ai/requirements.txt ]; then
             pip install -r src/timecraft_ai/requirements.txt
           else
