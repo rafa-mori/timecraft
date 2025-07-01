@@ -33,13 +33,13 @@ markdown_extensions:
   - smarty
   - tables
 nav:
-  - Home: https://github.com/rafa-mori/timecraft/blob/71c020a32d876be65bc406a0177a3bddeb96503b/docs/index.md
-  - README: https://github.com/rafa-mori/timecraft/blob/71c020a32d876be65bc406a0177a3bddeb96503b/README.md
-  - README pt-BR: https://github.com/rafa-mori/timecraft/blob/71c020a32d876be65bc406a0177a3bddeb96503b/docs/README.pt-BR.md
-  - License: https://github.com/rafa-mori/timecraft/blob/71c020a32d876be65bc406a0177a3bddeb96503b/LICENSE
-  - Code of Conduct: https://github.com/rafa-mori/timecraft/blob/71c020a32d876be65bc406a0177a3bddeb96503b/CODE_OF_CONDUCT.md
-  - Contributing: https://github.com/rafa-mori/timecraft/blob/71c020a32d876be65bc406a0177a3bddeb96503b/CONTRIBUTING.md
-  - Changelog: https://github.com/rafa-mori/timecraft/blob/71c020a32d876be65bc406a0177a3bddeb96503b/CHANGELOG.md
+  - Home: docs/index.md
+  - README: README.md
+  - README pt-BR: docs/README.pt-BR.md
+  - License: LICENSE
+  - Code of Conduct: CODE_OF_CONDUCT.md
+  - Contributing: CONTRIBUTING.md
+  - Changelog: CHANGELOG.md
 extra:
   social:
     - icon: fontawesome/brands/github
