@@ -101,7 +101,7 @@ jobs:
           fi
           # Check if the version exists on PyPI
           echo "Checking PyPI for version $VERSION"
-          if curl -s https://pypi.org/pypi/timecraft-ai/v1.1.1/json | grep -v 'Not Found' -q; then
+          if curl -s https://pypi.org/pypi/timecraft-ai/$VERSION/json | grep -v 'Not Found' -q; then
             echo "Version $VERSION already exists on PyPI"
             exit 1
           fi
