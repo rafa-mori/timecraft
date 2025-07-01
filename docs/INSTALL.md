@@ -1,177 +1,158 @@
-# TimeCraft - Guia de Instalação e Configuração
+# TimeCraft AI - Installation and Configuration Guide
 
-## 📦 Instalação
+## 📦 Installation
 
-### Instalação Rápida (Recomendada)
+### Quick Installation (Recommended)
 
 ```bash
-# Instalar TimeCraft com recursos principais
-pip install timecraft
-
-# Ou instalar com todos os recursos (AI, Servidor Web)
-pip install timecraft[all]
+# Install TimeCraft with core features
+pip install timecraft_ai
 ```
 
-### Instalação para Desenvolvimento
+### Development Installation
 
 ```bash
-# Clonar o repositório
+# Clone the repository
 git clone https://github.com/rafa-mori/timecraft.git
 cd timecraft
 
-# Configuração rápida com script de desenvolvimento
+# Quick setup with development script
 ./dev.sh setup
 
-# Ou configuração manual
+# Or manual configuration
 python3 -m venv venv
-source venv/bin/activate  # No Windows: venv\Scripts\activate
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -e .
 ```
 
-## 🎯 Recursos Opcionais
+## 🎯 Optional Features
 
-### Recursos de AI (Voz, Chatbot, Processamento de Áudio)
+### AI Features (Voice, Chatbot, Audio Processing)
 
-```bash
-pip install timecraft[ai]
-```
+**Included dependencies:**
 
-**Dependências incluídas:**
+- `pyaudio` - Audio capture and processing
+- `SpeechRecognition` - Speech recognition
+- `pyttsx3` - Voice synthesis
+- `openai` - OpenAI integration
+- `fastapi` - Web API
 
-- `pyaudio` - Captura e processamento de áudio
-- `SpeechRecognition` - Reconhecimento de fala
-- `pyttsx3` - Síntese de voz
-- `openai` - Integração com OpenAI
-- `fastapi` - API web
+### Web Server and API
 
-### Servidor Web e API
+**Included dependencies:**
 
-```bash
-pip install timecraft[web]
-```
+- `fastapi` - Modern web framework
+- `uvicorn` - ASGI server
+- `pydantic` - Data validation
 
-**Dependências incluídas:**
+### Database Connectors
 
-- `fastapi` - Framework web moderno
-- `uvicorn` - Servidor ASGI
-- `pydantic` - Validação de dados
-
-### Conectores de Banco de Dados
-
-```bash
-pip install timecraft[db]
-```
-
-**Dependências incluídas:**
+**Included dependencies:**
 
 - `psycopg2` - PostgreSQL
 - `pymysql` - MySQL
 - `pyodbc` - SQL Server
 
-### Ferramentas de Desenvolvimento
+### Development Tools
 
-```bash
-pip install timecraft[dev]
-```
+**Included dependencies:**
 
-**Dependências incluídas:**
-
-- `pytest` - Testes
-- `black` - Formatação de código
+- `pytest` - Testing
+- `black` - Code formatting
 - `flake8` - Linting
-- `mypy` - Verificação de tipos
+- `mypy` - Type checking
 
-## 🔧 Configuração
+## 🔧 Configuration
 
-### Verificação da Instalação
+### Installation Verification
 
 ```python
-import timecraft
+import timecraft_ai as timecraft
 
-# Verificar versão e recursos disponíveis
+# Check version and available features
 print(f"TimeCraft v{timecraft.__version__}")
-print(f"Recursos AI: {timecraft.AI_AVAILABLE}")
-print(f"Servidor MCP: {timecraft.SERVER_AVAILABLE}")
+print(f"AI Features: {timecraft.AI_AVAILABLE}")
+print(f"MCP Server: {timecraft.SERVER_AVAILABLE}")
 ```
 
-### Teste Rápido
+### Quick Test
 
 ```bash
-# Executar teste de instalação
+# Run installation test
 python examples/quick_test.py
 
-# Executar demo básico
+# Run basic demo
 python examples/demo_basic.py
 ```
 
-## 🚀 Primeiros Passos
+## 🚀 Getting Started
 
-### Uso Básico
+### Basic Usage
 
 ```python
-import timecraft
+import timecraft_ai as timecraft
 
-# Criar modelo de análise temporal
+# Create temporal analysis model
 model = timecraft.TimeCraftAI()
 
-# Carregar dados
-data = model.load_data("dados.csv")
+# Load data
+data = model.load_data("data.csv")
 
-# Fazer previsões
+# Make predictions
 forecasts = model.forecast(data, periods=30)
 
-# Visualizar resultados
+# Visualize results
 model.plot_forecast()
 ```
 
-### Recursos Avançados (se AI disponível)
+### Advanced Features (if AI available)
 
 ```python
-import timecraft
+import timecraft_ai as timecraft
 
 if timecraft.AI_AVAILABLE:
-    # Chatbot para análise de dados
+    # Chatbot for data analysis
     chatbot = timecraft.ChatbotActions()
-    response = chatbot.process_query("Analise meus dados de vendas")
+    response = chatbot.process_query("Analyze my sales data")
     
-    # Processamento de áudio
+    # Audio processing
     audio = timecraft.AudioProcessor()
     audio.start_recording()
     
-    # Síntese de voz
+    # Voice synthesis
     voice = timecraft.VoiceSynthesizer()
-    voice.speak("Análise concluída!")
+    voice.speak("Analysis completed!")
 ```
 
-## 🛠️ Script de Desenvolvimento
+## 🛠️ Development Script
 
-O TimeCraft inclui um script de desenvolvimento que facilita o trabalho:
+TimeCraft includes a development script that makes work easier:
 
 ```bash
-# Configurar ambiente
+# Setup environment
 ./dev.sh setup
 
-# Executar testes
+# Run tests
 ./dev.sh test
 
-# Executar demo
+# Run demo
 ./dev.sh run-demo
 
-# Limpar ambiente
+# Clean environment
 ./dev.sh clean
 
-# Ver ajuda
+# Show help
 ./dev.sh help
 ```
 
-## 📋 Requisitos do Sistema
+## 📋 System Requirements
 
-- **Python:** 3.8 ou superior
-- **Sistema Operacional:** Linux, macOS, Windows
-- **RAM:** 512MB (mínimo), 2GB (recomendado)
-- **Espaço em Disco:** 100MB (core), 500MB (com AI)
+- **Python:** 3.8 or higher
+- **Operating System:** Linux, macOS, Windows
+- **RAM:** 512MB (minimum), 2GB (recommended)
+- **Disk Space:** 100MB (core), 500MB (with AI)
 
-### Dependências do Sistema (para recursos AI)
+### System Dependencies (for AI features)
 
 **Ubuntu/Debian:**
 
@@ -189,42 +170,42 @@ brew install portaudio
 **Windows:**
 
 ```bash
-# PyAudio será instalado automaticamente via pip
+# PyAudio will be installed automatically via pip
 ```
 
-## 🔍 Solução de Problemas
+## 🔍 Troubleshooting
 
-### Erro: "ModuleNotFoundError: No module named 'pyaudio'"
+### Error: "ModuleNotFoundError: No module named 'pyaudio'"
 
-Recursos de AI não estão disponíveis. Para instalar:
+AI features are not available. To install:
 
 ```bash
 # Linux/Mac
-pip install timecraft[ai]
+pip install timecraft_ai
 
-# Se ainda houver erro no Linux:
+# If there's still an error on Linux:
 sudo apt-get install portaudio19-dev
 pip install pyaudio
 ```
 
-### Erro: "No module named 'prophet'"
+### Error: "No module named 'prophet'"
 
-Dependências de previsão não estão instaladas:
+Forecasting dependencies are not installed:
 
 ```bash
 pip install prophet plotly
 ```
 
-### Modo de Desenvolvimento vs Produção
+### Development vs Production Mode
 
-- **Produção:** `pip install timecraft`
-- **Desenvolvimento:** `pip install -e .` (no diretório do projeto)
+- **Production:** `pip install timecraft_ai`
+- **Development:** `pip install -e .` (in project directory)
 
-O TimeCraft detecta automaticamente o modo e ajusta os imports adequadamente.
+TimeCraft automatically detects the mode and adjusts imports accordingly.
 
-## 🔗 Links Úteis
+## 🔗 Useful Links
 
-- [Documentação Completa](docs/)
-- [Exemplos](examples/)
+- [Complete Documentation](docs/)
+- [Examples](examples/)
 - [Changelog](CHANGELOG.md)
-- [Contribuindo](CONTRIBUTING.md)
+- [Contributing](CONTRIBUTING.md)

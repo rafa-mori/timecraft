@@ -1,54 +1,55 @@
-# 🔧 TimeCraft AI - Guia de Instalação e Configuração
+# 🔧 TimeCraft AI - Installation and Configuration Guide
 
-## 📋 Pré-requisitos
+## 📋 Prerequisites
 
-### Sistema Operacional
+### Operating System
 
-- ✅ Linux (Ubuntu/Debian recomendado)
+- ✅ Linux (Ubuntu/Debian recommended)
 - ✅ macOS
 - ✅ Windows 10/11
 
 ### Python
 
-- Python 3.8+ (recomendado: 3.10+)
-- pip atualizado
+- Python 3.8+ (recommended: 3.10+)
+- Updated pip
 
 ### Hardware
 
-- 🎤 Microfone funcional
-- 🔊 Alto-falantes ou fones de ouvido
-- 💾 Pelo menos 2GB de espaço livre (para modelos de voz)
+- 🎤 Functional microphone
+- 🔊 Speakers or headphones
+- 💾 At least 2GB of free space (for voice models)
 
 ---
 
-## 🚀 Instalação Rápida
+## 🚀 Quick Installation
 
-### 1. Clonar o repositório
+### 1. Clone the repository
 
 ```bash
-git clone https://github.com/seu-usuario/timecraft.git
+git clone https://github.com/your-username/timecraft.git
 cd timecraft
 ```
 
-### 2. Criar ambiente virtual
+### 2. Create virtual environment
 
 ```bash
 python -m venv venv
 source venv/bin/activate  # Linux/macOS
-# ou
+# or
 venv\Scripts\activate     # Windows
 ```
 
-### 3. Instalar dependências
+### 3. Install dependencies
 
 ```bash
+pip install -r requirements.txt
 pip install -r requirements-ai.txt
 ```
 
-### 4. Baixar modelo de voz (Vosk)
+### 4. Download voice model (Vosk)
 
 ```bash
-# Português (recomendado)
+# Portuguese (recommended)
 mkdir -p models
 cd models
 wget https://alphacephei.com/vosk/models/vosk-model-small-pt-0.3.zip
@@ -57,14 +58,14 @@ mv vosk-model-small-pt-0.3 vosk-model-small-pt
 cd ..
 ```
 
-### 5. Configurar chave do Picovoice (opcional)
+### 5. Configure Picovoice key (optional)
 
 ```bash
-# Obtenha uma chave gratuita em: https://picovoice.ai/
-export PICOVOICE_ACCESS_KEY="sua_chave_aqui"
+# Get a free key at: https://picovoice.ai/
+export PICOVOICE_ACCESS_KEY="your_key_here"
 ```
 
-### 6. Testar instalação
+### 6. Test installation
 
 ```bash
 python test_timecraft_ai.py --mode test
@@ -72,53 +73,53 @@ python test_timecraft_ai.py --mode test
 
 ---
 
-## 🎤 Configuração de Áudio
+## 🎤 Audio Configuration
 
 ### Linux (Ubuntu/Debian)
 
 ```bash
-# Instalar dependências de áudio
-sudo apt update
-sudo apt install portaudio19-dev python3-pyaudio alsa-utils
+# Install audio dependencies
+sudo apt-get update
+sudo apt-get install -y portaudio19-dev python3-pyaudio alsa-utils
 
-# Testar microfone
-arecord -l  # Listar dispositivos de gravação
-aplay -l    # Listar dispositivos de reprodução
+# Test microphone
+arecord -l  # List recording devices
+aplay -l    # List playback devices
 
-# Ajustar volume
+# Adjust volume
 alsamixer
 ```
 
 ### macOS
 
 ```bash
-# Instalar PortAudio via Homebrew
+# Install PortAudio via Homebrew
 brew install portaudio
 
-# Verificar permissões de microfone
-# Vá em: System Preferences > Security & Privacy > Privacy > Microphone
-# Adicione seu terminal/IDE à lista
+# Check microphone permissions
+# Go to: System Preferences > Security & Privacy > Privacy > Microphone
+# Add your terminal/IDE to the list
 ```
 
 ### Windows
 
 ```bash
-# Instalar Microsoft C++ Build Tools se necessário
-# Baixe de: https://visualstudio.microsoft.com/visual-cpp-build-tools/
+# Install Microsoft C++ Build Tools if needed
+# Download from: https://visualstudio.microsoft.com/visual-cpp-build-tools/
 
-# Verificar dispositivos de áudio
-# Painel de Controle > Som > Gravação/Reprodução
+# Check audio devices
+# Control Panel > Sound > Recording/Playback
 ```
 
 ---
 
-## 🔧 Solução de Problemas
+## 🔧 Troubleshooting
 
-### ❌ Erro: "No module named 'pyaudio'"
+### ❌ Error: "No module named 'pyaudio'"
 
 ```bash
 # Linux
-sudo apt install portaudio19-dev
+sudo apt-get update && sudo apt-get install -y portaudio19-dev
 pip install pyaudio
 
 # Windows
@@ -130,45 +131,45 @@ brew install portaudio
 pip install pyaudio
 ```
 
-### ❌ Erro: "Unable to import 'pvporcupine'"
+### ❌ Error: "Unable to import 'pvporcupine'"
 
 ```bash
-# Instalar Picovoice
+# Install Picovoice
 pip install pvporcupine
 
-# Configurar chave de API
-export PICOVOICE_ACCESS_KEY="sua_chave"
+# Configure API key
+export PICOVOICE_ACCESS_KEY="your_key"
 ```
 
-### ❌ Erro: "ALSA lib pcm_dsnoop.c" (Linux)
+### ❌ Error: "ALSA lib pcm_dsnoop.c" (Linux)
 
 ```bash
-# Adicionar ao ~/.bashrc ou ~/.zshrc:
+# Add to ~/.bashrc or ~/.zshrc:
 export ALSA_PCM_CARD=0
 export ALSA_PCM_DEVICE=0
 
-# Ou executar com:
+# Or run with:
 ALSA_PCM_CARD=0 ALSA_PCM_DEVICE=0 python test_timecraft_ai.py
 ```
 
-### ❌ Erro: "Access denied" (microfone)
+### ❌ Error: "Access denied" (microphone)
 
 - **macOS**: System Preferences > Security & Privacy > Privacy > Microphone
 - **Windows**: Settings > Privacy > Microphone
-- **Linux**: Verificar se o usuário está no grupo 'audio'
+- **Linux**: Check if user is in 'audio' group
 
   ```bash
   sudo usermod -a -G audio $USER
-  # Reiniciar sessão
+  # Restart session
   ```
 
-### ❌ Erro: "Model file not found"
+### ❌ Error: "Model file not found"
 
 ```bash
-# Verificar se o modelo foi baixado corretamente
+# Check if model was downloaded correctly
 ls -la models/vosk-model-small-pt/
 
-# Re-baixar se necessário
+# Re-download if necessary
 cd models
 rm -rf vosk-model-small-pt*
 wget https://alphacephei.com/vosk/models/vosk-model-small-pt-0.3.zip
@@ -178,43 +179,43 @@ mv vosk-model-small-pt-0.3 vosk-model-small-pt
 
 ---
 
-## 🎯 Modos de Uso
+## 🎯 Usage Modes
 
-### 1. Teste Básico
+### 1. Basic Test
 
 ```bash
 python test_timecraft_ai.py --mode test
 ```
 
-- Testa todas as funcionalidades básicas
-- Não requer microfone/áudio
+- Tests all basic functionalities
+- Doesn't require microphone/audio
 
-### 2. Servidor FastAPI
+### 2. FastAPI Server
 
 ```bash
 python test_timecraft_ai.py --mode server
 ```
 
-- Inicia servidor web na porta 8000
-- Acesse: <http://localhost:8000/docs>
+- Starts web server on port 8000
+- Access: <http://localhost:8000/docs>
 
-### 3. Modo Voz Contínua
+### 3. Continuous Voice Mode
 
 ```bash
 python test_timecraft_ai.py --mode voice
 ```
 
-- Escuta continuamente
-- Fale comandos como: "histórico", "previsão", "insights"
+- Listens continuously
+- Speak commands like: "history", "prediction", "insights"
 
-### 4. Modo Hotword
+### 4. Hotword Mode
 
 ```bash
 python test_timecraft_ai.py --mode hotword
 ```
 
-- Aguarda palavra-chave "MCP"
-- Depois fale seu comando
+- Waits for keyword "MCP"
+- Then speak your command
 
 ---
 
@@ -226,83 +227,83 @@ python test_timecraft_ai.py --mode hotword
 curl http://localhost:8000/health
 ```
 
-### Enviar Comando
+### Send Command
 
 ```bash
 curl -X POST http://localhost:8000/mcp/command \
   -H "Content-Type: application/json" \
-  -d '{"message": "me mostre o histórico"}'
+  -d '{"message": "show me the history"}'
 ```
 
-### Listar Plugins
+### List Plugins
 
 ```bash
 curl http://localhost:8000/mcp/plugins
 ```
 
-### Ativar Plugin OpenAI
+### Activate OpenAI Plugin
 
 ```bash
 curl -X POST http://localhost:8000/mcp/plugins/openai/enable
 ```
 
-### Configurar API Key
+### Configure API Key
 
 ```bash
 curl -X POST http://localhost:8000/mcp/plugins/openai/config \
   -H "Content-Type: application/json" \
-  -d '{"api_key": "sua_chave_openai"}'
+  -d '{"api_key": "your_openai_key"}'
 ```
 
 ---
 
-## 🔬 Desenvolvimento
+## 🔬 Development
 
-### Estrutura de Arquivos
+### File Structure
 
 ```plaintext
 src/timecraft_ai/
 ├── __init__.py
-├── audio_processor.py      # Captura e transcrição de áudio
-├── chatbot_actions.py      # Ações do chatbot (dados, previsões)
-├── chatbot_msgset.py       # Handler de mensagens
-├── chatbot_timecraft.py    # API Flask alternativa
-├── hotword_detector.py     # Detecção de palavra-chave
-├── mcp_command_handler.py  # Handler central de comandos
-├── mcp_server.py          # Servidor FastAPI principal
-└── voice_synthesizer.py   # Síntese de voz
+├── audio_processor.py      # Audio capture and transcription
+├── chatbot_actions.py      # Chatbot actions (data, predictions)
+├── chatbot_msgset.py       # Message handler
+├── chatbot_timecraft.py    # Alternative Flask API
+├── hotword_detector.py     # Keyword detection
+├── mcp_command_handler.py  # Central command handler
+├── mcp_server.py          # Main FastAPI server
+└── voice_synthesizer.py   # Voice synthesis
 ```
 
-### Adicionar Novos Comandos
+### Adding New Commands
 
-1. Edite `chatbot_actions.py` - adicione novos métodos
-2. Edite `chatbot_msgset.py` - adicione padrões de reconhecimento
-3. Teste com `python test_timecraft_ai.py --mode voice`
+1. Edit `chatbot_actions.py` - add new methods
+2. Edit `chatbot_msgset.py` - add recognition patterns
+3. Test with `python test_timecraft_ai.py --mode voice`
 
-### Integrar LLMs Externos
+### Integrating External LLMs
 
-1. Configure chave de API via endpoint `/mcp/plugins/{plugin}/config`
-2. Ative o plugin via `/mcp/plugins/{plugin}/enable`
-3. Edite `mcp_command_handler.py` para rotear comandos
+1. Configure API key via endpoint `/mcp/plugins/{plugin}/config`
+2. Activate plugin via `/mcp/plugins/{plugin}/enable`
+3. Edit `mcp_command_handler.py` to route commands
 
 ---
 
-## 📞 Suporte
+## 📞 Support
 
-### Logs e Debug
+### Logs and Debug
 
 ```bash
-# Executar com logs detalhados
-export PYTHONPATH=/srv/apps/KUBEX/timecraft/src
+# Run with detailed logs
+export PYTHONPATH=$PWD/src
 python -c "
 import logging
 logging.basicConfig(level=logging.DEBUG)
 from timecraft_ai.audio_processor import AudioProcessor
-# ... seu código de teste
+# ... your test code
 "
 ```
 
-### Contato
+### Contact
 
 - 📧 Email: [<faelmori@gmail.com>](mailto://faelmori@gmail.com)
 - 🐙 GitHub: [Issues](https://github.com/rafa-mori/timecraft/issues)
@@ -310,6 +311,6 @@ from timecraft_ai.audio_processor import AudioProcessor
 
 ---
 
-## 📄 Licença
+## 📄 License
 
-MIT License - Veja [LICENSE](LICENSE) para detalhes.
+MIT License - See [LICENSE](LICENSE) for details.
