@@ -1,44 +1,33 @@
 import logging
-
-# Setup logging configuration for the package
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
-)
-logger = logging.getLogger("timecraft_ai")
-
-#__init__.py
-# noinspection PyUnusedFunction
-
 import os
-import json
+import threading
+import time
+from concurrent.futures import ProcessPoolExecutor
+from datetime import datetime
+from typing import Optional
+
+import pandas as pd
+import plotly.express as px  # Import Plotly
+from matplotlib import pyplot as plt
+from prophet import Prophet
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import accuracy_score, mean_squared_error
+from sklearn.model_selection import train_test_split
+from sqlalchemy import create_engine
+
 try:
     import requests
 except ImportError:
     requests = None
 
-from concurrent.futures import ProcessPoolExecutor
-from datetime import datetime
-
-import pandas as pd
-import plotly.express as px  # Import Plotly
-
-from matplotlib import pyplot as plt
-from prophet import Prophet
-
-import pandas as pd
-
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import train_test_split
-
-from sqlalchemy import create_engine
-import threading
-import time
-from typing import Optional
+# Setup logging configuration for the package
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+logger = logging.getLogger("timecraft_ai")
 
 
 def notify_webhook(webhook_url, payload):
@@ -49,7 +38,9 @@ def notify_webhook(webhook_url, payload):
     :return: Response object or None if requests is not available.
     """
     if not requests:
-        logger.warning("[Webhook] 'requests' library not installed. Cannot send webhook notification.")
+        logger.warning(
+            "[Webhook] 'requests' library not installed. Cannot send webhook notification."
+        )
         return None
     try:
         response = requests.post(webhook_url, json=payload, timeout=10)
@@ -65,7 +56,16 @@ class TimeCraftModel:
     Class for time series modeling using Prophet.
     """
 
-    def __init__(self, data=None, date_column=None, value_columns=None, is_csv=True, db_connector=None, query=None, periods=60):
+    def __init__(
+        self,
+        data=None,
+        date_column=None,
+        value_columns=None,
+        is_csv=True,
+        db_connector=None,
+        query=None,
+        periods=60,
+    ):
         """
         Initialize the TimeCraftModel class.
 
@@ -135,7 +135,14 @@ class TimeCraftModel:
         """
         Compare two TimeCraftModel objects for equality.
         """
-        return self.data == other.data and self.date_column == other.date_column and self.value_columns == other.value_columns and self.is_csv == other.is_csv and self.db_connector == other.db_connector and self.query == other.query
+        return (
+            self.data == other.data
+            and self.date_column == other.date_column
+            and self.value_columns == other.value_columns
+            and self.is_csv == other.is_csv
+            and self.db_connector == other.db_connector
+            and self.query == other.query
+        )
 
     def dropna(self):
         """
@@ -158,22 +165,24 @@ class TimeCraftModel:
                 self.db_connector.connect()
                 df = self.db_connector.execute_query(self.query)
             except Exception as e:
-                logger.error(f"TimeCraftModel: Error fetching data from the database: {e}")
+                logger.error(
+                    f"TimeCraftModel: Error fetching data from the database: {e}"
+                )
                 return
             finally:
-                if hasattr(self.db_connector, 'close'):
+                if hasattr(self.db_connector, "close"):
                     self.db_connector.close()
                 else:
                     logger.warning("The engine does not have a 'close' method.")
         elif self.is_csv:
-            chunks = pd.read_csv(self.data, chunksize=10000) # type: ignore
+            chunks = pd.read_csv(self.data, chunksize=10000)  # type: ignore
             df = pd.concat(chunks)
         else:
             # Converts the data list to a DataFrame
-            df = pd.DataFrame(self.data, columns=[self.date_column] + self.value_columns) # type: ignore
+            df = pd.DataFrame(self.data, columns=[self.date_column] + self.value_columns)  # type: ignore
 
         # Rename columns
-        df = df.rename(columns={self.date_column: "ds", self.value_columns[0]: "y"}) # type: ignore
+        df = df.rename(columns={self.date_column: "ds", self.value_columns[0]: "y"})  # type: ignore
 
         # Remove rows with null values
         df = df.dropna()
@@ -182,13 +191,15 @@ class TimeCraftModel:
         df["ds"] = pd.to_datetime(df["ds"])
 
         self.df = df
-        logger.info(f"Data loaded and prepared. Shape: {self.df.shape if self.df is not None else None}")
+        logger.info(
+            f"Data loaded and prepared. Shape: {self.df.shape if self.df is not None else None}"
+        )
 
     def fit_model(self) -> None:
         """
         Fit the Prophet model to the data.
         """
-        self.model.fit(self.df[['ds', 'y']]) # type: ignore
+        self.model.fit(self.df[["ds", "y"]])  # type: ignore
         logger.info("Prophet model fitted.")
 
     def make_predictions(self, periods=None) -> pd.DataFrame:
@@ -213,18 +224,30 @@ class TimeCraftModel:
         """
         output_dir = os.path.dirname(output_file)
 
-        if output_dir and not os.path.exists(output_dir):
+        if not os.path.exists(output_dir):
             os.makedirs(output_dir, exist_ok=True)
 
-        if not output_file.endswith('.csv'):
-            output_file += '.csv'
+        if not output_file.endswith(".csv"):
+            output_file += ".csv"
         if os.path.exists(output_file):
             os.remove(output_file)
-
-        if self.forecast is None or self.forecast.empty:
-            logger.error("Forecast is empty. Please run the model before saving the forecast.")
-            raise ValueError("Forecast is empty. Please run the model before saving the forecast.")
-        self.forecast.to_csv(output_file, index=False) # type: ignore
+        if not os.path.exists(output_file):
+            os.makedirs(output_file, exist_ok=True)
+        if len(self.forecast.value_counts()) == 0:  # type: ignore
+            logger.error(
+                "Forecast is empty. Please run the model before saving the forecast."
+            )
+            raise ValueError(
+                "Forecast is empty. Please run the model before saving the forecast."
+            )
+        if self.forecast is None:
+            logger.error(
+                "Forecast is None. Please run the model before saving the forecast."
+            )
+            raise ValueError(
+                "Forecast is None. Please run the model before saving the forecast."
+            )
+        self.forecast.to_csv(output_file, index=False)  # type: ignore
         logger.info(f"Forecast saved to {output_file}")
         return output_file
 
@@ -254,44 +277,59 @@ class TimeCraftModel:
             os.makedirs(output_dir, exist_ok=True)
 
         for plot_type in plot_types:
-            if plot_type == 'line':
-                fig = px.line(self.forecast, x='ds', y='yhat', title='Forecast')
-            elif plot_type == 'scatter':
-                fig = px.scatter(self.forecast, x='ds', y='yhat', title='Forecast')
-            elif plot_type == 'bar':
-                fig = px.bar(self.forecast, x='ds', y='yhat', title='Forecast')
+            if plot_type == "line":
+                fig = px.line(self.forecast, x="ds", y="yhat", title="Forecast")
+            elif plot_type == "scatter":
+                fig = px.scatter(self.forecast, x="ds", y="yhat", title="Forecast")
+            elif plot_type == "bar":
+                fig = px.bar(self.forecast, x="ds", y="yhat", title="Forecast")
             else:
                 continue
 
             for fmt in formats:
-                if fmt == 'html':
-                    fig.write_html(os.path.join(output_dir, f'plot_charts_forecast_{plot_type}.html'))
-                elif fmt == 'png':
-                    fig.write_image(os.path.join(output_dir, f'plot_charts_forecast_{plot_type}.png'), scale=3)
+                if fmt == "html":
+                    fig.write_html(
+                        os.path.join(
+                            output_dir, f"plot_charts_forecast_{plot_type}.html"
+                        )
+                    )
+                elif fmt == "png":
+                    fig.write_image(
+                        os.path.join(
+                            output_dir, f"plot_charts_forecast_{plot_type}.png"
+                        ),
+                        scale=3,
+                    )
                 else:
                     continue
 
         # Matplotlib plots
         for plot_type in plot_types:
             plt.figure()
-            if plot_type == 'line':
-                plt.plot(self.forecast['ds'], self.forecast['yhat']) # type: ignore
-            elif plot_type == 'scatter':
-                plt.scatter(self.forecast['ds'], self.forecast['yhat']) # type: ignore
-            elif plot_type == 'bar':
-                plt.bar(self.forecast['ds'], self.forecast['yhat']) # type: ignore
+            if plot_type == "line":
+                plt.plot(self.forecast["ds"], self.forecast["yhat"])  # type: ignore
+            elif plot_type == "scatter":
+                plt.scatter(self.forecast["ds"], self.forecast["yhat"])  # type: ignore
+            elif plot_type == "bar":
+                plt.bar(self.forecast["ds"], self.forecast["yhat"])  # type: ignore
             else:
                 continue
 
-            plt.title('Forecast')
+            plt.title("Forecast")
             for fmt in formats:
-                if fmt == 'png':
-                    plt.savefig(os.path.join(output_dir, f'plot_charts_forecast_{plot_type}.png'), transparent=True, dpi=300)
+                if fmt == "png":
+                    plt.savefig(
+                        os.path.join(
+                            output_dir, f"plot_charts_forecast_{plot_type}.png"
+                        ),
+                        transparent=True,
+                        dpi=300,
+                    )
                 else:
                     continue
 
             try:
-                if hasattr(plt, 'close'):
+                if hasattr(plt, "close"):
                     plt.close()
                 else:
                     logger.warning("The engine does not have a 'close' method.")
@@ -360,7 +398,9 @@ class TimeCraftModel:
                 "timestamp": datetime.now().isoformat(),
                 "model_type": "Prophet",
                 "data_shape": self.df.shape if self.df is not None else None,
-                "forecast_shape": self.forecast.shape if self.forecast is not None else None,
+                "forecast_shape": (
+                    self.forecast.shape if self.forecast is not None else None
+                ),
                 "duration_seconds": (datetime.now() - start_time).total_seconds(),
             }
             if webhook_payload_extra:
@@ -387,14 +427,14 @@ class TimeCraftModel:
         Get the loaded data as a DataFrame.
         :return: DataFrame with loaded data.
         """
-        return self.df # type: ignore
+        return self.df  # type: ignore
 
     def get_forecast(self) -> pd.DataFrame:
         """
         Get the forecasted values as a DataFrame.
         :return: DataFrame with forecasts.
         """
-        return self.forecast # type: ignore
+        return self.forecast  # type: ignore
 
     def get_data_columns(self) -> list:
         """
@@ -427,8 +467,8 @@ class TimeCraftModel:
         :return: Mean squared error.
         """
         if self.forecast is not None and self.df is not None:
-            return ((self.forecast['yhat'] - self.df['y']) ** 2).mean()
-        return float('nan')
+            return ((self.forecast["yhat"] - self.df["y"]) ** 2).mean()
+        return float("nan")
 
     def get_correlation(self) -> float:
         """
@@ -436,26 +476,26 @@ class TimeCraftModel:
         :return: Correlation value.
         """
         if self.forecast is not None and self.df is not None:
-            return self.forecast['yhat'].corr(self.df['y'])
-        return float('nan')
+            return self.forecast["yhat"].corr(self.df["y"])
+        return float("nan")
 
     def get_coefficients(self) -> float:
         """
         Get the coefficients of the Prophet model.
         :return: Coefficient value.
         """
-        if hasattr(self.model, 'params') and 'k' in self.model.params:
-            return self.model.params['k']
-        return float('nan')
+        if hasattr(self.model, "params") and "k" in self.model.params:
+            return self.model.params["k"]
+        return float("nan")
 
     def get_intercept(self) -> float:
         """
         Get the intercept of the Prophet model.
         :return: Intercept value.
         """
-        if hasattr(self.model, 'params') and 'm' in self.model.params:
-            return self.model.params['m']
-        return float('nan')
+        if hasattr(self.model, "params") and "m" in self.model.params:
+            return self.model.params["m"]
+        return float("nan")
 
     def plot_forecast(self) -> None:
         """
@@ -468,7 +508,7 @@ class TimeCraftModel:
         """
         Plot the forecasts using Plotly.
         """
-        plty = px.line(self.forecast, x='ds', y='yhat', title='Forecast')
+        plty = px.line(self.forecast, x="ds", y="yhat", title="Forecast")
         plty.show()
 
 
@@ -476,6 +516,7 @@ class DatabaseConnector:
     """
     Class for managing database connections and executing queries for various database types.
     """
+
     def __init__(self, db_type, **kwargs):
         """
         Initialize the DatabaseConnector.
@@ -495,12 +536,15 @@ class DatabaseConnector:
                 import cx_Oracle
 
                 self.connection = cx_Oracle.connect(
-                    user=self.credentials.get("username") or os.getenv("ORACLE_USERNAME"),
-                    password=self.credentials.get("password") or os.getenv("ORACLE_PASSWORD"),
-                    dsn=self.credentials.get("dsn") or os.getenv("ORACLE_DSN")
+                    user=self.credentials.get("username")
+                    or os.getenv("ORACLE_USERNAME"),
+                    password=self.credentials.get("password")
+                    or os.getenv("ORACLE_PASSWORD"),
+                    dsn=self.credentials.get("dsn") or os.getenv("ORACLE_DSN"),
                 )
             elif self.db_type == "sqlite":
                 import sqlite3
+
                 db_path = self.credentials.get("db_path") or os.getenv("SQLITE_DB_PATH")
                 if db_path is None:
                     raise ValueError("Database path for SQLite cannot be None.")
@@ -518,24 +562,32 @@ class DatabaseConnector:
                 self.connection = create_engine(conn_string)
             elif self.db_type == "postgres":
                 import psycopg2
+
                 self.connection = psycopg2.connect(
                     host=self.credentials.get("host") or os.getenv("POSTGRES_HOST"),
-                    database=self.credentials.get("database") or os.getenv("POSTGRES_DATABASE"),
+                    database=self.credentials.get("database")
+                    or os.getenv("POSTGRES_DATABASE"),
                     user=self.credentials.get("user") or os.getenv("POSTGRES_USER"),
-                    password=self.credentials.get("password") or os.getenv("POSTGRES_PASSWORD"),
-                    port=self.credentials.get("port") or os.getenv("POSTGRES_PORT", 5432)
+                    password=self.credentials.get("password")
+                    or os.getenv("POSTGRES_PASSWORD"),
+                    port=self.credentials.get("port")
+                    or os.getenv("POSTGRES_PORT", 5432),
                 )
             elif self.db_type == "mysql":
                 import mysql.connector
+
                 self.connection = mysql.connector.connect(
                     host=self.credentials.get("host") or os.getenv("MYSQL_HOST"),
                     user=self.credentials.get("user") or os.getenv("MYSQL_USER"),
-                    password=self.credentials.get("password") or os.getenv("MYSQL_PASSWORD"),
-                    database=self.credentials.get("database") or os.getenv("MYSQL_DATABASE"),
-                    port=self.credentials.get("port") or os.getenv("MYSQL_PORT", 3306)
+                    password=self.credentials.get("password")
+                    or os.getenv("MYSQL_PASSWORD"),
+                    database=self.credentials.get("database")
+                    or os.getenv("MYSQL_DATABASE"),
+                    port=self.credentials.get("port") or os.getenv("MYSQL_PORT", 3306),
                 )
             elif self.db_type == "mongodb":
                 from pymongo import MongoClient
+
                 self.connection = MongoClient(
                     self.credentials.get("uri") or os.getenv("MONGODB_URI")
                 )
@@ -552,9 +604,12 @@ class DatabaseConnector:
         """
         if self.connection:
             from sqlalchemy.engine.base import Engine
+
             if self.db_type == "mssql" and isinstance(self.connection, Engine):
                 self.connection.dispose()
-            elif not isinstance(self.connection, Engine) and hasattr(self.connection, "close"):
+            elif not isinstance(self.connection, Engine) and hasattr(
+                self.connection, "close"
+            ):
                 self.connection.close()
             logger.info(f"Connection to {self.db_type.upper()} closed.")
 
@@ -567,6 +622,7 @@ class DatabaseConnector:
         if self.connection and self.db_type == "mssql":
             try:
                 from sqlalchemy.engine.base import Engine
+
                 if isinstance(self.connection, Engine):
                     logger.info(f"Executing query on MSSQL: {query}")
                     return pd.read_sql(query, self.connection)
@@ -579,41 +635,49 @@ class DatabaseConnector:
         if self.connection and self.db_type == "oracle":
             try:
                 from sqlalchemy.engine.base import Engine
-                if not isinstance(self.connection, Engine) and hasattr(self.connection, "cursor"):
-                    cursor_method = getattr(self.connection, "cursor", None)
-                    if callable(cursor_method):
-                        cursor = cursor_method()
-                        execute = getattr(cursor, "execute", None)
-                        description = getattr(cursor, "description", None)
-                        fetchall = getattr(cursor, "fetchall", None)
-                        close = getattr(cursor, "close", None)
-                        if callable(execute) and callable(fetchall) and callable(close):
-                            logger.info(f"Executing query on Oracle: {query}")
-                            execute(query)
-                            columns = [col[0] for col in description] if description else []
-                            rows = list(fetchall()) # type: ignore
-                            if hasattr(rows, '__iter__'):
-                                rows = list(rows)
-                                close()
-                                return pd.DataFrame(rows, columns=columns)
-                            else:
-                                logger.warning("fetchall() não retornou um iterável.")
-                                close()
-                                return pd.DataFrame()
+
+                if not isinstance(self.connection, Engine) and hasattr(
+                    self.connection, "cursor"
+                ):
+                    cursor_method = getattr(self.connection, "cursor", pd.DataFrame)
+
+                    if cursor_method is None:
+                        logger.warning("Conexão Oracle não possui método cursor().")
+                        return pd.DataFrame()
+
+                    cursor = cursor_method()
+                    execute = getattr(cursor, "execute", None)
+                    description = getattr(cursor, "description", None)
+                    fetchall = getattr(cursor, "fetchall", None)
+                    close = getattr(cursor, "close", None)
+                    if callable(execute) and callable(fetchall) and callable(close):
+                        logger.info(f"Executing query on Oracle: {query}")
+                        execute(query)
+                        columns = [col[0] for col in description] if description else []
+                        rows = list(fetchall())  # type: ignore
+                        if hasattr(rows, "__iter__"):
+                            rows = list(rows)
+                            close()
+                            return pd.DataFrame(rows, columns=columns)
                         else:
-                            logger.warning("Métodos do cursor não são chamáveis.")
+                            logger.warning("fetchall() não retornou um iterável.")
+                            close()
                             return pd.DataFrame()
                     else:
-                        logger.warning("Atributo cursor existe mas não é chamável.")
+                        logger.warning("Métodos do cursor não são chamáveis.")
                         return pd.DataFrame()
                 else:
-                    logger.warning("Conexão Oracle não possui método cursor() ou é um Engine.")
+                    logger.warning(
+                        "Conexão Oracle não possui método cursor() ou é um Engine."
+                    )
                     return pd.DataFrame()
             except Exception as e:
                 logger.error(f"Erro ao executar a query: {e}")
                 return pd.DataFrame()
         elif self.db_type == "mongodb":
-            logger.warning("Use métodos específicos para MongoDB como find() ou insert_one().")
+            logger.warning(
+                "Use métodos específicos para MongoDB como find() ou insert_one()."
+            )
             return None
         else:
             logger.warning("Nenhuma conexão ativa.")
@@ -624,6 +688,7 @@ class LinearRegressionAnalysis:
     """
     Class for performing linear regression analysis on a dataset.
     """
+
     def __init__(self, data_path):
         """
         Initialize the LinearRegressionAnalysis class.
@@ -638,12 +703,12 @@ class LinearRegressionAnalysis:
         Load and preprocess the data from the CSV file.
         """
         self.data = pd.read_csv(self.data_path)
-        self.data = self.data.rename(columns={
-            "purchaseValue": "y",
-            "saleValue": "yhat",
-            "dt": "ds"
-        }).dropna()
-        logger.info(f"Data loaded for regression analysis. Shape: {self.data.shape if self.data is not None else None}")
+        self.data = self.data.rename(
+            columns={"purchaseValue": "y", "saleValue": "yhat", "dt": "ds"}
+        ).dropna()
+        logger.info(
+            f"Data loaded for regression analysis. Shape: {self.data.shape if self.data is not None else None}"
+        )
 
     def analyze_correlation(self):
         """
@@ -651,7 +716,9 @@ class LinearRegressionAnalysis:
         """
         if self.data is not None:
             correlation = self.data["y"].corr(self.data["yhat"])
-            logger.info(f"Correlation between purchaseValue and saleValue: {correlation}")
+            logger.info(
+                f"Correlation between purchaseValue and saleValue: {correlation}"
+            )
             print(f"Correlation between purchaseValue and saleValue: {correlation}")
         else:
             logger.warning("Data is None. Cannot analyze correlation.")
@@ -729,7 +796,16 @@ class ClassifierModel:
     """
     Class for training and evaluating a RandomForest classifier on tabular data.
     """
-    def __init__(self, data=None, target_column=None, test_size=0.2, random_state=42, db_connector=None, query=None):
+
+    def __init__(
+        self,
+        data=None,
+        target_column=None,
+        test_size=0.2,
+        random_state=42,
+        db_connector=None,
+        query=None,
+    ):
         """
         Initialize the ClassifierModel.
         :param data: Input data (DataFrame or None).
@@ -764,18 +840,18 @@ class ClassifierModel:
             self.db_connector.close()
         elif filepath:
             self.data = pd.read_csv(filepath)
-        logger.info(f"Data loaded for classification. Shape: {self.data.shape if self.data is not None else None}")
+        logger.info(
+            f"Data loaded for classification. Shape: {self.data.shape if self.data is not None else None}"
+        )
 
     def preprocess_data(self):
         """
         Preprocess the data by converting date columns and extracting features.
         """
         if self.data is not None:
-            self.data['data_compra'] = pd.to_datetime(self.data['data_compra'])
-            self.data['mes'] = self.data['data_compra'].dt.month
-            self.data['ano'] = self.data['data_compra'].dt.year
-            # Remove the datetime column to avoid dtype issues with scikit-learn
-            self.data = self.data.drop(columns=['data_compra'])
+            self.data["data_compra"] = pd.to_datetime(self.data["data_compra"])
+            self.data["mes"] = self.data["data_compra"].dt.month
+            self.data["ano"] = self.data["data_compra"].dt.year
         else:
             logger.warning("Data is None. Cannot preprocess data.")
 
@@ -786,7 +862,9 @@ class ClassifierModel:
         if self.data is not None and self.target_column in self.data.columns:
             X = self.data.drop(columns=[self.target_column])
             y = self.data[self.target_column]
-            self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size=self.test_size, random_state=self.random_state)
+            self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
+                X, y, test_size=self.test_size, random_state=self.random_state
+            )
         else:
             logger.warning("Data is None or target column missing. Cannot split data.")
             self.X_train = self.X_test = self.y_train = self.y_test = None
@@ -867,6 +945,7 @@ class TimeCraftAI:
     """
     Central class for integrating TimeCraftModel, ClassifierModel, LinearRegressionAnalysis, and DatabaseConnector.
     """
+
     def __init__(self, db_connector=None):
         """
         Initialize the TimeCraftAI class.
@@ -892,7 +971,9 @@ class TimeCraftAI:
         :param kwargs: Arguments for ClassifierModel.
         :return: ClassifierModel instance.
         """
-        self.classifier_model = ClassifierModel(db_connector=self.db_connector, **kwargs)
+        self.classifier_model = ClassifierModel(
+            db_connector=self.db_connector, **kwargs
+        )
         return self.classifier_model
 
     def create_linear_regression_analysis(self, data_path):
@@ -956,7 +1037,13 @@ class TimeCraftAI:
             self.linear_regression_analysis.run_analysis()
 
 
-def run_scheduled(target_func, interval_seconds: int = 60, max_runs: Optional[int] = None, *args, **kwargs):
+def run_scheduled(
+    target_func,
+    interval_seconds: int = 60,
+    max_runs: Optional[int] = None,
+    *args,
+    **kwargs,
+):
     """
     Run a target function periodically in a background thread.
     :param target_func: Function to execute.
@@ -965,16 +1052,20 @@ def run_scheduled(target_func, interval_seconds: int = 60, max_runs: Optional[in
     :param args: Positional arguments for the function.
     :param kwargs: Keyword arguments for the function.
     """
+
     def _runner():
         run_count = 0
         while max_runs is None or run_count < max_runs:
-            logger.info(f"[Scheduler] Running scheduled task: {target_func.__name__} (run {run_count+1})")
+            logger.info(
+                f"[Scheduler] Running scheduled task: {target_func.__name__} (run {run_count+1})"
+            )
             try:
                 target_func(*args, **kwargs)
             except Exception as e:
                 logger.error(f"[Scheduler] Error in scheduled task: {e}")
             run_count += 1
             time.sleep(interval_seconds)
+
     thread = threading.Thread(target=_runner, daemon=True)
     thread.start()
     return thread
@@ -985,6 +1076,7 @@ def main():
     Main entry point for command-line usage. Provides basic commands: help, status, version.
     """
     import sys
+
     VERSION = "1.0.0"
     HELP = """
 TimeCraftAI - Command Line Interface
@@ -1013,22 +1105,34 @@ Commands:
         model_type = sys.argv[3].lower()
         ai = TimeCraftAI()
         if model_type == "timecraft":
-            model = ai.create_timecraft_model(data="example/data/hist_cambio_float.csv", date_column="dt", value_columns=["purchaseValue", "saleValue"], is_csv=True)
+            model = ai.create_timecraft_model(
+                data="example/data/hist_cambio_float.csv",
+                date_column="dt",
+                value_columns=["purchaseValue", "saleValue"],
+                is_csv=True,
+            )
             run_scheduled(model.run, interval_seconds=interval)
         elif model_type == "classifier":
-            model = ai.create_classifier_model(data="example/data/hist_cambio_float.csv", target_column="purchaseValue")
+            model = ai.create_classifier_model(
+                data="example/data/hist_cambio_float.csv", target_column="purchaseValue"
+            )
             run_scheduled(model.run, interval_seconds=interval)
         elif model_type == "regression":
-            model = ai.create_linear_regression_analysis("example/data/hist_cambio_float.csv")
+            model = ai.create_linear_regression_analysis(
+                "example/data/hist_cambio_float.csv"
+            )
             run_scheduled(model.run_analysis, interval_seconds=interval)
         else:
             print(f"Unknown model type: {model_type}")
             sys.exit(1)
-        print(f"Scheduled {model_type} model to run every {interval} seconds. Press Ctrl+C to stop.")
+        print(
+            f"Scheduled {model_type} model to run every {interval} seconds. Press Ctrl+C to stop."
+        )
         try:
             while True:
                 time.sleep(1)
         except KeyboardInterrupt:
             print("\nScheduler stopped.")
     else:
+        main()
         main()

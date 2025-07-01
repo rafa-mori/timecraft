@@ -173,22 +173,7 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 /.idea/
-/.idea/dataSources/
-/.idea/dataSources/8ae14db5-f731-4025-822a-070c97ef7473/
-/.idea/dataSources/8ae14db5-f731-4025-822a-070c97ef7473/storage_v2/
-/.idea/dataSources/8ae14db5-f731-4025-822a-070c97ef7473/storage_v2/_src_/
-/.idea/dataSources/8ae14db5-f731-4025-822a-070c97ef7473/storage_v2/_src_/database/
-/.idea/dataSources/8ae14db5-f731-4025-822a-070c97ef7473/storage_v2/_src_/database/kubex_db.UgZZRQ/
-/.idea/dataSources/8ae14db5-f731-4025-822a-070c97ef7473/storage_v2/_src_/database/kubex_db.UgZZRQ/schema/
-/.idea/dataSources/8ae14db5-f731-4025-822a-070c97ef7473/storage_v2/_src_/database/kubex_db.UgZZRQ/schema/information_schema.FNRwLQ.meta
-/.idea/dataSources/8ae14db5-f731-4025-822a-070c97ef7473/storage_v2/_src_/database/kubex_db.UgZZRQ/schema/pg_catalog.0S1ZNQ.meta
-/.idea/dataSources/8ae14db5-f731-4025-822a-070c97ef7473/storage_v2/_src_/database/kubex_db.UgZZRQ/schema/public.abK9xQ.meta
-/.idea/dataSources/8ae14db5-f731-4025-822a-070c97ef7473/storage_v2/_src_/database/kubex_db.UgZZRQ.meta
-/.idea/dataSources/8ae14db5-f731-4025-822a-070c97ef7473.xml
-/.idea/.gitignore
-/.idea/misc.xml
-/.idea/modules.xml
-/.idea/TimeCraft.iml
-/.idea/vcs.xml
-/.idea/workspace.xml
+.idea/
 .project/roadmap.md
+pkg/
+docs/jobs/*.md
