@@ -20,3 +20,11 @@ pyaudio
 vosk
 soundfile
 pyttsx3
+mkdocs
+mkdocs-material
+mkdocs-include-markdown-plugin
+mkdocs-jupyter
+mkdocs-minify-plugin
+mkdocs-awesome-pages-plugin
+mkdocs-mermaid2-plugin
+mkdocs-material-extensions

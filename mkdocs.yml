@@ -1,7 +1,51 @@
 site_name: TimeCraft
+site_url: https://rafa-mori.github.io/timecraft/
+theme:
+  name: material
+  palette:
+    primary: 'indigo'
+    accent: 'indigo'
+  features:
+    - navigation.tabs
+    - navigation.top
+    - navigation.instant
+    - navigation.expand
+    - navigation.sections
+    - navigation.tracking
+    - navigation.tabs.sticky
+    - navigation.tabs.sticky.scroll
+    - navigation.tabs.sticky.scroll.offset: 64
+    - navigation.tabs.sticky.scroll.offset.mobile: 0
+    - navigation.tabs.sticky.scroll.offset.desktop: 64
+    - navigation.tabs.sticky.scroll.offset.tablet: 64
+  font:
+    text: Roboto
+    code: Roboto Mono
+markdown_extensions:
+  - admonition
+  - codehilite
+  - toc:
+      permalink: True
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - smarty
+  - tables
 nav:
   - Home: /docs/index.md
   - README: /README.md
   - README pt-BR: /docs/README.pt-BR.md
   - License: /LICENSE
   - Code of Conduct: /CODE_OF_CONDUCT.md
+  - Contributing: /CONTRIBUTING.md
+  - Changelog: /CHANGELOG.md
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/rafa-mori/timecraft
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/rafa-mori/
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/faelOmori
+  repo_url: https://github.com/rafa-mori/timecraft
