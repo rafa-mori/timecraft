@@ -8,16 +8,29 @@ It includes functionalities for data preprocessing, model training, and evaluati
 It also provides a simple interface for saving and loading models, as well as generating
 plots for visualizing the results.
 """
+# AudioProcessor,
+from .audio_processor import AudioProcessor
+from .chatbot_actions import ChatbotActions
+from .chatbot_msgset import ChatbotMsgSetHandler
+from .cli import main
+from .hotword_detector import HotwordDetector
 from .timecraft_ai import (
-                            TimeCraftAI,
-                            TimeCraftModel, 
-                            DatabaseConnector, 
-                            LinearRegression,
-                            LinearRegressionAnalysis,
-                            RandomForestClassifier,
-                            ClassifierModel,
-                            main,
+    ClassifierModel,
+    DatabaseConnector,
+    LinearRegression,
+    LinearRegressionAnalysis,
+    RandomForestClassifier,
+    TimeCraftAI,
+    TimeCraftModel,
+    main,
 )
+
+# VoiceSynthesizer,
+# HotwordDetector,
+# ChatbotMsgSetHandler,
+# MCPCommandHandler,
+# VoiceCommandHandler,
+# HotwordCommandHandler,
 
 __all__ = [
     "TimeCraftAI",
@@ -27,7 +40,7 @@ __all__ = [
     "LinearRegressionAnalysis",
     "RandomForestClassifier",
     "ClassifierModel",
-    "main"
+    "main",
 ]
 
 __version__ = "0.1.0"

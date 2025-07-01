@@ -71,6 +71,87 @@ timecraft/
 
 ---
 
+## 🗣️ MCP Voice & Chatbot Server (Nova Feature)
+
+O TimeCraft agora conta com um servidor MCP (Multi-Command Processor) com chatbot embutido, pronto para comandos por voz e texto, análise de dados, insights e integração opcional com LLMs/plugins externos!
+
+### Principais Endpoints (FastAPI)
+
+- **/health** — Health check do servidor
+- **/mcp/command** — Envie comandos de texto para o MCP (chatbot)
+- **/mcp/plugins** — Liste, ative/desative e configure plugins/LLMs (ex: OpenAI)
+
+#### Exemplos de uso
+
+```bash
+# Health check
+curl http://localhost:8000/health
+
+# Enviar comando para o chatbot
+curl -X POST http://localhost:8000/mcp/command -H "Content-Type: application/json" -d '{"message": "me mostre o histórico"}'
+
+# Listar plugins/LLMs
+curl http://localhost:8000/mcp/plugins
+
+# Ativar plugin OpenAI
+curl -X POST http://localhost:8000/mcp/plugins/openai/enable
+
+# Configurar chave de API do OpenAI
+curl -X POST http://localhost:8000/mcp/plugins/openai/config -H "Content-Type: application/json" -d '{"api_key": "SUA_CHAVE_AQUI"}'
+```
+
+### Como rodar o servidor
+
+```bash
+uvicorn src.timecraft_ai.mcp_server:app --reload
+```
+
+### Recursos do MCP
+- Processamento de comandos por voz (Vosk + Porcupine)
+- Síntese de voz (pyttsx3)
+- Chatbot integrado com análise de dados, previsão e insights
+- Modular: plugins/LLMs ativados só se configurados
+- Baixo custo computacional e monetário por padrão
+
+Veja o código-fonte em [`src/timecraft_ai/`](./timecraft_ai/) para detalhes e exemplos de integração.
+
+---
+
+## 🗣️ Como usar o MCP por voz
+
+O TimeCraft permite interação totalmente hands free via comandos de voz, com ativação por hotword e resposta falada!
+
+### Pré-requisitos
+- Microfone conectado ao computador
+- Dependências instaladas: `vosk`, `pyaudio`, `pyttsx3`, `pvporcupine`
+- (Opcional) Configurar o modelo Vosk para o idioma desejado (exemplo: `models/vosk-model-small-pt`)
+
+### Como rodar o processador de áudio
+
+```bash
+python -m timecraft_ai.audio_processor
+```
+
+Ou diretamente pelo arquivo:
+
+```bash
+python src/timecraft_ai/audio_processor.py
+```
+
+### Funcionamento
+- O sistema aguarda a palavra-chave (hotword), por padrão: `mcp`
+- Após detectar a hotword, grava e transcreve seu comando
+- O comando é processado pelo MCP e a resposta é falada de volta
+
+#### Exemplo de fluxo
+1. Diga: **"MCP"** (aguarde a confirmação)
+2. Fale: **"Me mostre o histórico"**
+3. O MCP responde em voz: "Esses são os dados históricos: ..."
+
+Você pode customizar a hotword, voz e outros parâmetros editando o arquivo `audio_processor.py`.
+
+---
+
 ## 🤝 Contributing
 
 Contributions of all kinds are welcome!
@@ -99,3 +180,6 @@ If you have any questions or feedback, please feel free to reach out:
 - Email: [faelmori@gmail.com](mailto:faelmori@gmail.com)
 - GitHub: [faelmori/timecraft](https://github.com/faelmori/timecraft)
 - LinkedIn: [Rafa Mori](https://www.linkedin.com/in/rafa-mori)
+
+---
+
