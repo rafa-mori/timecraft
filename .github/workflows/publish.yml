@@ -13,7 +13,6 @@ on:
   # The `pull_request` event triggers the workflow when a pull request is opened, synchronized, or reopened.
   # This is useful for running tests and checks on code changes before they are merged into the main branch.
   # The `branches` filter ensures that the workflow only runs for pull requests targeting the main branch.
-  # if: github.actor == 'faelmori'  # Only run for pull requests by faelmori
   pull_request:
     types: [opened, synchronize, reopened]  # Run on pull request events
     # The `branches` filter ensures that the workflow only runs for pull requests targeting the main
@@ -43,13 +42,43 @@ permissions:
   id-token: write  # Allows the workflow to request an ID token for authentication with external services
 
 jobs:
-  deploy:
+  # The `deploy-constraints` job is responsible for checking if the actor is allowed to deploy.
+  # It ensures that only authorized users can trigger the deployment process.
+  # This is important to prevent unauthorized deployments and ensure that only trusted contributors can publish new versions to PyPI.
+  # The job runs on the latest version of Ubuntu and performs a series of checks to validate the actor's permissions and the context of the workflow trigger.
+  # If any of the checks fail, the job exits with an error message, preventing the deployment from proceeding.
+  deploy-constraints:
     runs-on: ubuntu-latest
-    if: github.actor == 'faelmori'  # Only run for actions by faelmori
-    # The `if` condition ensures that the job only runs for actions initiated by the user
-    # This is useful for restricting the workflow to specific users or roles, such as the repository owner or a maintainer.
-    # This prevents unauthorized users from triggering the workflow and ensures that only trusted actions can publish to PyPI.
-    # This is particularly important for workflows that publish packages or make significant changes to the repository.
+    steps:
+      - name: Check if actor is allowed to deploy
+        run: |
+          # Get all contributor's username from the GitHub repository
+          _contributors=$(gh api repos/rafa-mori/timecraft/contributors --jq '.[].login' | tr '\n' ' ')
+          if [[ ! " ${_contributors[@]} " =~ " ${GITHUB_ACTOR} " ]]; then
+            echo "Actor is not allowed to deploy: ${{ github.actor }}"
+            echo "Allowed contributors: $_contributors"
+            echo "If you are a maintainer, please add yourself to the list of contributors."
+            echo "If you are not a maintainer, please contact a maintainer to deploy."
+            exit 1
+          fi
+          if [ "${{ github.event_name }}" != "push" ] && [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
+            echo "This workflow can only be triggered by push or workflow_dispatch events."
+            exit 1
+          fi
+          if [ "${{ github.event.repository.fork }}" == "true" ]; then
+            echo "This workflow cannot be triggered from a forked repository."
+            exit 1
+          fi
+          if [[ "${{ github.ref }}" != refs/tags/* ]]; then
+            echo "This workflow can only be triggered by a tag push."
+            exit 1
+          fi
+          echo "All workflow constraints are satisfied."
+
+  # The `deploy` job is responsible for building the project, checking the version, and publishing it to PyPI.
+  deploy:
+    needs: deploy-constraints  # This job depends on the deploy-constraints job to ensure that the actor is allowed to deploy
+    runs-on: ubuntu-latest
     steps:
       - name: Validate version
         uses: actions/checkout@v4
@@ -101,7 +130,7 @@ jobs:
           fi
           # Check if the version exists on PyPI
           echo "Checking PyPI for version $VERSION"
-          if curl -s https://pypi.org/pypi/timecraft-ai/v1.1.1/json | grep -v 'Not Found' -q; then
+          if curl -s https://pypi.org/pypi/timecraft-ai/$VERSION/json | grep -v 'Not Found' -q; then
             echo "Version $VERSION already exists on PyPI"
             exit 1
           fi
