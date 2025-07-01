@@ -15,4 +15,8 @@ pymongo
 cx_Oracle
 xarray
 sqlalchemy
-kaleido
+flask
+pyaudio
+vosk
+soundfile
+pyttsx3

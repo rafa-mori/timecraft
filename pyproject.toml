@@ -78,8 +78,7 @@ dependencies = [
   "xarray",
   "seaborn",
   "plotly",
-  "vosk",
-  "soundfile"
+  "fastapi>=0.115.12",
 ]
 
 [project.optional-dependencies]
