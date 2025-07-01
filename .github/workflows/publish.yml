@@ -59,7 +59,7 @@ jobs:
           script: |
             // This step sets up the GitHub CLI to interact with the repository
             // It allows us to fetch contributors and perform other GitHub API operations
-            const { exec } = require('child_process');
+            // const { exec } = require('child_process');
             exec('gh auth login --with-token', (error, stdout, stderr) => {
               if (error) {
                 console.error(`Error setting up GitHub CLI: ${error.message}`);
