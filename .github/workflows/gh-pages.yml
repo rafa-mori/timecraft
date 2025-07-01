@@ -2,30 +2,53 @@ name: Deploy GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
-  id-token: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # Checkout do código
       - uses: actions/checkout@v4
+
+      # Configuração do Python
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-      - name: Install dependencies
-        run: pip install mkdocs
-      - name: Build site
-        run: mkdocs build --site-dir site
+
+      # Cache das dependências pip
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      # Instalação das dependências (via requirements.txt se existir, senão apenas mkdocs)
+      - name: Instalar dependências
+        run: |
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            pip install mkdocs
+          fi
+
+      # Lint do arquivo mkdocs (opcional, mas recomendado)
+      - name: Lint MkDocs config
+        run: mkdocs build --strict --site-dir site
+
+      # Upload do artifact
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           path: site
+          retention-days: 7
 
   deploy:
     needs: build
@@ -34,6 +57,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # Deploy para o GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
