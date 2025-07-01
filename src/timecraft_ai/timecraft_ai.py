@@ -547,7 +547,7 @@ class DatabaseConnector:
                 raise ValueError("Unsupported database type")
             logger.info(f"Connected to {self.db_type.upper()} database.")
         except Exception as e:
-            logger.error(f"Error connecting to the {self.db_type} database: {e}")
+            logger.error(f"Erro ao conectar ao banco de dados {self.db_type}: {e}")
             self.connection = None
 
     def close(self):
@@ -575,10 +575,10 @@ class DatabaseConnector:
                     logger.info(f"Executing query on MSSQL: {query}")
                     return pd.read_sql(query, self.connection)
                 else:
-                    logger.warning("MSSQL connection is not a SQLAlchemy Engine.")
+                    logger.warning("Conexão mssql não é um Engine do SQLAlchemy.")
                     return pd.DataFrame()
             except Exception as e:
-                logger.error(f"Error executing query: {e}")
+                logger.error(f"Erro ao executar a query: {e}")
                 return pd.DataFrame()
         if self.connection and self.db_type == "oracle":
             try:
@@ -601,26 +601,26 @@ class DatabaseConnector:
                                 close()
                                 return pd.DataFrame(rows, columns=columns)
                             else:
-                                logger.warning("fetchall() did not return an iterable.")
+                                logger.warning("fetchall() não retornou um iterável.")
                                 close()
                                 return pd.DataFrame()
                         else:
-                            logger.warning("Cursor methods are not callable.")
+                            logger.warning("Métodos do cursor não são chamáveis.")
                             return pd.DataFrame()
                     else:
-                        logger.warning("Cursor attribute exists but is not callable.")
+                        logger.warning("Atributo cursor existe mas não é chamável.")
                         return pd.DataFrame()
                 else:
-                    logger.warning("Oracle connection lacks cursor() method or is a SQLAlchemy Engine.")
+                    logger.warning("Conexão Oracle não possui método cursor() ou é um Engine.")
                     return pd.DataFrame()
             except Exception as e:
-                logger.error(f"Error executing query: {e}")
+                logger.error(f"Erro ao executar a query: {e}")
                 return pd.DataFrame()
         elif self.db_type == "mongodb":
-            logger.warning("Use MongoDB-specific methods like find() or insert_one().")
+            logger.warning("Use métodos específicos para MongoDB como find() ou insert_one().")
             return None
         else:
-            logger.warning("No active connection.")
+            logger.warning("Nenhuma conexão ativa.")
             return pd.DataFrame()
 
 
@@ -820,7 +820,7 @@ class ClassifierModel:
         if self.y_test is not None and self.y_pred is not None:
             self.accuracy = accuracy_score(self.y_test, self.y_pred)
             logger.info(f"Model accuracy: {self.accuracy}")
-            print(f"Model accuracy: {self.accuracy}")
+            print(f"Acurácia do modelo: {self.accuracy}")
         else:
             logger.warning("Test or prediction data is None. Cannot evaluate model.")
             self.accuracy = None
@@ -912,7 +912,7 @@ class TimeCraftAI:
         :param db_connector: DatabaseConnector instance.
         """
         self.db_connector = db_connector
-        # Update the connector in previously created models
+        # Atualiza o conector nos modelos já criados
         if self.timecraft_model:
             self.timecraft_model.db_connector = db_connector
         if self.classifier_model:
