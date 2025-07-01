@@ -52,9 +52,6 @@ markdown_extensions:
       smart_enable: all
   - pymdownx.caret
   - pymdownx.details
-  - pymdownx.emoji:
-      emoji_index: "material.extensions.emoji.twemoji"
-      emoji_generator: !!null
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
