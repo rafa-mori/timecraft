@@ -40,6 +40,7 @@ nav:
   - Code of Conduct: CODE_OF_CONDUCT.md
   - Contributing: CONTRIBUTING.md
   - Changelog: CHANGELOG.md
+  - AI Integration (Installation): INSTALL_AI
 extra:
   social:
     - icon: fontawesome/brands/github
