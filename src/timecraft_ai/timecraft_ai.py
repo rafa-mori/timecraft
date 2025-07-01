@@ -213,21 +213,17 @@ class TimeCraftModel:
         """
         output_dir = os.path.dirname(output_file)
 
-        if not os.path.exists(output_dir):
+        if output_dir and not os.path.exists(output_dir):
             os.makedirs(output_dir, exist_ok=True)
 
         if not output_file.endswith('.csv'):
             output_file += '.csv'
         if os.path.exists(output_file):
             os.remove(output_file)
-        if not os.path.exists(output_file):
-            os.makedirs(output_file, exist_ok=True)
-        if len(self.forecast.value_counts()) == 0: # type: ignore
+
+        if self.forecast is None or self.forecast.empty:
             logger.error("Forecast is empty. Please run the model before saving the forecast.")
             raise ValueError("Forecast is empty. Please run the model before saving the forecast.")
-        if self.forecast is None:
-            logger.error("Forecast is None. Please run the model before saving the forecast.")
-            raise ValueError("Forecast is None. Please run the model before saving the forecast.")
         self.forecast.to_csv(output_file, index=False) # type: ignore
         logger.info(f"Forecast saved to {output_file}")
         return output_file
@@ -778,6 +774,8 @@ class ClassifierModel:
             self.data['data_compra'] = pd.to_datetime(self.data['data_compra'])
             self.data['mes'] = self.data['data_compra'].dt.month
             self.data['ano'] = self.data['data_compra'].dt.year
+            # Remove the datetime column to avoid dtype issues with scikit-learn
+            self.data = self.data.drop(columns=['data_compra'])
         else:
             logger.warning("Data is None. Cannot preprocess data.")
 
