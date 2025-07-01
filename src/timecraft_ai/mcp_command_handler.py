@@ -32,4 +32,4 @@ class MCPCommandHandler:
         return response
 
 # Instância pronta para uso
-handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()handler = MCPCommandHandler()
+handler = MCPCommandHandler()handler = MCPCommandHandler()
