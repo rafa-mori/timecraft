@@ -5,6 +5,7 @@ on:
     tags:
     #   - NoPublishForNow
        - "v*.*.*"  
+  workflow_dispatch:
 
 jobs:
   deploy:
