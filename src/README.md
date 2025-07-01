@@ -21,7 +21,7 @@ Welcome to **TimeCraft**! This project was created to simplify time series analy
 
 ## 📁 Project Structure
 
-```
+```plaintext
 timecraft/
 ├── /src/                # Core logic and modules
 ├── /docs/               # Documentation files (README, INSTALL, CONTRIBUTING)
@@ -39,7 +39,7 @@ timecraft/
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/faelmori/timecraft.git
+   git clone https://github.com/rafa-mori/timecraft.git
    cd timecraft
    ```
 
@@ -77,9 +77,9 @@ O TimeCraft agora conta com um servidor MCP (Multi-Command Processor) com chatbo
 
 ### Principais Endpoints (FastAPI)
 
-- **/health** — Health check do servidor
-- **/mcp/command** — Envie comandos de texto para o MCP (chatbot)
-- **/mcp/plugins** — Liste, ative/desative e configure plugins/LLMs (ex: OpenAI)
+* **/health** — Health check do servidor
+* **/mcp/command** — Envie comandos de texto para o MCP (chatbot)
+* **/mcp/plugins** — Liste, ative/desative e configure plugins/LLMs (ex: OpenAI)
 
 #### Exemplos de uso
 
@@ -107,11 +107,12 @@ uvicorn src.timecraft_ai.mcp_server:app --reload
 ```
 
 ### Recursos do MCP
-- Processamento de comandos por voz (Vosk + Porcupine)
-- Síntese de voz (pyttsx3)
-- Chatbot integrado com análise de dados, previsão e insights
-- Modular: plugins/LLMs ativados só se configurados
-- Baixo custo computacional e monetário por padrão
+
+* Processamento de comandos por voz (Vosk + Porcupine)
+* Síntese de voz (pyttsx3)
+* Chatbot integrado com análise de dados, previsão e insights
+* Modular: plugins/LLMs ativados só se configurados
+* Baixo custo computacional e monetário por padrão
 
 Veja o código-fonte em [`src/timecraft_ai/`](./timecraft_ai/) para detalhes e exemplos de integração.
 
@@ -122,9 +123,10 @@ Veja o código-fonte em [`src/timecraft_ai/`](./timecraft_ai/) para detalhes e e
 O TimeCraft permite interação totalmente hands free via comandos de voz, com ativação por hotword e resposta falada!
 
 ### Pré-requisitos
-- Microfone conectado ao computador
-- Dependências instaladas: `vosk`, `pyaudio`, `pyttsx3`, `pvporcupine`
-- (Opcional) Configurar o modelo Vosk para o idioma desejado (exemplo: `models/vosk-model-small-pt`)
+
+* Microfone conectado ao computador
+* Dependências instaladas: `vosk`, `pyaudio`, `pyttsx3`, `pvporcupine`
+* (Opcional) Configurar o modelo Vosk para o idioma desejado (exemplo: `models/vosk-model-small-pt`)
 
 ### Como rodar o processador de áudio
 
@@ -139,11 +141,13 @@ python src/timecraft_ai/audio_processor.py
 ```
 
 ### Funcionamento
-- O sistema aguarda a palavra-chave (hotword), por padrão: `mcp`
-- Após detectar a hotword, grava e transcreve seu comando
-- O comando é processado pelo MCP e a resposta é falada de volta
+
+* O sistema aguarda a palavra-chave (hotword), por padrão: `mcp`
+* Após detectar a hotword, grava e transcreve seu comando
+* O comando é processado pelo MCP e a resposta é falada de volta
 
 #### Exemplo de fluxo
+
 1. Diga: **"MCP"** (aguarde a confirmação)
 2. Fale: **"Me mostre o histórico"**
 3. O MCP responde em voz: "Esses são os dados históricos: ..."
@@ -172,14 +176,10 @@ Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on ho
 
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
-
 ## 📧 Contact
 
 If you have any questions or feedback, please feel free to reach out:
 
-- Email: [faelmori@gmail.com](mailto:faelmori@gmail.com)
-- GitHub: [faelmori/timecraft](https://github.com/faelmori/timecraft)
-- LinkedIn: [Rafa Mori](https://www.linkedin.com/in/rafa-mori)
-
----
-
+* Email: [faelmori@gmail.com](mailto:faelmori@gmail.com)
+* GitHub: [faelmori/timecraft](https://github.com/rafa-mori/timecraft)
+* LinkedIn: [Rafa Mori](https://www.linkedin.com/in/rafa-mori)

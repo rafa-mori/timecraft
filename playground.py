@@ -5,21 +5,23 @@
 # Certifique-se de instalar o pacote antes de rodar este script:
 #     pip install timecraft_ai
 from datetime import datetime
-from timecraft_ai.timecraft_ai import TimeCraftModel
+
+from .src.timecraft_ai import TimeCraftModel
 
 start_time = datetime.now()
 
 # Crie uma instância de TimeCraftModel
 model = TimeCraftModel(
-    data='./example/data/hist_cambio_float.csv',  # Caminho para o arquivo CSV
-    date_column='dt',
-    value_columns=['purchaseValue', 'saleValue'],
+    data="./example/data/hist_cambio_float.csv",  # Caminho para o arquivo CSV
+    date_column="dt",
+    value_columns=["purchaseValue", "saleValue"],
     is_csv=True,
-    periods=30
+    periods=30,
 )
 
 # Rode o modelo
-data = model.run()
+model.run()
+
 fcst = model.get_forecast()
 for key, value in fcst.items():
     print(key, value)

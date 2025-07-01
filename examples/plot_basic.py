@@ -6,7 +6,7 @@ Make sure to install the package before running this script:
 
 from datetime import datetime
 
-from timecraft_ai.timecraft_ai import TimeCraftModel
+from ..src.timecraft_ai import TimeCraftModel
 
 start_time = datetime.now()
 
@@ -20,7 +20,7 @@ model = TimeCraftModel(
 )
 
 # Run the model
-data = model.run()
+model.run()
 
 fcst = model.get_forecast()
 
