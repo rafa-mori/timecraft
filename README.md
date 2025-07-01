@@ -49,16 +49,16 @@ TimeCraft is a flexible and powerful solution for time series analysis, database
 
 ## 📦 Installation
 
-**Requirements:** Python 3.8+
-
+**Requirements:** Python 3.11+
+  
 ```bash
-git clone https://github.com/faelmori/timecraft.git
+git clone https://github.com/rafa-mori/timecraft.git
 cd timecraft
 
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 
-pip install -r requirements.txt
+pip install -r src/timecraft_ai/requirements.txt
 ```
 
 ---
@@ -159,7 +159,7 @@ Full documentation is available on [GitHub Pages](<https://rafa-mori.github.io/t
 
 ## 📄 License
 
-[MIT License](<https://opensource.org/licenses/MIT>)
+[MIT License](LICENSE)
 
 ---
 

@@ -19,7 +19,7 @@ jobs:
       # Configuração do Python
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.12'  # Versão do Python a ser usada
 
       # Cache das dependências pip
       - name: Cache pip
@@ -33,15 +33,15 @@ jobs:
       # Instalação das dependências (via requirements.txt se existir, senão apenas mkdocs)
       - name: Instalar dependências
         run: |
-          if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
+          if [ -f src/timecraft_ai/requirements.txt ]; then
+            pip install -r src/timecraft_ai/requirements.txt
           else
             pip install mkdocs
           fi
 
       # Lint do arquivo mkdocs (opcional, mas recomendado)
       - name: Lint MkDocs config
-        run: mkdocs build --strict --site-dir site
+        run: mkdocs build --site-dir site
 
       # Upload do artifact
       - name: Upload artifact

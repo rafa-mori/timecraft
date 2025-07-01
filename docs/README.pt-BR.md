@@ -68,7 +68,7 @@ TimeCraft é uma solução flexível e poderosa para análise de séries tempora
 
 Requisitos:
 
-- **Python** 3.8 ou superior.
+- **Python** 3.11 ou superior.
 
 ```bash
 # Clone o repositório
@@ -80,7 +80,7 @@ Requisitos:
  source venv/bin/activate  # No Windows: venv\Scripts\activate
 
 # Instale as dependências
- pip install -r requirements.txt
+ pip install -r src/timecraft_ai/requirements.txt
 ```
 
 ---
