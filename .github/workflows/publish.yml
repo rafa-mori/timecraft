@@ -3,8 +3,8 @@ name: Publish to PyPI
 on:
   push:
     tags:
-        - NoPublishForNow
-    #   - "v*.*.*"  
+    #   - NoPublishForNow
+       - "v*.*.*"  
 
 jobs:
   deploy:
