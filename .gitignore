@@ -176,4 +176,7 @@ cython_debug/
 .idea/
 .project/roadmap.md
 pkg/
+bkp/
+*.bkp/
+bkp.*/
 docs/jobs/*.md

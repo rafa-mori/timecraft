@@ -25,6 +25,9 @@ check_dir() {
 }
 
 ensure_vars() {
+  _PROC_REF="${_PROC_REF:-}"
+  _TEMP_DIR="${_TEMP_DIR:-}"
+
   export _PROJECT_NAME="${_PROJECT_NAME:-timecraft_ai}"
   export _APP_NAME="${_APP_NAME:-timecraft}" || log "fatal" "Failed to set app name"
   export _PACKAGE_NAME="${_PACKAGE_NAME:-timecraft_ai}" || log "fatal" "Failed to set package name"
@@ -32,6 +35,21 @@ ensure_vars() {
 
   # Ensure the root directory is set
   export _ROOT_DIR="${_ROOT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && git rev-parse --show-toplevel || printf '%s' "$(pwd)/..")}" || log "fatal" "Failed to set root directory"
+
+  if [[ -z "${_TEMP_DIR:-}" || ! $(check_dir "${_TEMP_DIR}") ]]; then
+    log "info" "Temporary directory not set or does not exist, creating a new one."
+    _TEMP_DIR=$(create_temp || {
+      log "fatal" "Failed to create temporary directory."
+      return 1
+    })
+
+    export _PROC_REF=${_TEMP_DIR##*"${_APP_NAME}."}
+  fi
+
+  if test -z "${_PROC_REF}"; then
+    log "fatal" "Error creating process reference, _TEMP_DIR is not set or does not exist."
+    return 1
+  fi
 
   # Base paths and directories
   export _SCRIPT_DIR="${_SCRIPT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}" || log "fatal" "Failed to determine script directory"
@@ -42,6 +60,7 @@ ensure_vars() {
   export _EXAMPLES_DIR="${_EXAMPLES_DIR:-${_SRC_DIR}/examples}" || log "fatal" "Failed to set examples directory"
   export _DOCS_DIR="${_DOCS_DIR:-${_SRC_DIR}/docs}" || log "fatal" "Failed to set documentation directory"
   export _SUPPORT_DIR="${_SUPPORT_DIR:-${_SRC_DIR}/support}" || log "fatal" "Failed to set support directory"
+  export _LOG_DIR="${_LOG_DIR:-${_ROOT_DIR}/log}" || log "fatal" "Failed to set log directory"
 
   if [[ -z "${_BINARY:-}" ]]; then
     _BINARY="${_DIST_DIR}/${_APP_NAME:-}"
@@ -122,6 +141,9 @@ ensure_vars() {
 }
 
 ensure_dirs(){
+  # Ensure the project source directory exists, if not will get panic at runtime
+  check_dir "${_SRC_DIR}" || log "fatal" "Failed to create project src directory: ${_SRC_DIR}"
+
   # Ensure temporary directory exists
   ! check_dir "${_TEMP_DIR:-}" && create_temp || true
 
@@ -132,9 +154,7 @@ ensure_dirs(){
   check_dir "${_EXAMPLES_DIR}" || mkdir -p "${_EXAMPLES_DIR}"
   check_dir "${_DOCS_DIR}" || mkdir -p "${_DOCS_DIR}"
   check_dir "${_SUPPORT_DIR}" || mkdir -p "${_SUPPORT_DIR}"
-
-  # Ensure the project source directory exists, if not will get panic at runtime
-  check_dir "${_SRC_DIR}" || log "fatal" "Failed to create project src directory: ${_SRC_DIR}"
+  check_dir "${_LOG_DIR}" || mkdir -p "${_LOG_DIR}"
 
   # Ensure the release directory exists, if not create it, because it is transient and will be removed after the release
   check_dir "${_DIST_DIR}" || mkdir -p "${_DIST_DIR}"

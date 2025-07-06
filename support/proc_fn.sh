@@ -59,6 +59,37 @@ setup_environment() {
   log "success" "Environment setup complete!"
 }
 
+setup_build_environment() {
+  log "info" "Setting up build environment..."
+  if [[ ! -d "${_VENV_NAME}" ]]; then
+    log "error" "Virtual environment not found: ${_VENV_NAME}. Please run 'setup' first."
+    return 1
+  fi
+
+  cd "${_SRC_DIR}" || {
+    log "error" "Failed to change directory to ${_SRC_DIR}. Exiting."
+    return 1
+  }
+
+  run_command "python3 -m pip install --upgrade pip setuptools wheel" || {
+    log "error" "Failed to upgrade pip, setuptools, or wheel. Exiting."
+    return 1
+  }
+
+  run_command "python3 -m pip install --upgrade build twine" || {
+    log "error" "Failed to install build or twine. Exiting."
+    return 1
+  }
+
+  run_command "python3 -m pip install --upgrade -e ." || {
+    log "error" "Failed to install the package in editable mode. Exiting."
+    return 1
+  }
+
+  log "success" "Build environment setup complete!"
+  return 0
+}
+
 run_command() {
   local CMD="${1:-}"
   if [[ -z "$CMD" ]]; then

@@ -19,13 +19,16 @@ permissions:
 jobs:
   deploy-constraints:
     runs-on: ubuntu-latest
+    outputs:
+      will_proceed: ${{ steps.marker_check.outputs.will_proceed }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Ensure we have all tags and history
+          fetch-depth: 0
 
-      - name: Validate deploy constraints
+      - name: Extract Project Info
+        id: extract_info
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
@@ -34,35 +37,180 @@ jobs:
           IS_FORK: ${{ github.event.repository.fork }}
           REF: ${{ github.ref }}
         run: |
-          echo "🔐 Validating deployment..."
+          VERSION_TAG=${GITHUB_REF#refs/tags/}
+          VERSION=${VERSION_TAG#v}
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version=${VERSION}" >> $GITHUB_ENV
 
-          CONTRIBUTORS=$(gh api repos/${REPO}/contributors --jq '.[].login' | tr '\n' ' ')
-          echo "✔️ Contributors: $CONTRIBUTORS"
+      - name: Check anti-loop marker
+        id: marker_check
+        run: |
+          printf '%s\n' "🔐 Validating deployment..."
 
+          # Extract necessary variables
+
+          # Extract repository contributors username list
+          CONTRIBUTORS="$(gh api repos/${REPO}/contributors --jq '.[].login' | tr '\n' ' ')"
+
+          # Remove trailing space
+          CONTRIBUTORS="$(echo "$CONTRIBUTORS" | sed 's/[[:space:]]*$//')"
+
+          # Print contributors for debugging
+          printf '%s\n' "✔️ Contributors: $CONTRIBUTORS"
+
+          # Check if actor is in contributors
           if [[ ! " $CONTRIBUTORS " =~ " $ACTOR " ]]; then
-            echo "❌ Actor '$ACTOR' is not an authorized contributor."
+            printf '%s\n' "❌ Actor '$ACTOR' is not an authorized contributor."
             exit 1
           fi
 
+          # Check event type and repository fork status
+          if [[ -z "$EVENT" ]]; then
+            printf '%s\n' "❌ EVENT is not set. Cannot proceed."
+            exit 1
+          fi
           if [[ "$EVENT" != "push" && "$EVENT" != "workflow_dispatch" ]]; then
-            echo "❌ Only 'push' or manual dispatch allowed. Got '$EVENT'."
+            printf '%s\n' "❌ Only 'push' or manual dispatch allowed. Got '$EVENT'."
             exit 1
           fi
-
           if [[ "$IS_FORK" == "true" ]]; then
-            echo "❌ Workflow cannot run from a fork."
+            printf '%s\n' "❌ Workflow cannot run from a fork."
             exit 1
           fi
 
+          # Check if the ref who triggered the workflow is a tag and matches semver format
+          if [[ -z "$REF" ]]; then
+            printf '%s\n' "❌ REF is not set. Cannot proceed."
+            exit 1
+          fi
           if [[ ! "$REF" =~ ^refs/tags/v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "❌ Tag does not match semver format: $REF"
+            printf '%s\n' "❌ Tag does not match semver format: $REF"
             exit 1
           fi
 
-          echo "✅ All constraints passed."
+          # Get the version from the extracted info
+          VERSION="${{ steps.extract_info.outputs.version }}"
+          if [[ -z "$VERSION" ]]; then
+            printf '%s\n' "❌ Version is not set. Cannot proceed."
+            exit 1
+          fi
+          VERSION_HASH="$(echo -n "$VERSION" | sha256sum | awk '{print $1}')"
+
+          # Flag to control deployment
+          # If the marker exists and the count is 2 or more, we will not proceed
+          # If the marker does not exist, we will create a new one
+          # If the marker exists and the count is less than 2, we will proceed
+          MARKER_PREFIX="docs/vsctl/.kubex_publish_marker_${VERSION}_${VERSION_HASH}"
+          CUR_TIMESTAMP="$(date +%Y%m%d%H%M%S)"
+
+          # Full marker name with timestamp
+          # This will be used to create a new marker file
+          # and to check if the marker file exists
+          MARKER_FULL="${MARKER_PREFIX}_${CUR_TIMESTAMP}"
+
+          # Initialize control variables
+          WILL_PROCEED=false
+          COUNT=0
+
+          # Check for existing publish marker, allowing up to 2 executions
+          MARKER_FILE=$(ls "docs/vsctl/.kubex_publish_marker_${VERSION}_${VERSION_HASH}"* 2>/dev/null | head -n1 || true)
+
+          if [ -n "${MARKER_FILE}" ]; then
+            # Check for existing marker file
+            if test -f "${MARKER_FILE}"; then
+              # Read the count from the marker file
+              COUNT=$(cat "${MARKER_FILE}" | grep '^COUNT=' | awk -F'=' '{print $2}')
+
+              # Increment the count
+              COUNT=$((COUNT + 1))
+              printf '%s\n' "COUNT=$COUNT" > "${MARKER_FILE}"
+
+              # Output the current count
+              printf '%s\n' "📊 Current publish marker count for ${VERSION}: $COUNT"
+              printf '%s\n' "🗓️ Last execution: $(date -d "@${CUR_TIMESTAMP}" +"%Y-%m-%d %H:%M:%S")"
+
+              # If count exceeds 2, abort the publication
+              # and inform the user
+              if [ $COUNT -ge 2 ]; then
+                WILL_PROCEED=false
+                printf '%s\n' "❌ Publish marker count for ${VERSION} has reached $COUNT executions. Aborting deployment."
+                printf '%s\n' "Please check the marker file: ${MARKER_FILE}"
+                printf '%s\n' "If you want to reset the count, please remove the marker file manually."
+              else
+                WILL_PROCEED=true
+              fi
+            else
+              WILL_PROCEED=true
+            fi
+          else 
+            WILL_PROCEED=true
+          fi
+
+          if test "$WILL_PROCEED" = true; then
+              # Log the deployment proceeding
+              printf '%s\n' "✅ Proceeding with deployment for version ${VERSION}."
+
+              if test -f "${MARKER_FILE}"; then
+                # Read the count from the marker file
+                COUNT=$(cat "${MARKER_FILE}" | grep '^COUNT=' | awk -F'=' '{print $2}')
+                # Read the timestamp from the marker file and check if it is older than 24 hours
+                TIMESTAMP=${MARKER_FILE##*-}
+                CURRENT_TIMESTAMP=$(date +%s)
+                MARKER_TIMESTAMP=$(date -d "$TIMESTAMP" +%s)
+                TIME_DIFF=$((CURRENT_TIMESTAMP - MARKER_TIMESTAMP))
+
+                if [ $TIME_DIFF -gt 86400 ]; then
+                  # If the marker is older than 24 hours, reset the count
+                  printf '%s\n' "🕒 Marker file is older than 24 hours. Removing marker file, allowing runners again over this tag."
+                  rm -f "${MARKER_FILE}"
+                  COUNT=0
+                else
+                  # Increment the count
+                  COUNT=$((COUNT + 1))
+                fi
+              else
+                # If marker file does not exist, initialize count to 1 and create it
+                printf '%s\n' "📄 Marker file not found. Initializing count to 1."
+                COUNT=1
+                touch "${MARKER_FILE}"
+              fi
+
+              printf '%d\n' "COUNT=$COUNT" > "${MARKER_FILE}"
+
+              # Add the marker file to git
+              if [ $COUNT -gt 0 ]; then
+                  git add "${MARKER_FILE}"
+              else
+                  git rm "${MARKER_FILE}" || true*
+              fi
+
+              git commit -m "add publish marker for version ${VERSION}, count: ${COUNT}" || true
+              git push origin HEAD:main
+          else
+              printf '%s\n' "❌ Deployment will not proceed due to marker count limit."
+
+              echo "version='${VERSION}'" >> $GITHUB_OUTPUT
+              echo "will_proceed=false" >> $GITHUB_OUTPUT
+              echo "marker='${MARKER_FILE}'" >> $GITHUB_OUTPUT
+              echo "count=$COUNT" >> $GITHUB_OUTPUT
+
+              exit 1
+          fi
+
+          echo "will_proceed=${WILL_PROCEED}" >> $GITHUB_OUTPUT
+          echo "version='${VERSION}'" >> $GITHUB_OUTPUT
+          echo "will_proceed=$WILL_PROCEED" >> $GITHUB_OUTPUT
+          echo "marker='${MARKER_FILE}'" >> $GITHUB_OUTPUT
+          echo "count=$COUNT" >> $GITHUB_OUTPUT
+
+          printf '%s\n' "✅ Deployment validation completed successfully."
+
+          exit 0
 
   deploy:
     needs: deploy-constraints
+    if: ${{ needs.deploy-constraints.outputs.will_proceed == 'true' }} # Only run if the previous job allows proceeding
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -78,56 +226,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install build twine
 
-      - name: Extract and validate version
-        id: version
-        run: |
-          VERSION_TAG=${GITHUB_REF#refs/tags/}
-          VERSION=${VERSION_TAG#v}
-
-          echo "Extracted version: $VERSION"
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-
-          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "❌ Invalid version format: $VERSION"
-            exit 1
-          fi
-
-      - name: Check if version already exists on PyPI (via jq)
-        run: |
-          echo "🔍 Checking PyPI for version $VERSION..."
-          VERSION_CHECK=$(curl -s https://pypi.org/pypi/timecraft-ai/$VERSION/json | jq -er '.info.version') && {
-            echo "❌ Version $VERSION already exists on PyPI as: $VERSION_CHECK"
-            exit 1
-          } || {
-            echo "✅ Version not found on PyPI. Proceeding..."
-          }
-
-      - name: Compare with previous tag
-        run: |
-          git fetch --tags --force --prune
-          current_version=${VERSION}
-          previous_tag=$(git tag --sort=-creatordate | grep '^v' | grep -v "v$current_version" | head -n1)
-          previous_version=${previous_tag#v}
-
-          echo "Current: $current_version"
-          echo "Previous: $previous_version"
-
-          if [[ "$current_version" == "$previous_version" ]]; then
-            echo "⚠️ Current version matches previous version. Skipping publish."
-            exit 1
-          fi
-
-          IFS='.' read -r c_major c_minor c_patch <<< "$current_version"
-          IFS='.' read -r p_major p_minor p_patch <<< "$previous_version"
-
-          if [[ "$c_major" -eq "$p_major" && "$c_minor" -eq "$p_minor" && "$c_patch" -eq "$p_patch" ]]; then
-            echo "🚫 No semantic change detected. Possibly a reused tag?"
-            exit 1
-          fi
-
-          echo "✅ Semantic version difference detected. Continuing..."
-
       - name: Build package
         run: |
           cd src
@@ -141,6 +239,15 @@ jobs:
           cd src
           echo "🚀 Publishing version $VERSION to PyPI..."
           twine upload --non-interactive dist/* --verbose
+
+      - name: Cleanup marker(s)
+        id: cleanup_markers
+        run: |
+          echo "🧹 Cleaning up publish marker(s)..."
+          VERSION="${{ github.event.inputs.version || github.ref_name }}"
+          git rm .kubex_publish_marker_${VERSION}_* || true
+          git commit -m "cleanup publish marker(s) $VERSION" || true
+          git push origin HEAD:main
 
       - name: Confirm success
         run: |

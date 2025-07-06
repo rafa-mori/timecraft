@@ -40,15 +40,17 @@ test -z "$(declare -f activate_venv)" >/dev/null && source "${_SCRIPT_DIR}/proc_
 #shellcheck source=/dev/null
 test -z "${_BANNER:-}" && source "${_SCRIPT_DIR}/config.sh" || true
 
+set_globals || log "fatal" "Failed to set global variables. Exiting."
 
-trap 'trap_error $LINENO $?' ERR
-trap 'trap_cleanup' EXIT HUP INT QUIT ABRT ALRM TERM
+set_trap || log "fatal" "Failed to set trap. Exiting."
 
 # Main command handler
 main() {
   local _COMMAND="${1:-help}"
 
-  set_globals || log "fatal" "Failed to set global variables. Exiting."
+  log_check || log "fatal" "Failed to check logging configuration. Exiting."
+
+  exit 109
 
   case "$_COMMAND" in
     setup*|-s|--setup)
@@ -61,14 +63,24 @@ main() {
     build*|-b|--build)
       clear_script_cache
       activate_venv
-      setup_environment
-      cd "${_SRC_DIR}" || {
-        log "error" "Failed to change directory to ${_SRC_DIR}. Exiting."
-        return 1
-      }
-      run_command "python3 -m pip install --upgrade pip setuptools wheel"
-      run_command "python3 -m pip install --upgrade build twine"
-      run_command "python3 -m pip install --upgrade -e ."
+
+      local _setup_env_log=""
+      _setup_env_log=$(setup_environment)
+
+      if [[ -z "${_setup_env_log}" || $? -ne 0 ]]; then
+        log "info" "Environment setup output: ${_setup_env_log}"
+      else 
+        printf "\n%s\n" "${_setup_env_log}" | tee "${_LOG_DIR}/setup_env.${_PROC_REF}.log" 1>&2 /dev/null
+      fi
+
+      local _setup_build_env_log=""
+      _setup_build_env_log=$(setup_build_environment)
+
+      if [[ -z "${_setup_build_env_log}" || $? -ne 0 ]]; then
+        log "info" "Build environment setup output: ${_setup_build_env_log}"
+      else
+        printf "\n%s\n" "${_setup_build_env_log}" | tee "${_LOG_DIR}/setup_build_env.${_PROC_REF}.log" 1>&2 > /dev/null
+      fi
 
       run_command "python3 -m build"
       ;;
