@@ -241,5 +241,5 @@ Contribuições são bem-vindas! Veja o [Guia de Contribuição](/CONTRIBUTING.m
 
 💌 **Developer**:  
 [Rafael Mori](mailto:faelmori@gmail.com)
-💼 [faelmori/timecraft no GitHub](https://github.com/rafa-mori/timecraft)
+💼 [rafa-mori/timecraft no GitHub](https://github.com/rafa-mori/timecraft)
 [LinkedIn: Rafa Mori](https://www.linkedin.com/in/rafa-mori)
