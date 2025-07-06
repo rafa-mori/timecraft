@@ -1,14 +1,17 @@
 from __future__ import annotations  # For forward references in type hints
 
-import pyttsx3
 import logging
 import sys
+from typing import Optional
 
-# Ensure the package exif is in the Python path
+# Imports para os diferentes backends
+from timecraft_ai.ai.pyper_voice_be import PyperVoice, IPyperVoice
+from timecraft_ai.ai.pyttsx3_voice_be import Pyttsx3Engine, IPyttsx3Engine
+
+# Ensure the package path is in the Python path
 if __name__ == "__main__":
-    sys.path.append(
-        ".."
-    )  # Adjust the path as necessary to include the parent directory
+    # Adjust the path as necessary to include the parent directory
+    sys.path.append("..")
 
 # Setup logging configuration for the package
 logging.basicConfig(
@@ -21,368 +24,421 @@ logger = logging.getLogger("timecraft_ai")
 
 class VoiceSynthesizer:
     """
-    VoiceSynthesizer is a class that provides text-to-speech functionality using the pyttsx3 library.
+    A robust class for synthesizing speech from text using different backends.
 
-    Attributes:
-        engine (pyttsx3.Engine): The text-to-speech engine instance used for speech synthesis.
+    Supports multiple TTS backends with automatic fallback:
+    1. PiperVoice (high-quality offline TTS)
+    2. pyttsx3 (system TTS as fallback)
 
-    Methods:
-        __init__(rate: int = 180, volume: float = 1.0, voice: str = "default"):
-            Initializes the VoiceSynthesizer with the specified speech rate, volume, and voice.
-
-        speak(text: str):
-            Converts the given text to speech and plays it using the text-to-speech engine.
+    Features:
+    - Automatic backend detection and initialization
+    - Resilient fallback system
+    - Configurable voice settings (language, rate, volume, pitch)
+    - Error handling and logging
+    - Simple entry point for MCP server integration
     """
 
-    def __init__(self, rate: int = 145, volume: float = 0.5, voice: str = "female"):
+    def __init__(self, lang: str = "en", rate: int = 140, volume: float = 1.0,
+                 pitch: float = 1.0, debug: bool = False):
         """
-        Inicializa o sintetizador de voz com as configurações fornecidas.
-        """
-        self.engine = pyttsx3.init()
-        self.engine.setProperty("voices", self.engine.getProperty("voices"))
-        self.engine.setProperty("rate", rate)
-        self.engine.setProperty("volume", volume)
-        if voice:
-            self.engine.setProperty("voice", voice)
-
-        logger.info(
-            "Text-to-speech engine initialized with rate=%d, volume=%.2f, voice=%s", rate, volume, voice)
-
-        # self.engine.startLoop(False)  # Start the event loop without blocking
-        # logger.info("Text-to-speech engine event loop started.")
-
-    def __del__(self):
-        """
-        Ensures that the text-to-speech engine is properly cleaned up when the object is deleted.
-        """
-        if self.engine is not None:
-            self.engine.stop()
-        logger.info("Text-to-speech engine stopped.")
-        # Ensure the engine is set to None to avoid dangling references
-        # This is important for cleanup in case the object is deleted
-        # or goes out of scope.
-        if hasattr(self, 'engine'):
-            del self.engine
-        else:
-            self.engine = None
-
-        logger.info("VoiceSynthesizer instance deleted and engine cleaned up.")
-
-    def _speak_chunk(self, chunk: str):
-        """
-        Helper method to speak a chunk of text, ensuring that the text is not too long.
+        Initialize the VoiceSynthesizer with preferred settings.
 
         Args:
-            chunk (str): The text chunk to be spoken.
+            lang (str): Language code for the voice (default: "en")
+            rate (int): Speech rate in words per minute (default: 140)
+            volume (float): Volume level 0.0-1.0 (default: 1.0)
+            pitch (float): Pitch level 0.0-2.0 (default: 1.0)
+            debug (bool): Enable debug output (default: False)
         """
-        if not chunk:
-            logger.warning("Attempted to speak an empty chunk.")
+        self.lang = lang
+        self.rate = rate
+        self.volume = volume
+        self.pitch = pitch
+        self.debug = debug
+
+        # Backend instances
+        self.piper_voice: Optional[IPyperVoice] = None
+        self.pyttsx3_engine: Optional[IPyttsx3Engine] = None
+
+        # Active backend identifier
+        self.active_backend: str = "none"
+
+        # Initialize backends with fallback
+        self.initialize_backends()
+
+    def initialize_backends(self) -> None:
+        """
+        Initialize TTS backends with resilient fallback system.
+        Tries PiperVoice first, then falls back to pyttsx3.
+        """
+        logger.info("Initializing TTS backends...")
+
+        # Try PiperVoice first (higher quality)
+        try:
+            logger.info("Attempting to initialize PiperVoice...")
+            self.piper_voice = PyperVoice(
+                lang=self.lang,
+                rate=self.rate,
+                volume=self.volume,
+                pitch=self.pitch
+            )
+            self.active_backend = "piper"
+            logger.info("✅ PiperVoice initialized successfully")
             return
-        if not self.engine:
-            logger.error("Text-to-speech engine is not initialized.")
+        except Exception as e:
+            logger.warning("❌ PiperVoice initialization failed: %s", e)
+            self.piper_voice = None
+
+        # Fallback to pyttsx3
+        try:
+            logger.info("Attempting to initialize pyttsx3...")
+            self.pyttsx3_engine = Pyttsx3Engine(
+                lang=self.lang,
+                rate=self.rate,
+                volume=self.volume
+            )
+            self.active_backend = "pyttsx3"
+            logger.info("✅ pyttsx3 initialized successfully")
+            return
+        except Exception as e:
+            logger.warning("❌ pyttsx3 initialization failed: %s", e)
+            self.pyttsx3_engine = None
+
+        # If we reach here, no backends are available
+        self.active_backend = "none"
+        logger.error("❌ No TTS backends available!")
+
+    def speak(self, text: str) -> Optional[bytes]:
+        """
+        Synthesize speech from text using the best available backend.
+
+        Args:
+            text (str): The text to synthesize
+
+        Returns:
+            Optional[bytes]: Audio data if using PiperVoice, None if using pyttsx3
+
+        Raises:
+            RuntimeError: If no TTS backends are available or synthesis fails
+        """
+        if not text.strip():
+            logger.warning("Empty text provided, nothing to synthesize")
+            return None
+
+        if self.debug:
+            logger.info("🗣️ Synthesizing text using %s: %s",
+                        self.active_backend, text[:50] + "...")
+
+        if self.active_backend == "piper" and self.piper_voice:
+            return self._speak_with_piper(text)
+        elif self.active_backend == "pyttsx3" and self.pyttsx3_engine:
+            return self._speak_with_pyttsx3(text)
+        else:
+            raise RuntimeError("No TTS backend available for speech synthesis")
+
+    def _speak_with_piper(self, text: str) -> bytes:
+        """
+        Synthesize speech using PiperVoice backend.
+
+        Args:
+            text (str): Text to synthesize
+
+        Returns:
+            bytes: Audio data in WAV format
+        """
+        if not self.piper_voice:
+            raise RuntimeError("PiperVoice backend not available")
+
+        try:
+            audio_data = self.piper_voice.speak(text)
+            if self.debug:
+                logger.info(
+                    "🎵 PiperVoice synthesis successful, audio size: %d bytes", len(audio_data))
+            return audio_data
+        except Exception as e:
+            logger.error("PiperVoice synthesis failed: %s", e)
+            # Try to fallback to pyttsx3
+            if self._fallback_to_pyttsx3():
+                self._speak_with_pyttsx3(text)
+                return b''  # Return empty bytes since pyttsx3 doesn't return audio data
+            raise RuntimeError(f"Speech synthesis failed: {e}") from e
+
+    def _speak_with_pyttsx3(self, text: str) -> None:
+        """
+        Synthesize speech using pyttsx3 backend.
+
+        Args:
+            text (str): Text to synthesize
+
+        Returns:
+            None: pyttsx3 plays audio directly
+        """
+        if not self.pyttsx3_engine:
+            raise RuntimeError("pyttsx3 backend not available")
+
+        try:
+            self.pyttsx3_engine.speak(text)
+            self.pyttsx3_engine.runAndWait()
+            if self.debug:
+                logger.info("🔊 pyttsx3 synthesis and playback successful")
+            return None
+        except Exception as e:
+            logger.error("pyttsx3 synthesis failed: %s", e)
+            raise RuntimeError(f"Speech synthesis failed: {e}") from e
+
+    def _fallback_to_pyttsx3(self) -> bool:
+        """
+        Attempt to fallback to pyttsx3 if PiperVoice fails.
+
+        Returns:
+            bool: True if fallback successful, False otherwise
+        """
+        if self.pyttsx3_engine is not None:
+            logger.info("🔄 Falling back to pyttsx3...")
+            self.active_backend = "pyttsx3"
+            return True
+
+        try:
+            logger.info("🔄 Initializing pyttsx3 as fallback...")
+            self.pyttsx3_engine = Pyttsx3Engine(
+                lang=self.lang,
+                rate=self.rate,
+                volume=self.volume
+            )
+            self.active_backend = "pyttsx3"
+            logger.info("✅ Fallback to pyttsx3 successful")
+            return True
+        except Exception as e:
+            logger.error("❌ Fallback to pyttsx3 failed: %s", e)
+            return False
+
+    def play_audio(self, audio_data: bytes) -> None:
+        """
+        Play audio data using the system's audio capabilities.
+
+        Args:
+            audio_data (bytes): WAV audio data to play
+        """
+        if not audio_data:
+            logger.warning("No audio data to play")
             return
 
         try:
-            self.engine.say(chunk)
-            self.engine.runAndWait()
+            # Try different audio playback methods
+            self._play_audio_with_pygame(audio_data)
+        except ImportError:
+            try:
+                self._play_audio_with_playsound(audio_data)
+            except ImportError:
+                try:
+                    self._play_audio_with_system(audio_data)
+                except Exception as e:
+                    logger.error("Failed to play audio: %s", e)
+                    raise RuntimeError(f"Audio playback failed: {e}") from e
+
+    def _play_audio_with_pygame(self, audio_data: bytes) -> None:
+        """Play audio using pygame mixer."""
+        try:
+            import pygame
+            import io
+
+            pygame.mixer.init()
+            sound = pygame.mixer.Sound(io.BytesIO(audio_data))
+            sound.play()
+            while pygame.mixer.get_busy():
+                pygame.time.wait(100)
+        except ImportError:
+            raise ImportError("pygame not available")
+
+    def _play_audio_with_playsound(self, audio_data: bytes) -> None:
+        """Play audio using playsound library."""
+        try:
+            from playsound import playsound
+            import tempfile
+            import os
+
+            with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as temp_file:
+                temp_file.write(audio_data)
+                temp_path = temp_file.name
+
+            try:
+                playsound(temp_path)
+            finally:
+                if os.path.exists(temp_path):
+                    os.unlink(temp_path)
+        except ImportError:
+            raise ImportError("playsound not available")
+
+    def _play_audio_with_system(self, audio_data: bytes) -> None:
+        """Play audio using system commands."""
+        import tempfile
+        import os
+        import subprocess
+
+        with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as temp_file:
+            temp_file.write(audio_data)
+            temp_path = temp_file.name
+
+        try:
+            # Try different system audio players
+            for player in ['aplay', 'paplay', 'afplay', 'play']:
+                try:
+                    subprocess.run([player, temp_path], check=True,
+                                   capture_output=True, timeout=30)
+                    return
+                except (FileNotFoundError, subprocess.CalledProcessError):
+                    continue
+            raise RuntimeError("No system audio player found")
+        finally:
+            if os.path.exists(temp_path):
+                os.unlink(temp_path)
+
+    def synthesize_and_play(self, text: str) -> None:
+        """
+        Complete TTS pipeline: synthesize text and play audio.
+
+        This is the main entry point for MCP server integration.
+
+        Args:
+            text (str): Text to convert to speech and play
+        """
+        if not text.strip():
+            logger.warning("Empty text provided")
+            return
+
+        try:
+            audio_data = self.speak(text)
+
+            if audio_data is not None:
+                # PiperVoice returned audio data, play it
+                self.play_audio(audio_data)
+            # pyttsx3 handles playback internally, so nothing more to do
+
         except Exception as e:
-            logger.error("Error speaking chunk: %s", e)
+            logger.error("TTS synthesis and playback failed: %s", e)
+            raise
 
-    def speak(self, text: str):
+    # Configuration methods
+    def set_lang(self, lang: str) -> None:
+        """Set the language for speech synthesis."""
+        self.lang = lang
+        if self.piper_voice:
+            self.piper_voice.set_lang(lang)
+        if self.pyttsx3_engine:
+            self.pyttsx3_engine.set_lang(lang)
+
+    def set_rate(self, rate: int) -> None:
+        """Set the speech rate."""
+        self.rate = rate
+        if self.piper_voice:
+            self.piper_voice.set_rate(rate)
+        if self.pyttsx3_engine:
+            self.pyttsx3_engine.set_rate(rate)
+
+    def set_volume(self, volume: float) -> None:
+        """Set the volume level."""
+        self.volume = volume
+        if self.piper_voice:
+            self.piper_voice.set_volume(volume)
+        if self.pyttsx3_engine:
+            self.pyttsx3_engine.set_volume(volume)
+
+    def set_pitch(self, pitch: float) -> None:
+        """Set the pitch level."""
+        self.pitch = pitch
+        if self.piper_voice:
+            self.piper_voice.set_pitch(pitch)
+        if self.pyttsx3_engine and hasattr(self.pyttsx3_engine, 'set_pitch'):
+            self.pyttsx3_engine.set_pitch(pitch)
+
+    def get_status(self) -> dict:
         """
-        Converts the given text into speech and plays it using the text-to-speech engine.
+        Get the current status of the voice synthesizer.
 
-        Args:
-            text (str): The text to be synthesized into speech.
+        Returns:
+            dict: Status information including active backend and configuration
         """
-        if not text:
-            logger.warning("Attempted to speak empty text.")
-            return
-        if not self.engine:
-            logger.error("Text-to-speech engine is not initialized.")
-            return
+        return {
+            "active_backend": self.active_backend,
+            "piper_available": self.piper_voice is not None,
+            "pyttsx3_available": self.pyttsx3_engine is not None,
+            "settings": {
+                "lang": self.lang,
+                "rate": self.rate,
+                "volume": self.volume,
+                "pitch": self.pitch,
+                "debug": self.debug
+            }
+        }
 
-        logger.info("Speaking text: %s", text)
-
-        # try to normalize the text to avoid issues with special characters
-        text = text.replace("\n", " ").replace("\r", " ").strip()
-        if not text:
-            logger.warning("Normalized text is empty after processing.")
-            return
-        # Attempt to synthesize the text to speech
-        logger.debug("Attempting to synthesize text: %s", text)
-        if not isinstance(text, str):
-            logger.error("Text to speak must be a string, got %s",
-                         type(text).__name__)
-            return
-        # Use try-except to handle any exceptions during speech synthesis
-        logger.info("Starting speech synthesis for text: %s", text)
-        if len(text) > 1000:
-            logger.warning("Text is too long, splitting into smaller chunks.")
-            # Split the text into smaller chunks if it's too long
-            chunks = [text[i:i + 1000] for i in range(0, len(text), 1000)]
-            for chunk in chunks:
-                self._speak_chunk(chunk)
+    def get_available_languages(self) -> list[str]:
+        """Get available languages from the active backend."""
+        if self.active_backend == "piper" and self.piper_voice:
+            return self.piper_voice.get_available_languages()
+        elif self.active_backend == "pyttsx3" and self.pyttsx3_engine:
+            return self.pyttsx3_engine.get_available_languages()
         else:
-            # Speak the entire text if it's not too long
-            self._speak_chunk(text)
+            return ["en"]  # Default fallback
 
-    def get_available_voices(self):
-        """
-        Returns a list of available voices in the text-to-speech engine.
-
-        Returns:
-            list: A list of available voice IDs.
-        """
-        if not self.engine:
-            logger.error("Text-to-speech engine is not initialized.")
-            return []
-
-        voices = self.engine.getProperty("voices")
-        voice_ids = [voice.id for voice in voices]
-        logger.info("Available voices: %s", voice_ids)
-        return voice_ids
-
-    def set_voice(self, voice_id: str):
-        """
-        Sets the voice for the text-to-speech engine.
-
-        Args:
-            voice_id (str): The ID of the voice to be set.
-        """
-        if not self.engine:
-            logger.error("Text-to-speech engine is not initialized.")
-            return
-
-        voices = self.engine.getProperty("voices")
-        for voice in voices:
-            if voice.id == voice_id:
-                self.engine.setProperty("voice", voice_id)
-                logger.info("Voice set to: %s", voice_id)
-                return
-        logger.warning("Voice ID '%s' not found.", voice_id)
-        logger.error("Failed to set voice. Voice ID '%s' not found.", voice_id)
-        logger.info("Voice set to default voice.")
-        self.engine.setProperty("voice", voices[0].id if voices else "default")
-        logger.info("Voice set to default voice: %s",
-                    voices[0].id if voices else "default")
-        logger.info("Voice set to default voice: %s", voice_id)
-        self.engine.setProperty("voice", voice_id)
-        logger.info("Voice set to: %s", voice_id)
-
-    def set_rate(self, rate: int):
-        """
-        Sets the speech rate for the text-to-speech engine.
-
-        Args:
-            rate (int): The speech rate to be set.
-        """
-        if not self.engine:
-            logger.error("Text-to-speech engine is not initialized.")
-            return
-
-        self.engine.setProperty("rate", rate)
-        logger.info("Speech rate set to: %d", rate)
-
-    def set_volume(self, volume: float):
-        """
-        Sets the volume for the text-to-speech engine.
-
-        Args:
-            volume (float): The volume level to be set (0.0 to 1.0).
-        """
-        if not self.engine:
-            logger.error("Text-to-speech engine is not initialized.")
-            return
-
-        if not (0.0 <= volume <= 1.0):
-            logger.error("Volume must be between 0.0 and 1.0, got: %f", volume)
-            return
-
-        self.engine.setProperty("volume", volume)
-        logger.info("Volume set to: %.2f", volume)
-
-    def get_rate(self):
-        """
-        Returns the current speech rate of the text-to-speech engine.
-
-        Returns:
-            int: The current speech rate.
-        """
-        if not self.engine:
-            logger.error("Text-to-speech engine is not initialized.")
-            return None
-
-        rate = self.engine.getProperty("rate")
-        logger.info("Current speech rate: %d", rate)
-        return rate
-
-    def get_volume(self):
-        """
-        Returns the current volume of the text-to-speech engine.
-
-        Returns:
-            float: The current volume level (0.0 to 1.0).
-        """
-        if not self.engine:
-            logger.error("Text-to-speech engine is not initialized.")
-            return None
-
-        volume = self.engine.getProperty("volume")
-        logger.info("Current volume: %.2f", volume)
-        return volume
-
-    def get_voice(self):
-        """
-        Returns the current voice ID of the text-to-speech engine.
-
-        Returns:
-            str: The current voice ID.
-        """
-        if not self.engine:
-            logger.error("Text-to-speech engine is not initialized.")
-            return None
-
-        voice_id = self.engine.getProperty("voice")
-        logger.info("Current voice ID: %s", voice_id)
-        return voice_id
-
-    def get_voice_name(self):
-        """
-        Returns the name of the current voice in the text-to-speech engine.
-
-        Returns:
-            str: The name of the current voice.
-        """
-        if not self.engine:
-            logger.error("Text-to-speech engine is not initialized.")
-            return None
-
-        voice_id = self.get_voice()
-        voices = self.engine.getProperty("voices")
-        for voice in voices:
-            if voice.id == voice_id:
-                logger.info("Current voice name: %s", voice.name)
-                return voice.name
-        logger.warning("Voice ID '%s' not found.", voice_id)
-        return "Unknown Voice"
-
-    def get_voice_language(self):
-        """
-        Returns the language of the current voice in the text-to-speech engine.
-
-        Returns:
-            str: The language of the current voice.
-        """
-        if not self.engine:
-            logger.error("Text-to-speech engine is not initialized.")
-            return None
-
-        voice_id = self.get_voice()
-        voices = self.engine.getProperty("voices")
-        for voice in voices:
-            if voice.id == voice_id:
-                logger.info("Current voice language: %s", voice.languages)
-                return voice.languages
-        logger.warning("Voice ID '%s' not found.", voice_id)
-        return "Unknown Language"
-
-    def stop(self):
-        """
-        Stops the current speech synthesis.
-        """
-        if not self.engine:
-            logger.error("Text-to-speech engine is not initialized.")
-            return
-
-        self.engine.stop()
-        logger.info("Speech synthesis stopped.")
-
-    def is_speaking(self):
-        """
-        Checks if the text-to-speech engine is currently speaking.
-
-        Returns:
-            bool: True if the engine is speaking, False otherwise.
-        """
-        if not self.engine:
-            logger.error("Text-to-speech engine is not initialized.")
-            return False
-
-        speaking = self.engine.isBusy()
-        logger.info("Is speaking: %s", speaking)
-        return speaking
-
-    def pause(self):
-        """
-        Pauses the current speech synthesis.
-        """
-        if not self.engine:
-            logger.error("Text-to-speech engine is not initialized.")
-            return
-
-        self.engine.endLoop()
-        logger.info("Speech synthesis paused.")
-
-    def onStart(self, name):
-        print('starting', name)
-
-    def onWord(self, name, location, length):
-        print('word', name, location, length)
-
-    def onEnd(self, name, completed):
-        print('finishing', name, completed)
-
-        if self.engine is None:
-            print('engine is None')
-            return
-
-        if self.engine.isBusy():
-            print('engine is busy')
-
-        if name == 'fox':
-            self.engine.say('What a lazy dog!', 'dog')
-
-        elif name == 'dog':
-            self.engine.endLoop()
-
+    def get_available_voices(self) -> dict:
+        """Get available voices from the active backend."""
+        if self.active_backend == "piper" and self.piper_voice:
+            return self.piper_voice.get_available_voices()
+        elif self.active_backend == "pyttsx3" and self.pyttsx3_engine:
+            # Convert list to dict for consistency
+            voices_list = self.pyttsx3_engine.get_available_voices()
+            return {f"voice_{i}": voice for i, voice in enumerate(voices_list)}
         else:
-            self.engine.say('What a lazy fox!', 'fox')
+            return {"default": "default_voice"}
 
-    def connect(self):
-        """
-        Connects the text-to-speech engine to the event handlers.
-        """
-        if not self.engine:
-            logger.error("Text-to-speech engine is not initialized.")
-            return
+    def __del__(self):
+        """Clean up resources when the object is deleted."""
+        if self.piper_voice:
+            del self.piper_voice
+        if self.pyttsx3_engine:
+            del self.pyttsx3_engine
+        logger.info("VoiceSynthesizer instance cleaned up")
 
-        self.engine.connect('started-utterance', self.onStart)
-        self.engine.connect('word', self.onWord)
-        self.engine.connect('finished-utterance', self.onEnd)
-        logger.info("Connected event handlers to the text-to-speech engine.")
-        self.connect()
 
-    def start(self):
-        """
-          Starts the text-to-speech engine and begins speaking a sample text.
-        """
-        self.engine = pyttsx3.init()
-        self.engine.connect('started-utterance', self.onStart)
-        self.engine.connect('started-word', self.onWord)
-        self.engine.connect('finished-utterance', self.onEnd)
+def create_voice_synthesizer(lang: str = "en", debug: bool = False) -> VoiceSynthesizer:
+    """
+    Factory function to create a VoiceSynthesizer instance.
 
-        self.engine.say('The quick brown fox jumped over the lazy dog.', 'fox')
+    Simple entry point for MCP server integration.
 
-        self.engine.startLoop()
+    Args:
+        lang (str): Language code (default: "en")
+        debug (bool): Enable debug output (default: False)
 
-    def run(self):
-        """
-        Runs the text-to-speech engine, allowing it to process speech synthesis requests.
-        """
-        if not self.engine:
-            logger.error("Text-to-speech engine is not initialized.")
-            return
+    Returns:
+        VoiceSynthesizer: Configured voice synthesizer instance
+    """
+    return VoiceSynthesizer(lang=lang, debug=debug)
 
-        self.engine.runAndWait()
-        logger.info("Text-to-speech engine is running and processing requests.")
+
+# Simple test function
+def test_voice_synthesis(text: str = "Hello, this is a test of the voice synthesis system."):
+    """
+    Test function for voice synthesis.
+
+    Args:
+        text (str): Text to synthesize and speak
+    """
+    try:
+        synthesizer = create_voice_synthesizer(debug=True)
+        status = synthesizer.get_status()
+
+        logger.info("Voice Synthesizer Status: %s", status)
+        logger.info("Testing voice synthesis with text: '%s'", text)
+
+        synthesizer.synthesize_and_play(text)
+        logger.info("✅ Voice synthesis test completed successfully")
+
+    except Exception as e:
+        logger.error("❌ Voice synthesis test failed: %s", e)
+        raise
+
+
+if __name__ == "__main__":
+    # Run test if executed directly
+    test_voice_synthesis()

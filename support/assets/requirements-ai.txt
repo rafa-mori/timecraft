@@ -12,6 +12,26 @@ vosk
 pyaudio
 soundfile
 
+# === CHATBOT FRAMEWORKS ===
+chatterbot
+# transformers
+
+# === NATURAL LANGUAGE PROCESSING ===
+piper-tts
+
+# === TEXT-TO-SPEECH ===
+playsound
+
+# === GAME INTERACTION ===
+playgame
+
+# === VOICE COMMANDS & CONTROL ===
+speech_recognition  # Also used for voice commands
+
+# # === TEXT PROCESSING ===
+# nltk
+# spacy
+
 # === VOICE SYNTHESIS ===
 pyttsx3
 

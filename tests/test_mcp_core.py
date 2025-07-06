@@ -9,8 +9,6 @@
 
 from __future__ import annotations
 
-import argparse
-import logging
 import os
 import sys
 
@@ -101,7 +99,7 @@ def test_voice_real_synthesizer_class():
     synth = VoiceSynthesizer(rate=130, volume=1.0)
 
     # Testa se a instância foi criada corretamente
-    assert synth.engine is not None
+    assert synth.pyttsx3_engine is not None
 
     # Testa a síntese de voz
     synth.speak("Hi there!")
@@ -128,10 +126,10 @@ def test_voice_debug_info():
     synth = VoiceSynthesizer()
 
     # Lista vozes disponíveis
-    if synth.engine is None:
+    if synth.pyttsx3_engine is None:
         print("Erro: O motor de síntese de voz não foi inicializado.")
         return
-    voices = synth.engine.getProperty('voices')
+    voices = synth.pyttsx3_engine.__getattribute__('voices')
     print(f"\n=== DEBUG INFO ===")
     print(f"Vozes disponíveis: {len(voices) if voices else 0}")
 
@@ -139,8 +137,8 @@ def test_voice_debug_info():
         for i, voice in enumerate(voices[:3]):  # Mostra só as 3 primeiras
             print(f"Voz {i}: {voice.id}")
 
-    print(f"Rate atual: {synth.engine.getProperty('rate')}")
-    print(f"Volume atual: {synth.engine.getProperty('volume')}")
+    print(f"Rate atual: {synth.pyttsx3_engine.__getattribute__('rate')}")
+    print(f"Volume atual: {synth.pyttsx3_engine.__getattribute__('volume')}")
 
     synth.speak("Teste de depuração do TimeCraft AI!")
 
@@ -154,14 +152,17 @@ def test_voice_smooth_settings():
     # Configurações mais suaves
     synth = VoiceSynthesizer(rate=150, volume=0.8)  # Rate menor = mais devagar
 
-    if synth.engine is None:
-        print("Erro: O motor de síntese de voz não foi inicializado.")
-        return
-
-    # Ajusta o pitch para uma voz mais suave
-    synth.engine.setProperty('pitch', 150)
-
-    synth.start()
+    if synth.pyttsx3_engine is not None:
+        # Ajusta o pitch para uma voz mais suave
+        import pyttsx3
+        if isinstance(synth.pyttsx3_engine, pyttsx3.Engine):
+            # pyttsx3 não tem suporte direto para pitch, mas podemos simular com volume e rate
+            synth.pyttsx3_engine.setProperty('rate', 150)
+            synth.pyttsx3_engine.setProperty('volume', 0.8)
+            synth.pyttsx3_engine.startLoop(False)  # Inicia o loop do motor
+        else:
+            print("Erro: O motor de síntese de voz não é do tipo pyttsx3.Engine.")
+            return
 
     # Testa configurações específicas do engine
     # if synth.engine:

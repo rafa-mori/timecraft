@@ -20,6 +20,8 @@ Execute com diferentes modos:
 """
 
 from __future__ import annotations
+from timecraft_ai import (AudioProcessor, ChatbotActions, HotwordDetector,
+                          MCPCommandHandler, VoiceSynthesizer)
 
 import argparse
 import logging
@@ -29,8 +31,6 @@ import sys
 # Adiciona o diretório src ao path para imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
-from timecraft_ai import (AudioProcessor, ChatbotActions, HotwordDetector,
-                          MCPCommandHandler, VoiceSynthesizer)
 
 # Configuração de logging
 logging.basicConfig(
@@ -57,21 +57,36 @@ def test_voice_synthesizer():
     """Testa o sintetizador de voz."""
     print("🗣️ Testando VoiceSynthesizer...")
 
+    synthesizer: VoiceSynthesizer
+
     try:
-        synthesizer = VoiceSynthesizer(rate=180, volume=1.0, voice="default")
+        synthesizer = VoiceSynthesizer(
+            rate=180, volume=1.0, lang="pt-BR")
         try:
-            synthesizer.speak("Olá! Sistema TimeCraft AI funcionando perfeitamente.")
+            synthesizer.speak(
+                "Olá! Sistema TimeCraft AI funcionando perfeitamente.")
             print("✅ VoiceSynthesizer testado com sucesso!")
         except (RuntimeError, ValueError) as e:
             print(f"❌ Erro no VoiceSynthesizer: {e}")
         finally:
-            if not synthesizer.engine:
-                print("⚠️ Engine de voz não inicializada.")
+            import pyttsx3
+            if synthesizer.pyttsx3_engine is not None:
+                if isinstance(synthesizer.pyttsx3_engine, pyttsx3.Engine):
+                    if synthesizer.pyttsx3_engine.isBusy():
+                        print("🛑 Parando o sintetizador de voz...")
+                        try:
+                            synthesizer.pyttsx3_engine.stop()
+                        except RuntimeError as e:
+                            print(f"❌ Erro ao parar o sintetizador: {e}")
+                    else:
+                        print("✅ Sintetizador de voz já parado.")
+
+                    # Limpa o engine para evitar vazamentos de memória
+                    synthesizer.pyttsx3_engine.endLoop()
+                    synthesizer.pyttsx3_engine = None
+                    print("🛑 Engine de voz parada.")
             else:
-                print("🛑 Parando o sintetizador de voz...")
-                synthesizer.engine.stop()
-                synthesizer.engine = None
-                print("🛑 Engine de voz parada.")
+                print("⚠️ Engine de voz não inicializada.")
     except (RuntimeError, ValueError) as e:
         print(f"❌ Erro ao inicializar VoiceSynthesizer: {e}")
         return
@@ -109,7 +124,8 @@ def run_voice_mode():
     handler = MCPCommandHandler()
     synthesizer = VoiceSynthesizer()
 
-    processor = AudioProcessor(command_handler=handler, voice_synthesizer=synthesizer)
+    processor = AudioProcessor(
+        command_handler=handler, voice_synthesizer=synthesizer)
 
     processor.listen_and_transcribe()
 
@@ -201,7 +217,8 @@ def main():
     Returns:
         None
     """
-    parser = argparse.ArgumentParser(description="TimeCraft AI - Sistema de Teste")
+    parser = argparse.ArgumentParser(
+        description="TimeCraft AI - Sistema de Teste")
     parser.add_argument(
         "--mode",
         choices=["test", "voice", "hotword", "server"],

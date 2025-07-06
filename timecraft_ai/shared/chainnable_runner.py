@@ -127,7 +127,7 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
         self._value = current_value
         self._iterator = iter([])  # Inicializa um iterador vazio
 
-    ## <editor-fold default="collapsed" desc="Métodos especiais de representação e hash">
+    # <editor-fold default="collapsed" desc="Métodos especiais de representação e hash">
 
     def __str__(self) -> str:
         """
@@ -150,9 +150,9 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
         """
         return hash(self._value)
 
-    ## </editor-fold>
+    # </editor-fold>
 
-    ## <editor-fold default="collapsed" desc="Métodos especiais de conversão (tentam converter)">
+    # <editor-fold default="collapsed" desc="Métodos especiais de conversão (tentam converter)">
 
     def to_bool(self) -> bool:
         """
@@ -247,9 +247,9 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
         """
         return self._value
 
-    ## </editor-fold>
+    # </editor-fold>
 
-    ## <editor-fold default="collapsed" desc="Métodos de Operações Encadeadas (Fluentes)">
+    # <editor-fold default="collapsed" desc="Métodos de Operações Encadeadas (Fluentes)">
 
     def apply(self, func: Callable[[Any], Any]) -> "ChainableWrapper":
         """
@@ -261,7 +261,8 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
             new_value = func(self._value)
             return ChainableWrapper(new_value)
         except Exception as e:
-            raise TypeError(f"Falha ao aplicar função ao valor {self._value!r}: {e}")
+            raise TypeError(
+                f"Falha ao aplicar função ao valor {self._value!r}: {e}")
 
     def filter(self, predicate: Callable[[Any], bool]) -> "ChainableWrapper":
         """
@@ -275,7 +276,8 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
                 f"O objeto {type(self._value)} não é iterável para filtragem."
             )
         try:
-            filtered_elements = [item for item in self._value if predicate(item)]
+            filtered_elements = [
+                item for item in self._value if predicate(item)]
             return ChainableWrapper(
                 type(self._value)(filtered_elements)
             )  # Mantém o tipo da coleção
@@ -310,7 +312,8 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
         - Outros tipos: tenta adição.
         Retorna um novo ChainableWrapper com o resultado do merge.
         """
-        other_value = other._value if isinstance(other, ChainableWrapper) else other
+        other_value = other._value if isinstance(
+            other, ChainableWrapper) else other
 
         if isinstance(self._value, dict) and isinstance(other_value, dict):
             return ChainableWrapper({**self._value, **other_value})
@@ -342,14 +345,15 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
             if isinstance(item, (list, tuple)):
                 flat_list.extend(item)
             else:
-                flat_list.append(item)  # Adiciona itens não-coleções diretamente
+                # Adiciona itens não-coleções diretamente
+                flat_list.append(item)
         return ChainableWrapper(
             type(self._value)(flat_list)
         )  # Mantém o tipo original da coleção
 
-    ## </editor-fold>
+    # </editor-fold>
 
-    ## <editor-fold default="collapsed" desc="Métodos especiais de operações e comparação (Sobrecargas de operadores)">
+    # <editor-fold default="collapsed" desc="Métodos especiais de operações e comparação (Sobrecargas de operadores)">
 
     def __call__(self, next_value: Any) -> "ChainableWrapper":
         """
@@ -370,7 +374,8 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
         Suporta adição entre números, concatenação de strings,
         união de dicionários (merge), e concatenação de listas/tuplas.
         """
-        other_value = other._value if isinstance(other, ChainableWrapper) else other
+        other_value = other._value if isinstance(
+            other, ChainableWrapper) else other
 
         # Lógica para tipos compatíveis com adição nativa
         if isinstance(self._value, (int, float, complex)) and isinstance(
@@ -397,7 +402,8 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
         """
         Sobrecarga do operador de subtração (-).
         """
-        other_value = other._value if isinstance(other, ChainableWrapper) else other
+        other_value = other._value if isinstance(
+            other, ChainableWrapper) else other
         try:
             return ChainableWrapper(self._value - other_value)
         except TypeError as e:
@@ -409,7 +415,8 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
         """
         Sobrecarga do operador de multiplicação (*).
         """
-        other_value = other._value if isinstance(other, ChainableWrapper) else other
+        other_value = other._value if isinstance(
+            other, ChainableWrapper) else other
         try:
             return ChainableWrapper(self._value * other_value)
         except TypeError as e:
@@ -421,7 +428,8 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
         """
         Sobrecarga do operador de divisão real (/).
         """
-        other_value = other._value if isinstance(other, ChainableWrapper) else other
+        other_value = other._value if isinstance(
+            other, ChainableWrapper) else other
         if other_value == 0:
             raise ZeroDivisionError("Divisão por zero não é permitida.")
         try:
@@ -435,7 +443,8 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
         """
         Sobrecarga do operador de divisão inteira (//).
         """
-        other_value = other._value if isinstance(other, ChainableWrapper) else other
+        other_value = other._value if isinstance(
+            other, ChainableWrapper) else other
         if other_value == 0:
             raise ZeroDivisionError("Divisão por zero não é permitida.")
         try:
@@ -449,9 +458,11 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
         """
         Sobrecarga do operador de módulo (%).
         """
-        other_value = other._value if isinstance(other, ChainableWrapper) else other
+        other_value = other._value if isinstance(
+            other, ChainableWrapper) else other
         if other_value == 0:
-            raise ZeroDivisionError("Operação de módulo por zero não é permitida.")
+            raise ZeroDivisionError(
+                "Operação de módulo por zero não é permitida.")
         try:
             return ChainableWrapper(self._value % other_value)
         except TypeError as e:
@@ -463,7 +474,8 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
         """
         Sobrecarga do operador de exponenciação (**).
         """
-        other_value = other._value if isinstance(other, ChainableWrapper) else other
+        other_value = other._value if isinstance(
+            other, ChainableWrapper) else other
         try:
             return ChainableWrapper(self._value**other_value)
         except TypeError as e:
@@ -488,7 +500,8 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
 
     def _compare(self, other: Any, op_func: Callable[[Any, Any], bool]) -> bool:
         """Função auxiliar para métodos de comparação."""
-        other_value = other._value if isinstance(other, ChainableWrapper) else other
+        other_value = other._value if isinstance(
+            other, ChainableWrapper) else other
         try:
             return op_func(self._value, other_value)
         except TypeError as e:
@@ -531,7 +544,8 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
         try:
             return ChainableWrapper(self._value[key])
         except (TypeError, KeyError) as e:
-            raise TypeError(f"O objeto {type(self._value)} não suporta indexação: {e}")
+            raise TypeError(
+                f"O objeto {type(self._value)} não suporta indexação: {e}")
 
     def __setitem__(self, key: Any, value: Any) -> None:
         """
@@ -576,7 +590,8 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
             self._iterator = iter(self._value)
             return self
         except TypeError as e:
-            raise TypeError(f"O objeto {type(self._value)} não é iterável: {e}")
+            raise TypeError(
+                f"O objeto {type(self._value)} não é iterável: {e}")
 
     def __next__(self) -> Any:
         """
@@ -589,7 +604,8 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
         Sobrecarga do operador AND (&).
         Para números (int, bool): bitwise AND. Para sets: interseção.
         """
-        other_value = other._value if isinstance(other, ChainableWrapper) else other
+        other_value = other._value if isinstance(
+            other, ChainableWrapper) else other
 
         if isinstance(self._value, (int, bool)) and isinstance(
             other_value, (int, bool)
@@ -607,7 +623,8 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
         Sobrecarga do operador OR (|).
         Para números (int, bool): bitwise OR. Para sets: união.
         """
-        other_value = other._value if isinstance(other, ChainableWrapper) else other
+        other_value = other._value if isinstance(
+            other, ChainableWrapper) else other
 
         if isinstance(self._value, (int, bool)) and isinstance(
             other_value, (int, bool)
@@ -625,7 +642,8 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
         Sobrecarga do operador XOR (^).
         Para números (int, bool): bitwise XOR. Para sets: diferença simétrica.
         """
-        other_value = other._value if isinstance(other, ChainableWrapper) else other
+        other_value = other._value if isinstance(
+            other, ChainableWrapper) else other
 
         if isinstance(self._value, (int, bool)) and isinstance(
             other_value, (int, bool)
@@ -643,14 +661,15 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
         """Aplica uma função ao valor e retorna novo ChainableWrapper."""
         return ChainableWrapper(func(self._value))
 
-    ## </editor-fold>
+    # </editor-fold>
 
 
 # Decorator para adicionar comportamentos dinamicamente
 def chainable_behavior(
     name: str = "None",
 ) -> Callable[
-    [Callable[[ChainableBase], ChainableBase]], Callable[[ChainableBase], ChainableBase]
+    [Callable[[ChainableBase], ChainableBase]
+     ], Callable[[ChainableBase], ChainableBase]
 ]:
     """Decorator para registrar novos comportamentos."""
 
@@ -718,6 +737,15 @@ def main():
     # Exemplo de uso com métodos encadeados
     result = run(5)(5).value().square()  # (5+5)^2 = 100
     print(result)  # ChainableWrapper(100)
+
+
+__all__ = [
+    "ChainableWrapper",
+    "ChainableBase",
+    "run",
+    "add_five",
+    "square",
+]
 
 
 if __name__ == "__main__":
