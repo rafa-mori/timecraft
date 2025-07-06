@@ -9,9 +9,19 @@ Teste rápido para verificar se o TimeCraft AI está funcionando corretamente.
 import os
 import sys
 
+# Ensure the script is run from the correct directory
+if __name__ == "__main__":
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(script_dir)
+
+# Add parent directory to sys.path for module imports
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
+
 # Try to import from installed package first, fallback to dev environment
 try:
-    import timecraft_ai
+    import src.timecraft_ai as timecraft_ai
 
     DEV_MODE = False
     print("📦 Usando TimeCraft AI instalado como package")
@@ -20,7 +30,8 @@ except ImportError:
     src_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "src")
     if os.path.exists(src_path):
         sys.path.insert(0, src_path)
-        import timecraft_ai
+
+        import src.timecraft_ai as timecraft_ai
 
         DEV_MODE = True
         print("🔧 Usando TimeCraft AI em modo desenvolvimento")

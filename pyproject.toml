@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "timecraft_ai"
-version = "1.1.1"
+version = "1.1.2"
 requires-python = ">=3.11"
 authors = [
     { name = "Rafael Mori", email = "faelmori@gmail.com" }
@@ -128,10 +128,19 @@ packages = ["src/timecraft_ai"]
 
 [tool.hatch.build.targets.sdist]
 include = [
-    "/src",
+    "/src/timecraft_ai/assets/banner.png",
+    "/src/timecraft_ai",
+    "/src/pyproject.toml",
     "/README.md", 
     "/LICENSE",
-    "/pyproject.toml",
+    "/CHANGELOG.md",
+    "/NOTICE.md",
+    "/CONTRIBUTING.md",
+    "/AUTHORS.md",
+    "/SECURITY.md",
+    "/SUPPORT.md",
+    "/docs/INSTALL.md",
+    "/docs/INSTALL_AI.md"
 ]
 
 [tool.hatch.version]

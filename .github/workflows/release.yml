@@ -1,0 +1,284 @@
+name: Kubex Release Workflow - (Python)
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      tag_strategy:
+        description: 'Tagging strategy to use for the release'
+        # This input allows the user to choose the tagging strategy for the release.
+        # The type is 'choice', and it is required, but defaults to 'signed'.
+        type: choice
+        required: true
+        default: 'signed'
+
+        # The user can choose one of the following options:
+        # - 'lightweight': Creates a lightweight tag.
+        # - 'annotated': Creates an annotated tag.
+        # - 'signed': Creates a signed tag.
+        # - 'all': Creates all types of tags (lightweight, annotated, and signed).
+        # The default is 'signed'.
+        options:
+        - 'lightweight'
+        - 'annotated' 
+        - 'signed'
+        - 'all'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install yq
+        run: |
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+
+      - name: Get Project Information
+        id: extract_info
+        run: |
+          # Define variables separately to avoid conflicts and because is the best practice
+          PROJECT_TOML=""
+          TAG_STRATEGY=""
+          PROJ_TAG_STRATEGY=""
+          PROJECT_ROOT=""
+          VERSION=""
+          MOD_NAME=""
+          DESCRIPTION=""
+          AUTHOR=""
+
+          # Fill all variables with extracted values from pyproject.toml
+
+          # Get the project root directory
+          PROJECT_ROOT=$(realpath ./)
+          if [ ! -d "$PROJECT_ROOT/src" ]; then
+            echo "src directory not found in project root."
+            exit 1
+          fi
+
+          # Find the pyproject.toml file in the src directory
+          # This assumes that the pyproject.toml file is located in the src directory.
+          # This is the standard location for Python projects on the Kubex Ecosystem.
+          # If the file is not found, it will exit with an error message.
+          PROJECT_TOML=$(find "$PROJECT_ROOT" -name "pyproject.toml" | head -n 1)
+          if [ -z "$PROJECT_TOML" ]; then
+            echo "pyproject.toml not found in project root."
+            exit 1
+          fi
+
+          # Extract version from pyproject.toml
+          # This will extract the version from the pyproject.toml file.
+          # If the version is not found, it will exit with an error message.
+          VERSION=$(grep '^version = ' "$PROJECT_TOML" | awk -F'"' '{print $2}')
+          if [ -z "$VERSION" ]; then
+            echo "Version not found in pyproject.toml."
+            exit 1
+          fi
+
+          # Extract module name from pyproject.toml
+          # This will extract the module name from the pyproject.toml file.
+          # If the module name is not found, it will exit with an error message.
+          MOD_NAME=$(grep '^name = ' "$PROJECT_TOML" | awk -F'"' '{print $2}')
+          if [ -z "$MOD_NAME" ]; then
+            echo "Module name not found in pyproject.toml."
+            exit 1
+          fi
+
+          # Extract description from pyproject.toml
+          # This will extract the description from the pyproject.toml file.
+          # If the description is not found, it will exit with an error message.
+          DESCRIPTION=$(grep '^description = ' "$PROJECT_TOML" | awk -F'"' '{print $2}')
+          if [ -z "$DESCRIPTION" ]; then
+            echo "Description not found in pyproject.toml."
+            exit 1
+          fi
+
+          # Extract author from pyproject.toml
+          # This will extract the author from the pyproject.toml file.
+          # If the author is not found, it will exit with an error message.
+          AUTHOR=$(grep '^authors = ' "$PROJECT_TOML" | awk -F'"' '{print $2}')
+          if [ -z "$AUTHOR" ]; then
+            echo "Author not found in pyproject.toml."
+            exit 1
+          fi
+
+          # Extract tagging strategy from pyproject.toml, this will override the input if provided
+          # This is useful to have a default tagging strategy in the project.
+          # If the input is provided, it will override this value.
+          # If the input is not provided, it will use the value from pyproject.toml
+          # If the value is not found in pyproject.toml, it will default to 'signed'.
+          PROJ_TAG_STRATEGY=$(grep '^tag_strategy = ' "$PROJECT_TOML" | awk -F'"' '{print $2}')
+          if [ -n "${{ github.event.inputs.tag_strategy }}" ]; then
+            TAG_STRATEGY="${{ github.event.inputs.tag_strategy }}"
+          fi
+          TAG_STRATEGY=${TAG_STRATEGY:-${PROJ_TAG_STRATEGY:-signed}}
+
+          # Set environment variables
+          # This will set the environment variables for the workflow.
+          # These variables can be used in subsequent steps of the workflow, 
+          # GITHUB_OUTPUT or GITHUB_ENV, output is been deprecated.
+          # So we will use GITHUB_ENV and GITHUB_OUTPUT to ensure compatibility
+          # and contingency/fallback.
+          echo "tag_strategy=$TAG_STRATEGY" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_ENV
+          echo "author=$AUTHOR" >> $GITHUB_ENV
+          echo "tag=v$VERSION" >> $GITHUB_ENV
+          echo "module_name=$MOD_NAME" >> $GITHUB_ENV
+          echo "description=$DESCRIPTION" >> $GITHUB_ENV
+
+          # Set output variables
+          # These variables can be used in subsequent steps of the workflow.
+          # GITHUB_OUTPUT is been deprecated, so we will use GITHUB_ENV and GITHUB_OUTPUT to ensure compatibility
+          # and contingency/fallback.
+          echo "tag_strategy=$TAG_STRATEGY" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "author=$AUTHOR" >> $GITHUB_OUTPUT
+          echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+          echo "module_name=$MOD_NAME" >> $GITHUB_OUTPUT
+          echo "description=$DESCRIPTION" >> $GITHUB_OUTPUT
+
+      - name: Set up Git
+        run: |
+          # Configure git user for the commit (global config)
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+      - name: Generate CHANGELOG
+        uses: orhun/git-cliff-action@v3
+        with:
+          config: ./cliff.toml
+          args: --tag ${{ steps.extract_info.outputs.tag }}
+        env:
+          OUTPUT: CHANGELOG.md
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check if CHANGELOG.md is empty
+        run: |
+          if [ ! -s CHANGELOG.md ]; then
+            echo "CHANGELOG.md is empty. Skipping commit."
+            exit 0
+          fi
+          echo "CHANGELOG.md is not empty. Proceeding with commit."
+
+      - name: Commit & Push Changelog
+        run: |
+          # Check if current VERSION already exists in CHANGELOG.md
+          # this is to avoid duplicate entries in the changelog and 
+          # infinite loop of commits/jobs.
+          VERSION=${{ steps.extract_info.outputs.version }}
+
+          if [ ! -f CHANGELOG.md ]; then
+            echo "CHANGELOG.md does not exist. Creating a new one."
+            touch CHANGELOG.md
+          fi
+
+          # Will check just the first line of the changelog
+          # to see if it already contains the version header.
+          # If it does, it will skip the commit.
+          if cat CHANGELOG.md | head -n 1 | grep -q "# $VERSION"; then
+            echo "Changelog already contains version $VERSION. Skipping commit."
+            exit 0
+          else 
+            echo "Changelog does not contain version $VERSION. Proceeding with commit."
+            printf "# $VERSION\n\n$(cat CHANGELOG.md)" > CHANGELOG.md
+          fi
+
+          # Configure git user for the commit (global config)
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+          # Add, commit, and push the CHANGELOG.md file
+          git add CHANGELOG.md
+          git commit -m "update changelog"
+
+          # Fetch the latest tags and prune deleted ones
+          # This is necessary to ensure that the latest tags are available
+          # and to remove any tags that have been deleted from the remote repository.
+          git fetch --tags --force --prune
+
+          case ${{ steps.extract_info.outputs.tag_strategy }} in
+            "lightweight")
+              echo "🏷️  Creating lightweight tag..."
+              git tag $VERSION -f -m "Release $VERSION"
+              ;;
+            "annotated")
+              echo "📝 Creating annotated tag..."
+              git tag -a $VERSION -f -m "Release $VERSION"
+              ;;
+            "signed")
+              echo "🔐 Creating signed tag..."
+              git tag -s $VERSION -f -m "Release $VERSION"
+              ;;
+            "all")
+              echo "🎯 Creating all types of tags..."
+              git tag $VERSION-light -f -m "Lightweight Release $VERSION"
+              git tag -a $VERSION-annotated -f -m "Annotated Release $VERSION"
+              git tag -s $VERSION -f -m "Official Signed Release $VERSION"
+              ;;
+          esac
+
+          # Push the changes to the main branch
+          # This is necessary to ensure that the CHANGELOG.md file is updated in the main branch
+          # and the tag is pushed to the remote repository.
+          git push origin HEAD:main
+
+          # Force push the tag to the remote repository
+          # This is necessary to ensure that the tag is pushed to the remote repository.
+          # The --force option is used to overwrite the existing tag if it already exists.
+          git push origin --tags --force
+
+      - name: Checkout code again
+        # This is because the previous steps may have modified the working directory,
+        # and we need to ensure that the latest changes are available.
+        uses: actions/checkout@v2 
+        with:
+          fetch-depth: 0
+
+      - name: Create Release
+        id: create_release
+        # This step creates a GitHub release using the softprops/action-gh-release action.
+        # It uses the tag name, release name, and body from the previous steps.
+        # The GITHUB_TOKEN is used to authenticate the action.
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.extract_info.outputs.tag }}
+          name: Release ${{ steps.extract_info.outputs.tag }}
+          body: |
+            # ${{ steps.extract_info.outputs.module_name }} Release Notes
+
+            ## 📦 Version
+            ${{ steps.extract_info.outputs.version }}
+
+            ## 📝 Release Notes ✨
+            $(cat CHANGELOG.md)
+
+            ## 📄 Description 🖋️
+            ${{ steps.extract_info.outputs.description }}
+
+            ## 👤 Author 🧑‍💻
+            ${{ steps.extract_info.outputs.author }}
+
+            ## 📅 Release Date
+            $(date +'%Y-%m-%d')
+
+          draft: false
+          prerelease: false
+          generate_release_notes: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Asset
+        # This step uploads the release asset to the GitHub release created in the previous step.
+        # It uses the actions/upload-release-asset action to upload the asset.
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: CHANGELOG.md
+          asset_name: CHANGELOG.md
+          asset_content_type: text/markdown
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
