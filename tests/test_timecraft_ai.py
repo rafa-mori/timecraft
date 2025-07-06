@@ -3,15 +3,20 @@ from unittest.mock import MagicMock, patch
 
 import pandas as pd
 
-from timecraft_ai import (ClassifierModel, DatabaseConnector,
-                          LinearRegressionAnalysis, TimeCraftModel)
+from timecraft_ai.core import (
+    TimeCraftModel,
+    ClassifierModel,
+    LinearRegressionAnalysis,
+    DatabaseConnector,
+)
 
 
 class TestTimeCraftModel(unittest.TestCase):
     def setUp(self):
         # Minimal DataFrame for Prophet
         self.df = pd.DataFrame(
-            {"ds": pd.date_range("2024-01-01", periods=10, freq="D"), "y": range(10)}
+            {"ds": pd.date_range("2024-01-01", periods=10,
+                                 freq="D"), "y": range(10)}
         )
         self.model = TimeCraftModel(
             data=self.df, date_column="ds", value_columns=["y"], is_csv=False

@@ -10,6 +10,7 @@ This module provides AI-powered features including:
 - MCP (Model Context Protocol) server
 """
 
+import sys
 import warnings
 
 # Try to import AI modules with graceful fallback
@@ -67,3 +68,24 @@ __all__ = [
 def is_ai_modules_available():
     """Check if AI modules are available."""
     return AI_MODULES_AVAILABLE
+
+
+def is_mcp_server_available():
+    """Check if MCP server is available."""
+    return MCP_SERVER_AVAILABLE
+
+
+# Ensure the module is importable from the root package
+if __name__ == "__main__":
+    print("This is the TimeCraft AI module. Import it in your scripts.")
+    print(f"Available modules: {', '.join(__all__)}")
+    print(f"AI Modules Available: {is_ai_modules_available()}")
+    print(f"MCP Server Available: {is_mcp_server_available()}")
+else:
+    print("TimeCraft AI module imported successfully.")
+    print(f"Available modules: {', '.join(__all__)}")
+    print(f"AI Modules Available: {is_ai_modules_available()}")
+    print(f"MCP Server Available: {is_mcp_server_available()}")
+
+if sys.version_info < (3, 7):
+    raise ImportError("TimeCraft AI requires Python 3.7 or higher.")

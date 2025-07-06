@@ -12,7 +12,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
-from timecraft_ai.core.timecraft_ai import notify_webhook
+from ..shared.notify_webhook import Notifier
 
 # Setup logging configuration for the package
 logging.basicConfig(
@@ -133,7 +133,4 @@ class LinearRegressionAnalysis:
             }
             if webhook_payload_extra:
                 payload.update(webhook_payload_extra)
-            notify_webhook(webhook_url, payload)
-            notify_webhook(webhook_url, payload)
-            notify_webhook(webhook_url, payload)
-            notify_webhook(webhook_url, payload)
+            Notifier.notify_webhook(webhook_url, payload)

@@ -13,7 +13,7 @@ import pandas as pd
 import plotly.express as px
 from prophet import Prophet
 
-from .classifier_model import notify_webhook
+from ..shared.notify_webhook import Notifier
 
 # Setup logging configuration for the package
 logging.basicConfig(
@@ -146,16 +146,19 @@ class TimeCraftModel:
                 if hasattr(self.db_connector, "close"):
                     self.db_connector.close()
                 else:
-                    logger.warning("The engine does not have a 'close' method.")
+                    logger.warning(
+                        "The engine does not have a 'close' method.")
         elif self.is_csv:
             chunks = pd.read_csv(self.data, chunksize=10000)  # type: ignore
             df = pd.concat(chunks)
         else:
             # Converts the data list to a DataFrame
-            df = pd.DataFrame(self.data, columns=[self.date_column] + self.value_columns)  # type: ignore
+            df = pd.DataFrame(self.data, columns=[
+                              self.date_column] + self.value_columns)  # type: ignore
 
         # Rename columns
-        df = df.rename(columns={self.date_column: "ds", self.value_columns[0]: "y"})  # type: ignore
+        df = df.rename(columns={self.date_column: "ds",
+                       self.value_columns[0]: "y"})  # type: ignore
 
         # Remove rows with null values
         df = df.dropna()
@@ -251,9 +254,11 @@ class TimeCraftModel:
 
         for plot_type in plot_types:
             if plot_type == "line":
-                fig = px.line(self.forecast, x="ds", y="yhat", title="Forecast")
+                fig = px.line(self.forecast, x="ds",
+                              y="yhat", title="Forecast")
             elif plot_type == "scatter":
-                fig = px.scatter(self.forecast, x="ds", y="yhat", title="Forecast")
+                fig = px.scatter(self.forecast, x="ds",
+                                 y="yhat", title="Forecast")
             elif plot_type == "bar":
                 fig = px.bar(self.forecast, x="ds", y="yhat", title="Forecast")
             else:
@@ -280,11 +285,32 @@ class TimeCraftModel:
         for plot_type in plot_types:
             plt.figure()
             if plot_type == "line":
-                plt.plot(self.forecast["ds"], self.forecast["yhat"])  # type: ignore
+                # type: ignore
+                # type: ignore
+                # type: ignore
+                # type: ignore
+                if self.forecast is not None:
+                    plt.plot(self.forecast["ds"], self.forecast["yhat"])
+                else:
+                    logger.error("Forecast is None. Cannot plot.")
             elif plot_type == "scatter":
-                plt.scatter(self.forecast["ds"], self.forecast["yhat"])  # type: ignore
+                # type: ignore
+                # type: ignore
+                # type: ignore
+                # type: ignore
+                if self.forecast is not None:
+                    plt.scatter(self.forecast["ds"], self.forecast["yhat"])
+                else:
+                    logger.error("Forecast is None. Cannot plot scatter.")
             elif plot_type == "bar":
-                plt.bar(self.forecast["ds"], self.forecast["yhat"])  # type: ignore
+                # type: ignore
+                # type: ignore
+                # type: ignore
+                # type: ignore
+                if self.forecast is not None:
+                    plt.bar(self.forecast["ds"], self.forecast["yhat"])
+                else:
+                    logger.error("Forecast is None. Cannot plot bar chart.")
             else:
                 continue
 
@@ -305,7 +331,8 @@ class TimeCraftModel:
                 if hasattr(plt, "close"):
                     plt.close()
                 else:
-                    logger.warning("The engine does not have a 'close' method.")
+                    logger.warning(
+                        "The engine does not have a 'close' method.")
             except Exception as e:
                 logger.error(f"Error closing the figure: {e}")
 
@@ -378,7 +405,7 @@ class TimeCraftModel:
             }
             if webhook_payload_extra:
                 payload.update(webhook_payload_extra)
-            notify_webhook(webhook_url, payload)
+            Notifier.notify_webhook(webhook_url, payload)
 
     def info(self) -> None:
         """
@@ -388,7 +415,7 @@ class TimeCraftModel:
         print(self.df)
         print(self.forecast)
 
-    def get_model(self) -> Prophet: 
+    def get_model(self) -> Prophet:
         """
         Get the Prophet model instance.
         :return: Prophet model.

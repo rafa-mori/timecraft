@@ -79,3 +79,119 @@ def test_hotword_detector_mock():
     hotword = DummyHotword()
     assert hotword.listen_for_hotword() is True
     assert hotword.triggered
+
+
+def test_voice_long_synthesizer_mock():
+    synth = DummySynthesizer()
+    synth.speak("Hi there! Let's conquer the world today?! Dude, are you ready?")
+    assert synth.last_spoken == "Hi there! Let's conquer the world today?! Dude, are you ready?"
+
+
+def test_voice_real_synthesizer():
+    import pyttsx3
+    engine = pyttsx3.init()
+    engine.say("Hi there! Let's conquer the world today?!")
+    engine.runAndWait()
+
+
+def test_voice_real_synthesizer_class():
+    """Teste usando a classe VoiceSynthesizer real do projeto"""
+    from timecraft_ai.ai.voice_synthesizer import VoiceSynthesizer
+
+    synth = VoiceSynthesizer(rate=130, volume=1.0)
+
+    # Testa se a instância foi criada corretamente
+    assert synth.engine is not None
+
+    # Testa a síntese de voz
+    synth.speak("Hi there!")
+
+    # Testa a síntese de voz com uma frase longa
+    synth.speak("Let's conquer the world today?!")
+
+    # Testa a síntese de voz com uma frase longa e complexa
+    try:
+        synth.speak("Dude, are you ready? This is a test of the TimeCraft AI voice synthesizer. "
+                    "It should handle long sentences and complex phrases without issues.")
+    except Exception as e:
+        # Se ocorrer uma exceção, falha o teste
+        assert False, f"Erro na síntese de voz: {e}"
+
+    # Se chegou até aqui sem exception, considera sucesso
+    assert True
+
+
+def test_voice_debug_info():
+    """Teste para debugar configurações de voz"""
+    from timecraft_ai.ai.voice_synthesizer import VoiceSynthesizer
+
+    synth = VoiceSynthesizer()
+
+    # Lista vozes disponíveis
+    if synth.engine is None:
+        print("Erro: O motor de síntese de voz não foi inicializado.")
+        return
+    voices = synth.engine.getProperty('voices')
+    print(f"\n=== DEBUG INFO ===")
+    print(f"Vozes disponíveis: {len(voices) if voices else 0}")
+
+    if voices:
+        for i, voice in enumerate(voices[:3]):  # Mostra só as 3 primeiras
+            print(f"Voz {i}: {voice.id}")
+
+    print(f"Rate atual: {synth.engine.getProperty('rate')}")
+    print(f"Volume atual: {synth.engine.getProperty('volume')}")
+
+    synth.speak("Teste de depuração do TimeCraft AI!")
+
+    assert True
+
+
+def test_voice_smooth_settings():
+    """Teste com configurações mais suaves para a voz"""
+    from timecraft_ai.ai.voice_synthesizer import VoiceSynthesizer
+
+    # Configurações mais suaves
+    synth = VoiceSynthesizer(rate=150, volume=0.8)  # Rate menor = mais devagar
+
+    if synth.engine is None:
+        print("Erro: O motor de síntese de voz não foi inicializado.")
+        return
+
+    # Ajusta o pitch para uma voz mais suave
+    synth.engine.setProperty('pitch', 150)
+
+    synth.start()
+
+    # Testa configurações específicas do engine
+    # if synth.engine:
+    #     # Lista vozes disponíveis e escolhe uma melhor
+    #     voices = synth.engine.getProperty('voices')
+    #     if voices and len(voices) > 1:
+    #         # Tenta usar uma voz feminina (geralmente mais suave)
+    #         for voice in voices:
+    #             if 'female' in voice.name.lower() or 'woman' in voice.name.lower():
+    #                 synth.engine.setProperty('voice', voice.id)
+    #                 break
+
+    # Texto com pausas naturais
+    synth.speak("Olá! Meu nome é TimeCraft AI. Como posso ajudá-lo hoje?")
+
+    assert True
+
+
+def test_voice_with_punctuation():
+    """Teste com pontuação para pausas naturais"""
+    from timecraft_ai.ai.voice_synthesizer import VoiceSynthesizer
+
+    synth = VoiceSynthesizer(rate=140, volume=0.9)
+
+    # Texto com pontuações para pausas naturais
+    text = """Bem-vindo ao TimeCraft AI! 
+    Este é um teste de síntese de voz... 
+    Com pausas naturais, vírgulas, e pontos finais. 
+    Espero que esteja mais claro agora!"""
+
+    synth.speak(text)
+
+    assert True

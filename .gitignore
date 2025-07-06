@@ -183,4 +183,4 @@ bkp/
 *.bkp/
 bkp.*/
 docs/jobs/*.md
-log/Xvg6zd_logs.tar.gz
+log/**/*

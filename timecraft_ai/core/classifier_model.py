@@ -4,13 +4,15 @@ ClassifierModel
 Class for training and evaluating a RandomForest classifier on tabular data.
 """
 
+from sklearn.metrics import accuracy_score
+import pandas as pd
 import datetime
 import logging
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 
-from .linear_regression import notify_webhook
+from ..shared.notify_webhook import Notifier
 
 logging.basicConfig(
     level=logging.INFO,
@@ -18,9 +20,6 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 logger = logging.getLogger("timecraft_ai")
-
-import pandas as pd
-from sklearn.metrics import accuracy_score
 
 
 class ClassifierModel:
@@ -52,7 +51,8 @@ class ClassifierModel:
         self.random_state = random_state
         self.db_connector = db_connector
         self.query = query
-        self.model = RandomForestClassifier(n_estimators=100, random_state=random_state)
+        self.model = RandomForestClassifier(
+            n_estimators=100, random_state=random_state)
         self.X_train = None
         self.X_test = None
         self.y_train = None
@@ -98,7 +98,8 @@ class ClassifierModel:
                 X, y, test_size=self.test_size, random_state=self.random_state
             )
         else:
-            logger.warning("Data is None or target column missing. Cannot split data.")
+            logger.warning(
+                "Data is None or target column missing. Cannot split data.")
             self.X_train = self.X_test = self.y_train = self.y_test = None
 
     def train_model(self):
@@ -130,7 +131,8 @@ class ClassifierModel:
             logger.info("Model accuracy: %s", self.accuracy)
             print(f"Acurácia do modelo: {self.accuracy}")
         else:
-            logger.warning("Test or prediction data is None. Cannot evaluate model.")
+            logger.warning(
+                "Test or prediction data is None. Cannot evaluate model.")
             self.accuracy = None
 
     def predict_proba(self, new_data):
@@ -170,5 +172,4 @@ class ClassifierModel:
             }
             if webhook_payload_extra:
                 payload.update(webhook_payload_extra)
-            notify_webhook(webhook_url, payload)
-            notify_webhook(webhook_url, payload)
+            Notifier.notify_webhook(webhook_url, payload)

@@ -5,13 +5,31 @@ TimeCraft AI Core Module
 This module includes classes for time series modeling using Prophet, linear regression analysis, and database connectivity.
 
 """
+from __future__ import annotations
 
-import logging
-import threading
-import time
+
 from typing import Optional
+import time
+import threading
+import logging
 
-from . import ClassifierModel, LinearRegressionAnalysis, TimeCraftModel
+import os
+import sys
+
+from .classifier_model import ClassifierModel
+from .database_connection import DatabaseConnector
+from .linear_regression import LinearRegressionAnalysis
+from .timecraft_model import TimeCraftModel
+from ..shared.run_scheduled import SchedulerService
+
+# Adicionar src ao path para importações diretas
+_root_dir = os.path.dirname(os.path.abspath(__file__))
+_src_dir = os.path.join(_root_dir, "timecraft_ai")
+
+if _src_dir not in sys.path:
+    sys.path.insert(0, _src_dir)
+
+# Import core classes from the timecraft_ai package
 
 # Setup logging configuration for the package
 logging.basicConfig(
@@ -36,27 +54,6 @@ logging.basicConfig(
 logger = logging.getLogger("timecraft_ai")
 
 
-def notify_webhook(webhook_url, payload):
-    """
-    Send a JSON payload to a webhook URL via HTTP POST.
-    :param webhook_url: The webhook endpoint URL.
-    :param payload: Dictionary to send as JSON.
-    :return: Response object or None if requests is not available.
-    """
-    if not requests:
-        logger.warning(
-            "[Webhook] 'requests' library not installed. Cannot send webhook notification."
-        )
-        return None
-    try:
-        response = requests.post(webhook_url, json=payload, timeout=10)
-        logger.info(f"[Webhook] Notification sent. Status code: {response.status_code}")
-        return response
-    except Exception as e:
-        logger.error(f"[Webhook] Error sending notification: {e}")
-        return None
-
-
 class TimeCraftAI:
     """
     Central class for integrating TimeCraftModel, ClassifierModel, LinearRegressionAnalysis, and DatabaseConnector.
@@ -78,7 +75,8 @@ class TimeCraftAI:
         :param kwargs: Arguments for TimeCraftModel.
         :return: TimeCraftModel instance.
         """
-        self.timecraft_model = TimeCraftModel(db_connector=self.db_connector, **kwargs)
+        self.timecraft_model = TimeCraftModel(
+            db_connector=self.db_connector, **kwargs)
         return self.timecraft_model
 
     def create_classifier_model(self, **kwargs):
@@ -153,47 +151,13 @@ class TimeCraftAI:
             self.linear_regression_analysis.run_analysis()
 
 
-def run_scheduled(
-    target_func,
-    interval_seconds: int = 60,
-    max_runs: Optional[int] = None,
-    *args,
-    **kwargs,
-):
-    """
-    Run a target function periodically in a background thread.
-    :param target_func: Function to execute.
-    :param interval_seconds: Interval between executions in seconds.
-    :param max_runs: Maximum number of executions (None for infinite).
-    :param args: Positional arguments for the function.
-    :param kwargs: Keyword arguments for the function.
-    """
-
-    def _runner():
-        run_count = 0
-        while max_runs is None or run_count < max_runs:
-            logger.info(
-                f"[Scheduler] Running scheduled task: {target_func.__name__} (run {run_count+1})"
-            )
-            try:
-                target_func(*args, **kwargs)
-            except Exception as e:
-                logger.error(f"[Scheduler] Error in scheduled task: {e}")
-            run_count += 1
-            time.sleep(interval_seconds)
-
-    thread = threading.Thread(target=_runner, daemon=True)
-    thread.start()
-    return thread
-
-
 def main():
     """
     Main entry point for command-line usage. Provides basic commands: help, status, version.
     """
     import sys
 
-    VERSION = "1.1.3" 
+    VERSION = "1.1.3"
     HELP = """
 TimeCraftAI - Command Line Interface
 
@@ -227,17 +191,20 @@ Commands:
                 value_columns=["purchaseValue", "saleValue"],
                 is_csv=True,
             )
-            run_scheduled(model.run, interval_seconds=interval)
+            SchedulerService.run_scheduled(
+                model.run, interval_seconds=interval)
         elif model_type == "classifier":
             model = ai.create_classifier_model(
                 data="example/data/hist_cambio_float.csv", target_column="purchaseValue"
             )
-            run_scheduled(model.run, interval_seconds=interval)
+            SchedulerService.run_scheduled(
+                model.run, interval_seconds=interval)
         elif model_type == "regression":
             model = ai.create_linear_regression_analysis(
                 "example/data/hist_cambio_float.csv"
             )
-            run_scheduled(model.run_analysis, interval_seconds=interval)
+            SchedulerService.run_scheduled(
+                model.run_analysis, interval_seconds=interval)
         else:
             print(f"Unknown model type: {model_type}")
             sys.exit(1)

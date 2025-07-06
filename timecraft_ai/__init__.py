@@ -14,21 +14,25 @@ Exemplo:
 import os
 import sys
 
-from timecraft_ai.ai import (AI_MODULES_AVAILABLE, MCP_SERVER_AVAILABLE, AudioProcessor,
-                             ChatbotActions, ChatbotMsgSetHandler, ChatbotTimecraftAPI,
-                             HotwordDetector, MCPCommandHandler, VoiceSynthesizer,
-                             mcp_server_app)
-from timecraft_ai.core import (ClassifierModel, DatabaseConnector,
-                               LinearRegressionAnalysis, TimeCraftAI, TimeCraftModel,
-                               main, notify_webhook, run_scheduled)
-from timecraft_ai.shared import (ChainableBase, ChainableMeta, ChainableWrapper,
-                                 ChainableWrapperError, ChainableWrapperTypeError,
-                                 ChainableWrapperValueError, add_five,
-                                 chainable_behavior, run, square)
+from .ai import (AI_MODULES_AVAILABLE, MCP_SERVER_AVAILABLE, AudioProcessor,
+                 ChatbotActions, ChatbotMsgSetHandler, ChatbotTimecraftAPI,
+                 HotwordDetector, MCPCommandHandler, VoiceSynthesizer,
+                 mcp_server_app)
+from .core import (ClassifierModel, DatabaseConnector,
+                   LinearRegressionAnalysis, TimeCraftAI, TimeCraftModel,
+                   main)
+
+from .shared.notify_webhook import Notifier
+from .shared.run_scheduled import SchedulerService
+
+from .shared import (ChainableBase, ChainableMeta, ChainableWrapper,
+                     ChainableWrapperError, ChainableWrapperTypeError,
+                     ChainableWrapperValueError, add_five,
+                     chainable_behavior, run, square)
 
 # Adicionar src ao path para importações diretas
 _root_dir = os.path.dirname(os.path.abspath(__file__))
-_src_dir = os.path.join(_root_dir, "src")
+_src_dir = os.path.join(_root_dir, "timecraft_ai")
 
 if _src_dir not in sys.path:
     sys.path.insert(0, _src_dir)
@@ -39,6 +43,8 @@ __version__ = "1.1.3"
 __email__ = "faelmori@gmail.com"
 __license__ = "MIT"
 __all__ = [
+    "Notifier",
+    "SchedulerService",
     "TimeCraftAI",
     "DatabaseConnector",
     "LinearRegressionAnalysis",
@@ -57,8 +63,6 @@ __all__ = [
     "ClassifierModel",
     "LinearRegressionAnalysis",
     "TimeCraftModel",
-    "notify_webhook",
-    "run_scheduled",
     "main",
     "ChainableBase",
     "ChainableMeta",
