@@ -74,8 +74,15 @@ jobs:
             printf '%s\n' "❌ Only 'push' or manual dispatch allowed. Got '$EVENT'."
             exit 1
           fi
+
           if [[ "$IS_FORK" == "true" ]]; then
             printf '%s\n' "❌ Workflow cannot run from a fork."
+          fi
+          
+          # Check if the version exists on PyPI
+          echo "Checking PyPI for version $VERSION"
+          if curl -s https://pypi.org/pypi/timecraft-ai/$VERSION/json | grep -v 'Not Found' -q; then
+            echo "Version $VERSION already exists on PyPI"
             exit 1
           fi
 
