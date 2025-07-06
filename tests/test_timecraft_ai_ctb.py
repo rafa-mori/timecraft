@@ -28,6 +28,8 @@ import logging
 import os
 import sys
 
+from timecraft_ai.ai.audio_processor import get_model_path
+
 # Adiciona o diretório src ao path para imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
@@ -146,7 +148,14 @@ def run_hotword_mode():
     try:
         handler = MCPCommandHandler()
         synthesizer = VoiceSynthesizer()
-        hotword = HotwordDetector(keyword="mcp")
+
+        model_path = get_model_path()
+        if not model_path:
+            raise ValueError("Modelo Vosk não encontrado")
+
+        hotword = HotwordDetector(
+            model_path=model_path
+        )
 
         processor = AudioProcessor(
             command_handler=handler,
@@ -253,5 +262,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
     main()

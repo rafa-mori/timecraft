@@ -594,6 +594,91 @@ class AudioProcessor:
         """Destructor to ensure cleanup."""
         self.cleanup()
 
+    def listen_for_single_command(self, timeout: float = 10.0):
+        """
+        Listen for a single command with optimized VAD and timeout handling.
+        
+        Args:
+            timeout: Maximum time to wait for speech (seconds)
+        
+        Returns:
+            str: Transcribed command or empty string if no command detected
+        """
+        """
+        This method captures audio, applies advanced voice activity detection,
+        and transcribes the command using Vosk. It handles timeouts and ensures
+        minimal latency for real-time command processing.
+        """
+        print(f"🎤 Aguardando comando único (timeout: {timeout}s)...")
+        
+        try:
+
+            if not self.stream:
+                logger.error("Stream de áudio não inicializado!")
+                return ""
+            
+            self.stream.start_stream()
+            start_time = time.time()
+            frames = []
+            speech_started = False
+            
+            while time.time() - start_time < timeout:
+                data = self.stream.read(self.chunk, exception_on_overflow=False)
+                
+                # Voice activity detection
+                is_voice = self._is_voice_activity(data)
+                
+                if is_voice:
+                    if not speech_started:
+                        speech_started = True
+                        print("🔊 Fala detectada...")
+                    
+                    frames.append(data)
+                    
+                    # Process in real-time for responsiveness
+                    if self.rec.AcceptWaveform(data):
+                        result = json.loads(self.rec.Result())
+                        text = result.get("text", "").strip()
+                        if text:
+                            print(f"🗣️ Transcrito: {text}")
+                            return text
+                    else:
+                        # Show partial for immediate feedback
+                        partial = json.loads(self.rec.PartialResult())
+                        if partial.get("partial"):
+                            print(f"⚡ {partial['partial']}", end="\r")
+                
+                elif speech_started:
+                    # We had speech, now silence
+                    break
+                
+                time.sleep(0.01)  # Small delay to prevent excessive CPU usage
+
+            # Process any remaining audio
+            for frame in frames:
+                if self.rec.AcceptWaveform(frame):
+                    result = json.loads(self.rec.Result())
+                    text = result.get("text", "").strip()
+                    if text:
+                        print(f"🗣️ Transcrito: {text}")
+                        return text
+
+            # Check final result
+            final_result = json.loads(self.rec.FinalResult())
+            text = final_result.get("text", "").strip()
+            if text:
+                print(f"🗣️ Final: {text}")
+                return text
+
+            print("🔇 Nenhuma fala detectada.")
+            return ""
+
+        except Exception as e:
+            logger.error(f"Erro na transcrição: {e}")
+            return ""
+        finally:
+            self._cleanup_stream()
+
     def run_with_hotword(self, passive_mode: bool = True):
         """
         Advanced hotword-based voice command system with passive/active modes.
@@ -780,7 +865,19 @@ def main():
         
         # Optional hotword detector (comment out if not available)
         try:
-            hotword = HotwordDetector(keyword="timecraft")
+            model_path = get_model_path()
+            if not model_path:
+                raise ValueError("Modelo Vosk não encontrado")
+            hotword = HotwordDetector(
+                wake_words=[
+                    "hey timecraft",
+                    "oi timecraft",
+                    "olá timecraft",
+                    "timecraft ativa",
+                    "timecraft"
+                ],
+                model_path=model_path,
+            )
         except Exception as e:
             logger.warning(f"Hotword detector não disponível: {e}")
             hotword = None
