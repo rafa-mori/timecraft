@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2010
 # lib/utils.sh – Funções utilitárias
 
 set -euo pipefail
@@ -243,7 +244,7 @@ log_check() {
   fi
   
   if check_dir "${_LOG_DIR}"; then
-    if ls -lA "${_LOG_DIR}" | grep -v "${_LOG_FILES_PATTERN}" | grep -v "tar.gz" -q; then
+    if ls -1A "${_LOG_DIR}" | grep -v "${_LOG_FILES_PATTERN}" | grep -v "tar.gz" -q; then
       if ! is_a_real_cmd find; then  
         log "fatal" "The 'find' command is not available. Cannot proceed with log archiving."
       fi
