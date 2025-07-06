@@ -121,6 +121,7 @@ parse_vars(){
   # Internal function to validate context with shared scope
   validate_context(){
     # Check if actor is in contributors
+    # shellcheck disable=SC2076
     if [[ ! " $CONTRIBUTORS " =~ " $ACTOR " ]]; then
       printf '%s\n' "❌ Actor '$ACTOR' is not an authorized contributor."
       return 1
@@ -161,7 +162,7 @@ parse_vars(){
 
   validate_marker() {
     # Extract repository contributors username list
-    CONTRIBUTORS="$(gh api repos/${_ARGS_LIST["repo"]}/contributors --jq '.[].login' 2>/dev/null || true)"
+    CONTRIBUTORS="$(gh api repos/"${_ARGS_LIST["repo"]}"/contributors --jq '.[].login' 2>/dev/null || true)"
     # Remove trailing space
     CONTRIBUTORS="$(echo "${CONTRIBUTORS:-}" | sed 's/[[:space:]]*$//')"
 
@@ -324,6 +325,7 @@ main () {
 main "${@:-}"
 
 # If the script is sourced, we don't want to exit
+# shellcheck disable=SC2319
 test $_SOURCED = false && exit $?
 
 # End of script

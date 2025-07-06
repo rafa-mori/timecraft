@@ -1,0 +1,69 @@
+.
+├── AUTHORS.md
+├── docs
+│   │   # Documentation assets, such as images, stylesheets, and scripts
+│   ├── assets
+│   │   └── ...
+│   │   # Documentation page entrypoint
+│   ├── index.md
+│   │   # Documentation files for project installation, usage, and development
+│   ├── knowledge
+│   │   ├── INSTALL_AI.md
+│   │   └── INSTALL.md
+│   │   # Project main documentation files
+│   ├── CHANGELOG.md
+│   ├── NOTICE.md
+│   ├── README_DOCS.md
+│   ├── README.en.md
+│   ├── README.pt-BR.md
+│   │   # Opensource Community Standards and guidelines
+│   └── standards
+│       ├── CODE_OF_CONDUCT.md
+│       ├── CONTRIBUTING.md
+│       ├── LICENSE
+│       ├── SECURITY.md
+│       └── SUPPORT.md
+│   # Documentation examples, guides, etc...
+├── examples
+│   │   # Example files to demonstrate the usage of the package
+│   ├── data
+│   │   └── ...
+│   │   # File to make possible to import the package
+│   ├── __init__.py
+│   │   # Example notebooks to demonstrate the usage of the package
+│   ├── notebooks
+│   │   └── ...
+│   │   # Output files from the example notebooks and scripts
+│   ├── output
+│   │   └── ...
+│   │   # Example scripts to demonstrate the usage of the package
+│   └── ...
+│   # File to make possible to import the package without install or build
+├── __init__.py
+│   # Build process logs
+├── log
+│   └── ...
+│   # Script to turn easy to use the package for developers, tests and exploration
+├── playground.py
+│   # Project metadata, dependencies and configuration
+├── pyproject.toml
+│   # Readme file for the project
+├── README.md
+│   # Requirements for the project (just for reference, pyproject.toml already contains them)
+├── requirements-ai.txt
+├── requirements.txt
+│   # Python package distribution files
+├── src
+│   │   # File to make possible to import the package without install or build
+│   ├── __init__.py
+│   │   # Test suite for the package
+│   ├── tests
+│   │   └── ...
+│   │   # Package source code
+│   └── timecraft_ai
+│       └── ...
+│   # Distribution flow and other tools entrypoint
+├── Makefile
+│   # Support files and scripts for the Distribution flow and other tools
+└── support
+    └── ...

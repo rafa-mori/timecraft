@@ -50,8 +50,6 @@ main() {
 
   log_check || log "fatal" "Failed to check logging configuration. Exiting."
 
-  exit 109
-
   case "$_COMMAND" in
     setup*|-s|--setup)
       setup_environment
@@ -64,25 +62,10 @@ main() {
       clear_script_cache
       activate_venv
 
-      local _setup_env_log=""
-      _setup_env_log=$(setup_environment)
+      setup_environment "${_LOG_DIR}/setup_env.${_PROC_REF}.log"
+      setup_build_environment "${_LOG_DIR}/setup_build_env.${_PROC_REF}.log"
 
-      if [[ -z "${_setup_env_log}" || $? -ne 0 ]]; then
-        log "info" "Environment setup output: ${_setup_env_log}"
-      else 
-        printf "\n%s\n" "${_setup_env_log}" | tee "${_LOG_DIR}/setup_env.${_PROC_REF}.log" 1>&2 /dev/null
-      fi
-
-      local _setup_build_env_log=""
-      _setup_build_env_log=$(setup_build_environment)
-
-      if [[ -z "${_setup_build_env_log}" || $? -ne 0 ]]; then
-        log "info" "Build environment setup output: ${_setup_build_env_log}"
-      else
-        printf "\n%s\n" "${_setup_build_env_log}" | tee "${_LOG_DIR}/setup_build_env.${_PROC_REF}.log" 1>&2 > /dev/null
-      fi
-
-      run_command "python3 -m build"
+      run_command "python3 -m build" >> "${_LOG_DIR}/build.${_PROC_REF}.log" 2>&1
       ;;
     publish*|-p|--publish)
       validate_publish_vars

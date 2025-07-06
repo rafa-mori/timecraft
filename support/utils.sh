@@ -264,12 +264,19 @@ log_check() {
         log "fatal" "Log directory does not exist: ${_LOG_DIR}"
       fi
     
-      mapfile -t _to_backup < <(find "${_LOG_DIR}" -maxdepth 1 -type f -name "*.log" ! -name "*.${_PROC_REF}.log" ! -name "${_LOG_BKP_FILE_NAME}" -print)
+      mapfile -t _to_backup < <(find "${_LOG_DIR}" -maxdepth 1 -type f -name "*.log" ! -name "*.${_PROC_REF}.log" ! -name "${_LOG_BKP_FILE_NAME}" -print | 
+        grep -v "${_LOG_FILES_PATTERN}" | grep -v "tar.gz" | sort -u | awk '{print $1}' | xargs -n 1 basename)
 
       if [[ ${#_to_backup[@]} -gt 0 ]]; then
         log "warn" "Log directory is not empty, archived logs to ${_tar_file_path}"
+        local _cur_dir=""
+        local _target_dir=""
+        _cur_dir="$(pwd)"
+        _target_dir="$(dirname "${_tar_file_path}")"
+        cd "${_target_dir}" || log "fatal" "Failed to change directory to ${_target_dir}"
         tar --remove-files -czf "${_tar_file_path}" "${_to_backup[@]}" || log "fatal" "Failed to archive log files to ${_tar_file_path}"
-        log "info" "Archived log files to ${_tar_file_path}"
+        cd "${_cur_dir}" || log "fatal" "Failed to change back to original directory: ${_cur_dir}"
+        log "success" "Archived log files to ${_tar_file_path}"
       fi
     else
       log "info" "Log directory is empty or contains only the expected log files."

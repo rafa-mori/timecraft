@@ -41,6 +41,7 @@ activate_venv() {
 }
 
 setup_environment() {
+  local _LOG_FILE="${1:-${_LOG_FILE:-"setup.log"}}"
   log "info" "Setting up Python virtual environment..."
 
   if [[ -d "${_VENV_NAME}" ]]; then
@@ -53,13 +54,21 @@ setup_environment() {
   activate_venv
   
   log "info" "Installing dependencies..."
-  pip install --upgrade pip
-  pip install -e .
+  pip install --upgrade pip --quiet >> "${_LOG_FILE}" || {
+    log "error" "Failed to upgrade pip. Check the log file: ${_LOG_FILE}"
+    return 1
+  }
+  pip install -e . --quiet >> "${_LOG_FILE}" || {
+    log "error" "Failed to install dependencies. Check the log file: ${_LOG_FILE}"
+    return 1
+  }
   
   log "success" "Environment setup complete!"
 }
 
 setup_build_environment() {
+  local _LOG_FILE="${1:-${_LOG_FILE:-"setup.log"}}"
+
   log "info" "Setting up build environment..."
   if [[ ! -d "${_VENV_NAME}" ]]; then
     log "error" "Virtual environment not found: ${_VENV_NAME}. Please run 'setup' first."
@@ -71,17 +80,17 @@ setup_build_environment() {
     return 1
   }
 
-  run_command "python3 -m pip install --upgrade pip setuptools wheel" || {
+  run_command "python3 -m pip install --upgrade pip setuptools wheel --quiet" >> "${_LOG_FILE}" || {
     log "error" "Failed to upgrade pip, setuptools, or wheel. Exiting."
     return 1
   }
 
-  run_command "python3 -m pip install --upgrade build twine" || {
+  run_command "python3 -m pip install --upgrade build twine --quiet" >> "${_LOG_FILE}" || {
     log "error" "Failed to install build or twine. Exiting."
     return 1
   }
 
-  run_command "python3 -m pip install --upgrade -e ." || {
+  run_command "python3 -m pip install --upgrade -e . --quiet" >> "${_LOG_FILE}" || {
     log "error" "Failed to install the package in editable mode. Exiting."
     return 1
   }
@@ -116,7 +125,7 @@ trap_error() {
   local EXIT_CODE=$2
   log "error" "Error on line ${LINE}: exit code ${EXIT_CODE}"
   clear_script_cache
-  exit ${EXIT_CODE:-1}
+  exit "${EXIT_CODE:-1}"
 }
 
 trap_cleanup() {
