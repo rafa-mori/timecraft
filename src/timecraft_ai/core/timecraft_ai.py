@@ -1077,7 +1077,7 @@ def main():
     """
     import sys
 
-    VERSION = "1.0.0"
+    VERSION = "1.1.3"
     HELP = """
 TimeCraftAI - Command Line Interface
 

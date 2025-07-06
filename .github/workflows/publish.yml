@@ -237,7 +237,7 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
           echo "🚀 Publishing version $VERSION to PyPI..."
-          if [[ ${GITHUB_WORKFLOW:-} != "Local CI" ]]; then
+          if [[ ${{ github.env.GITHUB_WORKFLOW }} != "Local CI" ]]; then
             twine upload --non-interactive dist/* --verbose
           else 
             echo "Skipping PyPI upload in local CI environment."
@@ -248,7 +248,7 @@ jobs:
         run: |
           echo "🧹 Cleaning up publish marker(s)..."
           VERSION="${{ github.event.inputs.version || github.ref_name }}"
-          if [[ ${GITHUB_WORKFLOW:-} != "Local CI" ]]; then
+          if [[ ${{ github.env.GITHUB_WORKFLOW }} != "Local CI" ]]; then
             git rm .kubex_publish_marker_${VERSION}_* || true
             git commit -m "cleanup publish marker(s) $VERSION" || true
             git push origin HEAD:main

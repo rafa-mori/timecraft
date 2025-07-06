@@ -29,7 +29,7 @@ List the approaches or solutions you've already attempted.
 
 - OS: [e.g. Ubuntu 20.04, macOS 12.0, Windows 11]
 - Python Version: [e.g. 3.9.7]
-- TimeCraft AI Version: [e.g. 1.1.0]
+- TimeCraft AI Version: [e.g. 1.1.3]
 - Installation Method: [e.g. pip, source]
 
 ## Code/Configuration

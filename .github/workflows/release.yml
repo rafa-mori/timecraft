@@ -100,7 +100,8 @@ jobs:
           # Extract author from pyproject.toml
           # This will extract the author from the pyproject.toml file.
           # If the author is not found, it will exit with an error message.
-          AUTHOR=$(grep '^authors = ' "$PROJECT_TOML" | awk -F'"' '{print $2}')
+          sudo apt-get update && sudo apt-get install -y python3-toml # Install toml library to parse pyproject.toml
+          AUTHOR=$(python -c "import toml; d=toml.load('pyproject.toml'); print(d['project']['authors'][0]['name'])")
           if [ -z "$AUTHOR" ]; then
             echo "Author not found in pyproject.toml."
             exit 1
@@ -224,12 +225,20 @@ jobs:
           # Push the changes to the main branch
           # This is necessary to ensure that the CHANGELOG.md file is updated in the main branch
           # and the tag is pushed to the remote repository.
-          git push origin HEAD:main
+          if [[ ${GITHUB_WORKFLOW:-} != "Local CI" ]]; then
+            git push origin HEAD:main
+          else
+            echo "Skipping push to main branch in local CI workflow."
+          fi
 
           # Force push the tag to the remote repository
           # This is necessary to ensure that the tag is pushed to the remote repository.
           # The --force option is used to overwrite the existing tag if it already exists.
-          git push origin --tags --force
+          if [[ ${GITHUB_WORKFLOW:-} != "Local CI" ]]; then
+            git push origin --tags --force
+          else
+            echo "Skipping push of tags in local CI workflow."
+          fi
 
       - name: Checkout code again
         # This is because the previous steps may have modified the working directory,

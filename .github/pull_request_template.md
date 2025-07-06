@@ -37,7 +37,7 @@ Fixes #(issue_number)
 
 - OS: [e.g. Ubuntu 20.04, macOS 12.0, Windows 11]
 - Python Version: [e.g. 3.9, 3.10, 3.11]
-- TimeCraft AI Version: [e.g. 1.1.0]
+- TimeCraft AI Version: [e.g. 1.1.3]
 
 ### Test Cases
 

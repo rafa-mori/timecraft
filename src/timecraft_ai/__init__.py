@@ -58,7 +58,7 @@ from .core import (
 )
 
 # Package metadata
-__version__ = "1.1.2"
+__version__ = "1.1.3"
 __author__ = "Rafael Mori"
 __email__ = "faelmori@gmail.com"
 __license__ = "MIT"
