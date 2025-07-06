@@ -81,6 +81,16 @@ main() {
       show_help
       return 0
       ;;
+    local-ci)
+      export GITHUB_WORKFLOW="Local CI"
+      export GITHUB_REF="refs/tags/v1.2.3"
+      export GITHUB_ACTOR="faelmori"
+      export GITHUB_REPOSITORY="rafa-mori/timecraft-ai"
+      export GITHUB_EVENT_NAME="push"
+      # etc...
+      bash support/main.sh build
+      bash support/main.sh publish
+    ;;
     *)
       log "error"  "Unknown command: $_COMMAND"
       show_help

@@ -33,6 +33,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install yq
+        run: |
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+
       - name: Get Project Information
         id: extract_info
         run: |
@@ -59,9 +64,9 @@ jobs:
           # This assumes that the pyproject.toml file is located in the src directory.
           # This is the standard location for Python projects on the Kubex Ecosystem.
           # If the file is not found, it will exit with an error message.
-          PROJECT_TOML=$(find "$PROJECT_ROOT/src" -name "pyproject.toml" | head -n 1)
+          PROJECT_TOML=$(find "$PROJECT_ROOT" -name "pyproject.toml" | head -n 1)
           if [ -z "$PROJECT_TOML" ]; then
-            echo "pyproject.toml not found in src directory."
+            echo "pyproject.toml not found in project root."
             exit 1
           fi
 

@@ -31,7 +31,7 @@ ensure_vars() {
   export _PROJECT_NAME="${_PROJECT_NAME:-timecraft_ai}"
   export _APP_NAME="${_APP_NAME:-timecraft}" || log "fatal" "Failed to set app name"
   export _PACKAGE_NAME="${_PACKAGE_NAME:-timecraft_ai}" || log "fatal" "Failed to set package name"
-  export _OWNER="${_OWNER:-faelmori}" || log "fatal" "Failed to set owner"
+  export _OWNER="${_OWNER:-rafa-mori}" || log "fatal" "Failed to set owner"
 
   # Ensure the root directory is set
   export _ROOT_DIR="${_ROOT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && git rev-parse --show-toplevel || printf '%s' "$(pwd)/..")}" || log "fatal" "Failed to set root directory"
