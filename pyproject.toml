@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "timecraft_ai"
 version = "1.1.3"
-requires-python = ">=3.11"
+requires-python = ">=3.8"
 authors = [
     { name = "Rafael Mori", email = "faelmori@gmail.com" }
 ]
@@ -40,8 +40,10 @@ classifiers = [
 
 # Core dependencies (always required)
 dependencies = [
+    "mypy>=1.0.0",
     "numpy>=1.21.0",
     "pandas>=1.5.0", 
+    "pandas-stubs>=1.5.0.11",
     "matplotlib>=3.4.0",
     "scikit-learn>=1.0.0",
     "requests>=2.25.0",
@@ -124,13 +126,11 @@ Changelog = "https://github.com/rafa-mori/timecraft/blob/main/CHANGELOG.md"
 timecraft_ai = "timecraft_ai.core:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/timecraft_ai"]
+packages = ["timecraft_ai"]
 
 [tool.hatch.build.targets.sdist]
 include = [
-    "/src/timecraft_ai/assets/banner.png",
-    "/src/timecraft_ai",
-    "/src/pyproject.toml",
+    "/timecraft_ai",
     "/README.md", 
     "/LICENSE",
     "/CHANGELOG.md",
@@ -144,7 +144,7 @@ include = [
 ]
 
 [tool.hatch.version]
-path = "src/timecraft_ai/__init__.py"
+path = "timecraft_ai/__init__.py"
 
 # Testing configuration
 [tool.pytest.ini_options]
@@ -167,3 +167,7 @@ include = '\.pyi?$'
 [tool.flake8]
 max-line-length = 88
 extend-ignore = ["E203", "W503"]
+
+[[tool.mypy.overrides]]
+module = ["untyped_package.*"]
+follow_untyped_imports = true

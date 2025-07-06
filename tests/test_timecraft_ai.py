@@ -3,12 +3,8 @@ from unittest.mock import MagicMock, patch
 
 import pandas as pd
 
-from ..timecraft_ai import (
-    ClassifierModel,
-    DatabaseConnector,
-    LinearRegressionAnalysis,
-    TimeCraftModel,
-)
+from timecraft_ai import (ClassifierModel, DatabaseConnector,
+                          LinearRegressionAnalysis, TimeCraftModel)
 
 
 class TestTimeCraftModel(unittest.TestCase):

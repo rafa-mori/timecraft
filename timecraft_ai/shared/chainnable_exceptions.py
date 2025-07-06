@@ -1,3 +1,10 @@
+"""
+ChainableWrapper Exceptions Module
+================================
+This module defines custom exceptions for the ChainableWrapper class, providing specific error handling for type,
+value, key, index, and general exceptions. Each exception logs an error message when raised.
+"""
+
 import logging
 from typing import Any
 

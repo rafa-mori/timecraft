@@ -88,10 +88,10 @@ Requisitos:
  source venv/bin/activate  # No Windows: venv\Scripts\activate
 
 # Instale as dependências
- pip install -r src/timecraft_ai/requirements.txt
+ pip install -r timecraft_ai/timecraft_ai/requirements.txt
 
 # (Opcional) Instale as dependências de AI
- pip install -r src/timecraft_ai/requirements-ai.txt
+ pip install -r timecraft_ai/timecraft_ai/requirements-ai.txt
 ```
 
 ---

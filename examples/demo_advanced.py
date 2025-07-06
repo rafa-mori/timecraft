@@ -26,14 +26,9 @@ import sys
 
 # Try to import from installed package first, fallback to dev environment
 try:
-    from ..src.timecraft_ai import (
-        AudioProcessor,
-        ChatbotActions,
-        HotwordDetector,
-        MCPCommandHandler,
-        VoiceSynthesizer,
-    )
-    from ..src.timecraft_ai import mcp_server_app as mcp_server
+    from timecraft_ai import (AudioProcessor, ChatbotActions, HotwordDetector,
+                              MCPCommandHandler, VoiceSynthesizer)
+    from timecraft_ai import mcp_server_app as mcp_server
 
     DEV_MODE = False
     print("📦 Usando TimeCraft instalado como package")
@@ -42,14 +37,10 @@ except ImportError:
     src_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "src")
     if os.path.exists(src_path):
         sys.path.insert(0, src_path)
-        from ..src.timecraft_ai import (
-            AudioProcessor,
-            ChatbotActions,
-            HotwordDetector,
-            MCPCommandHandler,
-            VoiceSynthesizer,
-        )
-        from ..src.timecraft_ai import mcp_server_app as mcp_server
+        from timecraft_ai import (AudioProcessor, ChatbotActions,
+                                  HotwordDetector, MCPCommandHandler,
+                                  VoiceSynthesizer)
+        from timecraft_ai import mcp_server_app as mcp_server
 
         DEV_MODE = True
         print("🔧 Usando TimeCraft em modo desenvolvimento")

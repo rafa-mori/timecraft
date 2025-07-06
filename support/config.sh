@@ -83,8 +83,8 @@ ensure_vars() {
   export _HELP="${_HELP:-}" || log "fatal" "Failed to set help"
 
   # Version information
-  if test -f "$_ROOT_DIR/src/$_PROJECT_NAME/pyproject.toml"; then
-    export _VERSION_PY="${_VERSION_PY:-$(grep '^version = ' "$_ROOT_DIR/src/$_PROJECT_NAME/pyproject.toml" | cut -d '"' -f 2)}" || log "fatal" "Failed to set Python version"
+  if test -f "$_ROOT_DIR/$_PROJECT_NAME/pyproject.toml"; then
+    export _VERSION_PY="${_VERSION_PY:-$(grep '^version = ' "$_ROOT_DIR/$_PROJECT_NAME/pyproject.toml" | cut -d '"' -f 2)}" || log "fatal" "Failed to set Python version"
   else
     export _VERSION_PY="${_VERSION_PY:-0.0.0}" || log "fatal" "Failed to set Python version"
   fi

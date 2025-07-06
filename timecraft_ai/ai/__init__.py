@@ -62,3 +62,8 @@ __all__ = [
     "AI_MODULES_AVAILABLE",
     "MCP_SERVER_AVAILABLE",
 ]
+
+
+def is_ai_modules_available():
+    """Check if AI modules are available."""
+    return AI_MODULES_AVAILABLE

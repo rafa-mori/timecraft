@@ -8,6 +8,9 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+bkp/**/*
+*.bkp/**/*
+bkp.*/**/*
 build/
 develop-eggs/
 dist/
@@ -180,3 +183,4 @@ bkp/
 *.bkp/
 bkp.*/
 docs/jobs/*.md
+log/Xvg6zd_logs.tar.gz

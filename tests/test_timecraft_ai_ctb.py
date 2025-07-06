@@ -29,13 +29,8 @@ import sys
 # Adiciona o diretório src ao path para imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
-from ..timecraft_ai import (
-    AudioProcessor,
-    ChatbotActions,
-    HotwordDetector,
-    MCPCommandHandler,
-    VoiceSynthesizer,
-)
+from timecraft_ai import (AudioProcessor, ChatbotActions, HotwordDetector,
+                          MCPCommandHandler, VoiceSynthesizer)
 
 # Configuração de logging
 logging.basicConfig(
@@ -158,7 +153,7 @@ def run_server_mode():
     try:
         import uvicorn
 
-        from ..timecraft_ai import mcp_server_app
+        from timecraft_ai import mcp_server_app
 
         uvicorn.run(mcp_server_app, host="0.0.0.0", port=8000)
     except ImportError:

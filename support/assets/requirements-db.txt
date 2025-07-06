@@ -1,0 +1,8 @@
+cx_Oracle
+psycopg2
+mysql-connector-python
+pymongo
+redis
+elasticsearch
+sqlalchemy
+sqlalchemy-utils

@@ -1,4 +1,7 @@
-# -*- coding: utf-8 -*-
+"""
+This script processes time series data for products from a Microsoft SQL Server database using the TimeCraft AI library.
+It retrieves active product IDs, fetches their historical data, trains a time series model, and
+"""
 
 from concurrent.futures import ProcessPoolExecutor
 
@@ -96,25 +99,4 @@ if __name__ == "__main__":
     with ProcessPoolExecutor(max_workers=4) as executor:
         executor.map(process_product, get_product_ids())
 
-    print("Processing completed.")
-    print("Processing completed.")
-    print("Processing completed.")
-    print("Processing completed.")
-    print("Processing completed.")
-    print("Processing completed.")
-    print("Processing completed.")
-    print("Processing completed.")
-    print("Processing completed.")
-    print("Processing completed.")
-    print("Processing completed.")
-    print("Processing completed.")
-    print("Processing completed.")
-    print("Processing completed.")
-    print("Processing completed.")
-    print("Processing completed.")
-    print("Processing completed.")
-    print("Processing completed.")
-    print("Processing completed.")
-    print("Processing completed.")
-    print("Processing completed.")
     print("Processing completed.")

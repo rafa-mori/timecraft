@@ -1,3 +1,10 @@
+"""
+ChainableWrapper: Chainable Wrapper
+# =====================
+Allows chaining method calls and operators for various types,
+where each operation returns a new ChainableWrapper with the updated value.
+"""
+
 import copy
 from calendar import c
 from typing import (
@@ -330,7 +337,7 @@ class ChainableWrapper(ChainableBase[T], metaclass=ChainableMeta):
                 f"Flatten só suporta listas ou tuplas de listas/tuplas. Tipo atual: {type(self._value)}"
             )
 
-        flat_list = []
+        flat_list: list[Any] = []
         for item in self._value:
             if isinstance(item, (list, tuple)):
                 flat_list.extend(item)

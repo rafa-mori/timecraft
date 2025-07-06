@@ -6,12 +6,12 @@ Make sure to install the package before running this script:
 
 from datetime import datetime
 
-from ..src.timecraft_ai import TimeCraftModel
+import timecraft_ai
 
 start_time = datetime.now()
 
 # Create an instance of TimeCraftModel
-model = TimeCraftModel(
+model = timecraft_ai.TimeCraftModel(
     data="data/hist_cambio_float.csv",  # Path to the CSV file
     date_column="dt",
     value_columns=["purchaseValue", "saleValue"],
@@ -27,4 +27,5 @@ fcst = model.get_forecast()
 for key, value in fcst.items():
     print(key, value)
 
+print("Time taken:", datetime.now() - start_time)
 print("Time taken:", datetime.now() - start_time)

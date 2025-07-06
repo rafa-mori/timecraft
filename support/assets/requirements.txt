@@ -1,19 +1,22 @@
 # TimeCraft AI - Main Dependencies
 # =====================================
 # This file facilitates the installation of the main dependencies
-# The complete dependencies are defined in src/pyproject.toml
+# The complete dependencies are defined in timecraft_ai/pyproject.toml
 
 # Main dependencies (always required)
-numpy>=1.21.0
-pandas>=1.5.0
-matplotlib>=3.4.0
-scikit-learn>=1.0.0
-requests>=2.25.0
-plotly>=5.0.0
-prophet>=1.0.0
-sqlalchemy>=1.4.0
-fastapi>=0.104.0
-uvicorn[standard]>=0.24.0
+mypy
+numpy
+pandas
+pandas-stubs
+matplotlib
+scikit-learn
+
+requests
+plotly
+prophet
+sqlalchemy
+fastapi
+uvicorn
 
 # Optional dependencies (install as needed)
 mkdocs
@@ -30,8 +33,8 @@ mkdocs-redirects
 
 
 # For full installation with AI:
-# pip install -e src/[ai]
+# pip install -e timecraft_ai/[ai]
 
 # For development:
-# pip install -e src/[dev]
+# pip install -e timecraft_ai/[dev]
 

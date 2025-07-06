@@ -2,25 +2,25 @@
 # To install: pip install -r requirements-ai.txt
 
 # === CORE DEPENDENCIES ===
-fastapi>=0.104.0
-uvicorn[standard]>=0.24.0
-pydantic>=2.0.0
-flask>=3.0.0
+fastapi
+uvicorn
+pydantic
+flask
 
 # === AUDIO PROCESSING ===
-vosk>=0.3.45
-pyaudio>=0.2.11
-soundfile>=0.12.1
+vosk
+pyaudio
+soundfile
 
 # === VOICE SYNTHESIS ===
-pyttsx3>=2.90
+pyttsx3
 
 # === HOTWORD DETECTION ===
-pvporcupine>=3.0.0
+pvporcupine
 
 # === LOGGING & UTILITIES ===
-python-dotenv>=1.0.0
-requests>=2.31.0
+python-dotenv
+requests
 
 # === OPTIONAL: ENHANCED VOICE FEATURES ===
 # Uncomment if you want enhanced audio processing
