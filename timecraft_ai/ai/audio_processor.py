@@ -110,7 +110,7 @@ class AudioProcessor:
             self.noise_samples_count = 0
             
             # Audio setup
-            self.p = pyaudio.PyAudio()
+            self.p: pyaudio.PyAudio
             self.stream: Optional[pyaudio.Stream] = None
             self._initialize_audio_stream()
             
@@ -130,32 +130,134 @@ class AudioProcessor:
     
     def _initialize_audio_stream(self):
         """Initialize audio stream with error handling and device selection."""
+        logger.info("Configurando stream de áudio...")
         try:
-            # Find best input device
+            # Initialize PyAudio
+            self.p = pyaudio.PyAudio()
+
+            # Check if PyAudio is available
+            if not self.p:
+                logger.error("PyAudio não está disponível. Verifique a instalação.")
+                raise RuntimeError("PyAudio não inicializado corretamente.")
+            
+            # Check if model is loaded
+            if not self.model:
+                logger.error("Modelo Vosk não está carregado. Verifique a inicialização.")
+                raise RuntimeError("Modelo Vosk não inicializado corretamente.")
+            
+            # Reset metrics
+            self._reset_metrics()
+
+            # Set up audio stream parameters
+            self.rate = self.rate
+            self.chunk = self.chunk
+            self.vad_threshold = self.vad_threshold
+            self.silence_threshold = self.silence_threshold
+            self.max_silent_duration = self.max_silent_duration
+            self.energy_window_size = self.energy_window_size
+            self.energy_buffer = deque(maxlen=self.energy_window_size)
+            self.background_noise_level = 0.0
+            self.noise_samples_count = 0
+
+            logger.info("Parâmetros de áudio configurados:")
+            logger.info(f"  Taxa: {self.rate}Hz")
+            logger.info(f"  Chunk: {self.chunk} samples")
+            logger.info(f"  VAD Threshold: {self.vad_threshold}")
+            logger.info(f"  Silence Threshold: {self.silence_threshold}")
+            logger.info(f"  Max Silent Duration: {self.max_silent_duration}s")
+            logger.info(f"  Energy Window Size: {self.energy_window_size} samples")
+            logger.info("Iniciando configuração do stream de áudio...")
+            # Check if model is loaded
+            if not self.model:
+                logger.error("Modelo Vosk não está carregado. Verifique a inicialização.")
+                raise RuntimeError("Modelo Vosk não inicializado corretamente.")
+            logger.info("Modelo Vosk carregado com sucesso.")
+
             device_info = self._find_best_input_device()
             
+            if device_info is None:
+                logger.warning("Nenhum dispositivo de entrada adequado encontrado. Usando dispositivo padrão.")
+                device_info = self.p.get_default_input_device_info()
+            else:
+                logger.info(f"Dispositivo de entrada selecionado: {device_info['name']} (Index: {device_info['index']})")
+            # Check if device supports input channels
+            maxInputChannels = 0
+
+            if device_info is not None and 'maxInputChannels' in device_info:
+                maxInputChannels = device_info['maxInputChannels']
+            else:
+                logger.warning("Dispositivo de entrada não encontrado ou não suporta canais de entrada. Usando dispositivo padrão.")  
+
+            if not isinstance(maxInputChannels, int) or maxInputChannels < 1:
+                logger.warning("Dispositivo selecionado não suporta entrada de áudio. Usando dispositivo padrão.")
+                device_info = self.p.get_default_input_device_info()
+
+            # If no device found, raise error
+            if not device_info or 'index' not in device_info:
+                logger.error("Nenhum dispositivo de entrada encontrado. Verifique a configuração do áudio.")
+                raise RuntimeError("Dispositivo de entrada não encontrado.")
+
+            if device_info is None:
+                logger.error("Nenhum dispositivo de entrada disponível.")
+                raise RuntimeError("Dispositivo de entrada não encontrado.")
+            
+            logger.info(f"Dispositivo de entrada selecionado: {device_info['name']} (Index: {device_info['index']})")
+            # Open audio stream with selected device
+
+            device_index = device_info['index'] if 'index' in device_info else None
+
+            if device_index is None:
+                logger.warning("Nenhum dispositivo de entrada selecionado. Usando dispositivo padrão.")
+                device_info = self.p.get_default_input_device_info()
+            else:
+                logger.info(f"Dispositivo de entrada selecionado: {device_info['name']} (Index: {device_index})")
+                device_index = int(device_index)
+            
+            logger.info(f"Stream de áudio configurado: {device_info['name'] if device_info else 'default'}")
             self.stream = self.p.open(
                 format=pyaudio.paInt16,
                 channels=1,
                 rate=self.rate,
                 input=True,
-                input_device_index=device_info['index'] if device_info else None,
+                input_device_index=device_index,
                 frames_per_buffer=self.chunk,
                 start=False  # Don't start immediately
             )
-            
+
             logger.info(f"Stream de áudio configurado: {device_info['name'] if device_info else 'default'}")
-            
+            if not self.stream:
+                logger.error("Falha ao configurar o stream de áudio. Verifique os dispositivos de entrada.")
+                raise RuntimeError("Stream de áudio não configurado corretamente.")
         except Exception as e:
             logger.error(f"Erro ao configurar stream de áudio: {e}")
             raise
-    
-    def _find_best_input_device(self):
+
+    def _find_best_input_device(self) -> dict[str, str | int | float] | None:
         """Find the best available input device."""
+        best_device = None
+
         try:
-            device_count = self.p.get_device_count()
-            best_device = None
+            self.p = pyaudio.PyAudio()
+            default_input = self.p.get_default_input_device_info()
+            if default_input:
+                best_device = {
+                    'name': default_input.get('name', 'Default Input'),
+                    'index': default_input.get('index', 0),
+                    'maxInputChannels': default_input.get('maxInputChannels', 1)
+                }
+                logger.debug(f"Dispositivo de entrada padrão encontrado: {best_device['name']} (Index: {best_device['index']})")
+
+            else:
+                logger.warning("Nenhum dispositivo de entrada padrão encontrado. Usando dispositivo genérico.") 
+
+            # Get all devices and find the best one
+            logger.debug("Buscando dispositivos de entrada disponíveis...")
             
+            device_count = self.p.get_device_count()
+
+            device_info = self.p.get_default_host_api_info()
+            device_api_count = self.p.get_host_api_count()
+
             for i in range(device_count):
                 try:
                     device_info = self.p.get_device_info_by_index(i)
