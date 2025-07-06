@@ -20,7 +20,7 @@ import timecraft_ai
 try:
     if timecraft_ai:
         from timecraft_ai.core import (
-            DatabaseConnector, LinearRegression)
+            DatabaseConnector, LinearRegressionAnalysis)
 
     if AI_MODULES_AVAILABLE:
         from timecraft_ai.ai import (AI_MODULES_AVAILABLE, AudioProcessor,
@@ -35,7 +35,7 @@ except ImportError:
         sys.path.insert(0, src_path)
         if timecraft_ai:
             # Importar as classes principais do core
-            from timecraft_ai.core import (DatabaseConnector, LinearRegression,
+            from timecraft_ai.core import (DatabaseConnector, LinearRegressionAnalysis,
                                            TimeCraftAI)
         else:
             print("⚠️ Módulo core não encontrado. Verifique a instalação.")
