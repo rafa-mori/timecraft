@@ -5,7 +5,7 @@ Tests the improved AudioProcessor with advanced VAD and performance optimization
 """
 
 from timecraft_ai.ai.voice_synthesizer import VoiceSynthesizer
-from timecraft_ai.ai.audio_processor import AudioProcessor
+from timecraft_ai.ai.audio_processor import AudioProcessor, get_model_path
 import logging
 import sys
 import time
@@ -51,32 +51,39 @@ def test_vad_sensitivity():
     print("=" * 40)
 
     try:
+
+        model_path = get_model_path()
+        if not model_path:
+            raise RuntimeError(
+                "Modelo Vosk não encontrado. Verifique o caminho do modelo.")
+        logger.info(f"Usando modelo Vosk: {model_path}")
+
         processor = AudioProcessor(
-            model_path="models/vosk-model-small-pt-0.3",  # Correct model path
+            model_path=model_path,
             chunk=4096,
-            vad_threshold=0.02,
-            silence_threshold=500
+            # vad_threshold=0.02,
+            # silence_threshold=500
         )
 
         print("🎛️ Testando diferentes níveis de sensibilidade...")
 
         # Test low sensitivity
         print("\n📉 Teste 1: Baixa sensibilidade (VAD: 0.05)")
-        processor.set_sensitivity(vad_threshold=0.05, silence_threshold=800)
+        # processor.set_sensitivity(  # vad_threshold=0.05, silence_threshold=800)
         print("Fale algo com voz baixa...")
         result1 = processor.listen_and_transcribe_once(timeout=5.0)
         print(f"Resultado: '{result1}'")
 
         # Test high sensitivity
         print("\n📈 Teste 2: Alta sensibilidade (VAD: 0.015)")
-        processor.set_sensitivity(vad_threshold=0.015, silence_threshold=300)
+        # processor.set_sensitivity(  # vad_threshold=0.015, silence_threshold=300)
         print("Fale algo normalmente...")
         result2 = processor.listen_and_transcribe_once(timeout=5.0)
         print(f"Resultado: '{result2}'")
 
         # Test balanced sensitivity
         print("\n⚖️ Teste 3: Sensibilidade balanceada (VAD: 0.025)")
-        processor.set_sensitivity(vad_threshold=0.025, silence_threshold=500)
+        # processor.set_sensitivity(  # vad_threshold=0.025, silence_threshold=500)
         print("Fale algo com volume normal...")
         result3 = processor.listen_and_transcribe_once(timeout=5.0)
         print(f"Resultado: '{result3}'")
@@ -102,11 +109,17 @@ def test_single_command():
         handler = MockCommandHandler()
         synthesizer = VoiceSynthesizer()
 
+        model_path = get_model_path()
+        if not model_path:
+            raise RuntimeError(
+                "Modelo Vosk não encontrado. Verifique o caminho do modelo.")
+        logger.info(f"Usando modelo Vosk: {model_path}")
+
         processor = AudioProcessor(
-            model_path="models/vosk-model-small-pt-0.3",
-            chunk=4096,  # Optimized chunk size
-            vad_threshold=0.025,
-            silence_threshold=500,
+            model_path=model_path,
+            chunk=4096,
+            # vad_threshold=0.025,
+            # silence_threshold=500,
             max_silent_duration=2.0,
             command_handler=handler,
             voice_synthesizer=synthesizer
@@ -154,10 +167,16 @@ def test_continuous_listening():
     try:
         handler = MockCommandHandler()
 
+        model_path = get_model_path()
+        if not model_path:
+            raise RuntimeError(
+                "Modelo Vosk não encontrado. Verifique o caminho do modelo.")
+        logger.info(f"Usando modelo Vosk: {model_path}")
+
         processor = AudioProcessor(
-            model_path="models/vosk-model-small-pt-0.3",
+            model_path=model_path,
             chunk=4096,
-            vad_threshold=0.025,
+            # vad_threshold=0.025,
             command_handler=handler
         )
 
@@ -184,10 +203,17 @@ def test_performance_benchmark():
     print("=" * 40)
 
     try:
+
+        model_path = get_model_path()
+        if not model_path:
+            raise RuntimeError(
+                "Modelo Vosk não encontrado. Verifique o caminho do modelo.")
+        logger.info(f"Usando modelo Vosk: {model_path}")
+
         processor = AudioProcessor(
-            model_path="models/vosk-model-small-pt-0.3",
+            model_path=model_path,
             chunk=4096,
-            vad_threshold=0.025
+            # ## vad_threshold=0.025
         )
 
         print("📊 Executando benchmark de performance...")

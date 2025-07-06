@@ -50,9 +50,9 @@ class AudioProcessor:
         rec (KaldiRecognizer): Vosk recognizer instance
         rate (int): Audio sampling rate (optimized for speech: 16kHz)
         chunk (int): Audio buffer size (balanced for latency vs accuracy)
-        vad_threshold (float): Voice activity detection threshold
+        ## vad_threshold (float): Voice activity detection threshold
         silence_threshold (int): Silence detection threshold
-        max_silent_duration (float): Maximum silence duration before stopping
+        ## max_silent_duration (float): Maximum silence duration before stopping
         energy_window_size (int): Rolling window size for energy calculation
         
     Performance optimizations:
@@ -66,11 +66,11 @@ class AudioProcessor:
         self,
         model_path: str = "models/vosk-model-small-pt",
         rate: int = 16000,
-        chunk: int = 4096,  # Reduced for lower latency
-        vad_threshold: float = 0.02,  # Voice activity detection threshold
-        silence_threshold: int = 500,  # Silence level threshold
-        max_silent_duration: float = 2.0,  # Max silence before stopping (seconds)
-        energy_window_size: int = 10,  # Rolling window for energy calculation
+        chunk: int = 4096,
+        ## vad_threshold: float = 0.02,
+        ## silence_threshold: int = 500,
+        max_silent_duration: float = 2.0,
+        energy_window_size: int = 10,
         command_handler=None,
         voice_synthesizer=None,
         hotword_detector=None,
@@ -82,14 +82,30 @@ class AudioProcessor:
             model_path: Path to Vosk model
             rate: Audio sampling rate (16kHz optimal for speech)
             chunk: Buffer size (smaller = lower latency, larger = better accuracy)
-            vad_threshold: Voice activity detection sensitivity (0.01-0.1)
-            silence_threshold: Audio level below which is considered silence
+            ## vad_threshold: Voice activity detection sensitivity (0.01-0.1)
+            ## silence_threshold: Audio level below which is considered silence
             max_silent_duration: Max seconds of silence before stopping recording
             energy_window_size: Window size for rolling energy calculation
         """
         logger.info(f"Inicializando AudioProcessor com parâmetros otimizados...")
         
         try:
+            # Get model path
+            find_model_path = get_model_path()
+            if not find_model_path:
+                print("❌ Não foi possível iniciar o sistema sem o modelo Vosk.")
+                return
+
+            if isinstance(find_model_path, str):
+                model_path = find_model_path
+            elif isinstance(find_model_path, Path):
+                model_path = str(find_model_path)
+            else:
+                logger.error("Caminho do modelo Vosk inválido. Deve ser uma string ou Path.")
+                raise ValueError("Caminho do modelo Vosk inválido.")
+            
+            logger.info(f"Modelo Vosk encontrado: {model_path}")
+
             self.model = Model(model_path)
             self.rec = KaldiRecognizer(self.model, rate)
             self.rec.SetWords(True)
@@ -99,8 +115,8 @@ class AudioProcessor:
             self.chunk = chunk
             
             # VAD and silence detection parameters
-            self.vad_threshold = vad_threshold
-            self.silence_threshold = silence_threshold
+            ##self.## vad_threshold = ## vad_threshold
+            ##self.silence_threshold = silence_threshold
             self.max_silent_duration = max_silent_duration
             self.energy_window_size = energy_window_size
             
@@ -151,8 +167,8 @@ class AudioProcessor:
             # Set up audio stream parameters
             self.rate = self.rate
             self.chunk = self.chunk
-            self.vad_threshold = self.vad_threshold
-            self.silence_threshold = self.silence_threshold
+            ##self.## vad_threshold = self.## vad_threshold
+            ## self.silence_threshold = self.silence_threshold
             self.max_silent_duration = self.max_silent_duration
             self.energy_window_size = self.energy_window_size
             self.energy_buffer = deque(maxlen=self.energy_window_size)
@@ -162,8 +178,8 @@ class AudioProcessor:
             logger.info("Parâmetros de áudio configurados:")
             logger.info(f"  Taxa: {self.rate}Hz")
             logger.info(f"  Chunk: {self.chunk} samples")
-            logger.info(f"  VAD Threshold: {self.vad_threshold}")
-            logger.info(f"  Silence Threshold: {self.silence_threshold}")
+            ##logger.info(f"  VAD Threshold: {self.## vad_threshold}")
+            ## logger.info(f"  Silence Threshold: {self.silence_threshold}")
             logger.info(f"  Max Silent Duration: {self.max_silent_duration}s")
             logger.info(f"  Energy Window Size: {self.energy_window_size} samples")
             logger.info("Iniciando configuração do stream de áudio...")
@@ -221,7 +237,7 @@ class AudioProcessor:
                 input=True,
                 input_device_index=device_index,
                 frames_per_buffer=self.chunk,
-                start=False  # Don't start immediately
+                start=False
             )
 
             logger.info(f"Stream de áudio configurado: {device_info['name'] if device_info else 'default'}")
@@ -341,8 +357,8 @@ class AudioProcessor:
             self.noise_samples_count += 1
         
         # Dynamic threshold: background noise + sensitivity margin
-        dynamic_threshold = max(self.vad_threshold, self.background_noise_level * 2.0)
-        
+        dynamic_threshold = self.background_noise_level * 2.0
+
         is_voice = energy > dynamic_threshold
         
         if is_voice:
@@ -377,7 +393,7 @@ class AudioProcessor:
             return
             
         print("🎤 Sistema de reconhecimento ativo (otimizado)...")
-        print(f"📊 VAD Threshold: {self.vad_threshold:.3f} | Silence: {self.silence_threshold}")
+        ##print(f"📊 VAD Threshold: {self.## vad_threshold:.3f} | Silence: {self.silence_threshold}")
         
         try:
             self.stream.start_stream()
@@ -702,6 +718,10 @@ class AudioProcessor:
         if vad_threshold is not None:
             self.vad_threshold = max(0.01, min(0.1, vad_threshold))
             print(f"🎛️ VAD threshold ajustado para: {self.vad_threshold:.3f}")
+
+        if not isinstance(silence_threshold, int):
+            logger.warning("Silence threshold deve ser um inteiro. Usando valor padrão de 500ms.")
+            silence_threshold = 500
             
         if silence_threshold is not None:
             self.silence_threshold = max(100, min(2000, silence_threshold))
@@ -716,12 +736,32 @@ class AudioProcessor:
         """Get current system status and metrics."""
         return {
             'stream_active': self.stream is not None and self.stream.is_active() if self.stream else False,
-            'vad_threshold': self.vad_threshold,
-            'silence_threshold': self.silence_threshold,
+            ##'## vad_threshold': self.## vad_threshold,
+            ## 'silence_threshold': self.silence_threshold,
             'background_noise': self.background_noise_level,
             'metrics': self.metrics.copy(),
             'energy_buffer_size': len(self.energy_buffer)
         }
+    
+
+def get_model_path()->str | None:
+    """
+    Get the path to the Vosk model.
+    This function checks if the model exists in the expected directory.
+    If not, it prompts the user to download the model.
+    """
+    # import os
+    # current_dir = os.path.dirname(os.path.abspath(__file__))
+    # parent_dir = os.path.dirname(current_dir)
+    # model_path = os.path.join(parent_dir, "models/vosk-model-small-pt-0.3")
+    model_path = "/srv/apps/KUBEX/timecraft_ai/docs/models/vosk-model-small-pt-0.3"
+    return model_path
+    # if not os.path.exists(model_path):
+    #     print(f"❌ Modelo Vosk não encontrado em {model_path}. Por favor, baixe o modelo correto.")
+    #     return None
+    # else:
+    #     print(f"✅ Modelo Vosk encontrado em {model_path}.")
+    #     return model_path
 
 
 def main():
@@ -744,12 +784,18 @@ def main():
         except Exception as e:
             logger.warning(f"Hotword detector não disponível: {e}")
             hotword = None
-        
+
+        # Get model path
+        model_path = get_model_path()
+        if not model_path:
+            print("❌ Não foi possível iniciar o sistema sem o modelo Vosk.")
+            return
+
         # Create optimized audio processor
         processor = AudioProcessor(
-            model_path="models/vosk-model-small-pt-0.3",  # Adjust path as needed
-            chunk=4096,  # Optimized for low latency
-            vad_threshold=0.025,  # Balanced sensitivity
+            model_path=model_path,
+            chunk=4096,
+            ## vad_threshold=0.025,
             command_handler=handler,
             voice_synthesizer=synthesizer,
             hotword_detector=hotword
@@ -786,9 +832,9 @@ def main():
         elif choice == "5":
             print("\n🎛️ Ajuste de sensibilidade...")
             try:
-                vad = float(input("VAD threshold (0.01-0.1, atual: {:.3f}): ".format(processor.vad_threshold)))
-                silence = int(input("Silence threshold (100-2000, atual: {}): ".format(processor.silence_threshold)))
-                processor.set_sensitivity(vad, silence)
+                ## vad = float(input("VAD threshold (0.01-0.1, atual: {:.3f}): ".format(processor.vad_threshold)))
+                ## silence = int(input("Silence threshold (100-2000, atual: {}): ".format (processor.silence_threshold)))
+                ## processor.set_sensitivity(vad, silence)
                 print("✅ Sensibilidade ajustada!")
             except ValueError:
                 print("❌ Valores inválidos.")
@@ -808,6 +854,9 @@ def main():
         logger.error(f"Erro no programa principal: {e}")
     finally:
         print("🔄 Finalizando...")
+
+
+__all__ = ["AudioProcessor", "get_model_path", "main"]
 
 
 if __name__ == "__main__":

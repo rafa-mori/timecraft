@@ -20,6 +20,15 @@ logging.basicConfig(
 logger = logging.getLogger("test_stt_mock")
 
 
+def get_model_path():
+    """Get the path to the Vosk model."""
+    model_path = Path("models/vosk-model-small-pt-0.3")
+    if not model_path.exists():
+        logger.error(f"Modelo Vosk não encontrado em: {model_path}")
+        return None
+    return str(model_path)
+
+
 class MockAudioData:
     """Generate mock audio data for testing."""
 
@@ -187,11 +196,15 @@ def test_vad_optimization():
             for threshold in thresholds:
                 print(f"\n📊 Testando VAD threshold: {threshold:.3f}")
 
+                model_path = get_model_path()
+                if not model_path:
+                    raise RuntimeError(
+                        "Modelo Vosk não encontrado. Verifique o caminho do modelo.")
+                logger.info(f"Usando modelo Vosk: {model_path}")
+
                 processor = AudioProcessor(
-                    model_path="mock_model",
+                    model_path=model_path,
                     chunk=4096,
-                    vad_threshold=threshold,
-                    silence_threshold=500
                 )
 
                 # Simulate processing audio chunks
@@ -250,12 +263,18 @@ def test_performance_metrics():
 
             from timecraft_ai.ai.audio_processor import AudioProcessor
 
+            model_path = get_model_path()
+            if not model_path:
+                raise RuntimeError(
+                    "Modelo Vosk não encontrado. Verifique o caminho do modelo.")
+            logger.info(f"Usando modelo Vosk: {model_path}")
+
             # Test with optimized parameters
             processor = AudioProcessor(
                 model_path="mock_model",
                 chunk=4096,  # Optimized chunk size
-                vad_threshold=0.025,
-                silence_threshold=500,
+                # ## vad_threshold=0.025,
+                # silence_threshold=500,
                 max_silent_duration=2.0
             )
 
@@ -357,11 +376,18 @@ def test_resource_management():
 
             # Test multiple processor instances
             processors = []
+
+            model_path = get_model_path()
+            if not model_path:
+                raise RuntimeError(
+                    "Modelo Vosk não encontrado. Verifique o caminho do modelo.")
+            logger.info(f"Usando modelo Vosk: {model_path}")
+
             for i in range(3):
                 processor = AudioProcessor(
-                    model_path="mock_model",
+                    model_path=model_path,
                     chunk=4096,
-                    vad_threshold=0.025
+                    # vad_threshold=0.025
                 )
                 processors.append(processor)
                 print(f"   ✅ Processor {i+1} inicializado")

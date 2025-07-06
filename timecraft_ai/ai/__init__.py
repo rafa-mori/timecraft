@@ -15,7 +15,7 @@ import warnings
 
 # Try to import AI modules with graceful fallback
 try:
-    from .audio_processor import AudioProcessor
+    from .audio_processor import AudioProcessor, get_model_path
     from .chatbot_actions import ChatbotActions
     from .chatbot_msgset import ChatbotMsgSetHandler
     from .chatbot_timecraft import ChatbotTimecraftAPI
@@ -41,7 +41,7 @@ except ImportError as e:
 
     AI_MODULES_AVAILABLE = False
     MCP_SERVER_AVAILABLE = False
-
+    get_model_path = None
     AudioProcessor = None
     ChatbotActions = None
     ChatbotMsgSetHandler = None
@@ -52,6 +52,7 @@ except ImportError as e:
     mcp_server_app = None
 
 __all__ = [
+    "get_model_path",
     "AudioProcessor",
     "ChatbotActions",
     "ChatbotMsgSetHandler",
