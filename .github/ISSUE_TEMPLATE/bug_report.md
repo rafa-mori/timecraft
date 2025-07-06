@@ -15,6 +15,7 @@ A clear and concise description of what the bug is.
 ## To Reproduce
 
 **Steps to reproduce the behavior:**
+
 1. Go to '...'
 2. Run command '...'
 3. With configuration '...'
@@ -31,12 +32,14 @@ A clear and concise description of what actually happened.
 ## Environment
 
 **Desktop (please complete the following information):**
+
 - OS: [e.g. Ubuntu 20.04, macOS 12.0, Windows 11]
 - Python Version: [e.g. 3.9.7]
-- TimeCraft Version: [e.g. 1.1.0]
+- TimeCraft Version: [e.g. 1.1.3]
 - Installation Method: [e.g. pip, source]
 
 **Additional Environment Details:**
+
 - Virtual Environment: [e.g. venv, conda, none]
 - Shell: [e.g. bash, zsh, PowerShell]
 - Terminal: [e.g. gnome-terminal, iTerm2, Windows Terminal]
@@ -44,11 +47,13 @@ A clear and concise description of what actually happened.
 ## Error Logs
 
 **Error Messages:**
+
 ```
 Paste any error messages here
 ```
 
 **Log Output:**
+
 ```
 Paste relevant log output here
 ```
@@ -56,11 +61,13 @@ Paste relevant log output here
 ## Configuration
 
 **TimeCraft AI Configuration:**
+
 ```yaml
 # Paste your configuration here (remove any sensitive information)
 ```
 
 **Command Used:**
+
 ```bash
 # Paste the exact command that caused the issue
 ```
@@ -85,6 +92,7 @@ If you have any ideas about what might be causing the issue or how to fix it, pl
 ---
 
 **Checklist before submitting:**
+
 - [ ] I have searched existing issues to make sure this bug hasn't been reported before
 - [ ] I have included all relevant information above
 - [ ] I have removed any sensitive information from logs and configuration
