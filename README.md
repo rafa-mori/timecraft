@@ -1,4 +1,4 @@
-# ![TimeCraft Banner](docs/assets/top_banner.png)
+# ![TimeCraft Banner](docs/assets/timecraft_banner_c.png)
 
 ---
 
