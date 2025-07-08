@@ -40,6 +40,7 @@ classifiers = [
 
 # Core dependencies (always required)
 dependencies = [
+    "click>=8.0.0",
     "mypy>=1.0.0",
     "numpy>=1.21.0",
     "pandas>=1.5.0", 
@@ -128,7 +129,8 @@ Repository = "https://github.com/rafa-mori/timecraft"
 Changelog = "https://github.com/rafa-mori/timecraft/blob/main/CHANGELOG.md"
 
 [project.scripts]
-timecraft_ai = "timecraft_ai.core:main"
+timecraft = "timecraft_ai:main"
+timecraft-ai = "timecraft_ai:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["timecraft_ai"]

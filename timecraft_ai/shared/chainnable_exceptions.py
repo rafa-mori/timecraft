@@ -6,7 +6,6 @@ value, key, index, and general exceptions. Each exception logs an error message 
 """
 
 import logging
-from typing import Any
 
 # Setup logging configuration for the package
 logging.basicConfig(
@@ -26,7 +25,7 @@ class ChainableWrapperError(Exception):
     def __init__(self, message: str):
         super().__init__(message)
         self.message = message
-        logger.error(f"ChainableWrapperError: {self.message}")
+        logger.error("ChainableWrapperError: %s", self.message)
 
 
 class ChainableWrapperTypeError(ChainableWrapperError, TypeError):
@@ -38,7 +37,7 @@ class ChainableWrapperTypeError(ChainableWrapperError, TypeError):
     def __init__(self, message: str):
         super().__init__(message)
         self.message = message
-        logger.error(f"ChainableWrapperTypeError: {self.message}")
+        logger.error("ChainableWrapperTypeError: %s", self.message)
 
     def __str__(self) -> str:
         return f"ChainableWrapperTypeError: {self.message}"
@@ -53,7 +52,7 @@ class ChainableWrapperValueError(ChainableWrapperError, ValueError):
     def __init__(self, message: str):
         super().__init__(message)
         self.message = message
-        logger.error(f"ChainableWrapperValueError: {self.message}")
+        logger.error("ChainableWrapperValueError: %s", self.message)
 
     def __str__(self) -> str:
         return f"ChainableWrapperValueError: {self.message}"
@@ -68,7 +67,7 @@ class ChainableWrapperKeyError(ChainableWrapperError, KeyError):
     def __init__(self, message: str):
         super().__init__(message)
         self.message = message
-        logger.error(f"ChainableWrapperKeyError: {self.message}")
+        logger.error("ChainableWrapperKeyError: %s", self.message)
 
     def __str__(self) -> str:
         return f"ChainableWrapperKeyError: {self.message}"
@@ -83,7 +82,7 @@ class ChainableWrapperIndexError(ChainableWrapperError, IndexError):
     def __init__(self, message: str):
         super().__init__(message)
         self.message = message
-        logger.error(f"ChainableWrapperIndexError: {self.message}")
+        logger.error("ChainableWrapperIndexError: %s", self.message)
 
     def __str__(self) -> str:
         return f"ChainableWrapperIndexError: {self.message}"
@@ -98,7 +97,7 @@ class ChainableWrapperException(ChainableWrapperError):
     def __init__(self, message: str):
         super().__init__(message)
         self.message = message
-        logger.error(f"ChainableWrapperException: {self.message}")
+        logger.error("ChainableWrapperException: %s", self.message)
 
     def __str__(self) -> str:
         return f"ChainableWrapperException: {self.message}"

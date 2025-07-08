@@ -22,9 +22,13 @@ try:
     from .hotword_detector import HotwordDetector
     from .mcp_command_handler import MCPCommandHandler
     from .voice_synthesizer import VoiceSynthesizer
+    from .voice_system_complete import HandsFreeVoiceSystem
+
+    from .mcp_server import app as mcp_server_app
 
     # Try to import MCP server (requires additional dependencies)
     try:
+
         from .mcp_server import app as mcp_server_app
 
         MCP_SERVER_AVAILABLE = True
@@ -38,9 +42,10 @@ try:
 except ImportError as e:
     # Create placeholder classes to avoid import errors
     warnings.warn(f"AI modules not available (missing dependencies): {e}")
-
+    # app = None
     AI_MODULES_AVAILABLE = False
     MCP_SERVER_AVAILABLE = False
+    mcp_server_app = None
     get_model_path = None
     AudioProcessor = None
     ChatbotActions = None
@@ -49,18 +54,21 @@ except ImportError as e:
     HotwordDetector = None
     MCPCommandHandler = None
     VoiceSynthesizer = None
+    HandsFreeVoiceSystem = None
     mcp_server_app = None
 
 __all__ = [
+    # "app",
     "get_model_path",
     "AudioProcessor",
     "ChatbotActions",
-    "ChatbotMsgSetHandler",
+    "mcp_server_app",
     "ChatbotTimecraftAPI",
+    "ChatbotMsgSetHandler",
     "HotwordDetector",
     "MCPCommandHandler",
     "VoiceSynthesizer",
-    "mcp_server_app",
+    "HandsFreeVoiceSystem",
     "AI_MODULES_AVAILABLE",
     "MCP_SERVER_AVAILABLE",
 ]

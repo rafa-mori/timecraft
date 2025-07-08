@@ -191,19 +191,19 @@ Commands:
                 value_columns=["purchaseValue", "saleValue"],
                 is_csv=True,
             )
-            SchedulerService.run_scheduled(
+            SchedulerService.scheduled_run(
                 model.run, interval_seconds=interval)
         elif model_type == "classifier":
             model = ai.create_classifier_model(
                 data="example/data/hist_cambio_float.csv", target_column="purchaseValue"
             )
-            SchedulerService.run_scheduled(
+            SchedulerService.scheduled_run(
                 model.run, interval_seconds=interval)
         elif model_type == "regression":
             model = ai.create_linear_regression_analysis(
                 "example/data/hist_cambio_float.csv"
             )
-            SchedulerService.run_scheduled(
+            SchedulerService.scheduled_run(
                 model.run_analysis, interval_seconds=interval)
         else:
             print(f"Unknown model type: {model_type}")

@@ -28,6 +28,7 @@ import sys
 try:
     from timecraft_ai import (AudioProcessor, ChatbotActions, HotwordDetector,
                               MCPCommandHandler, VoiceSynthesizer)
+    from timecraft_ai.ai.audio_processor import get_model_path
     from timecraft_ai import mcp_server_app as mcp_server
 
     DEV_MODE = False
@@ -108,7 +109,8 @@ def run_voice_mode():
     handler = MCPCommandHandler()
     synthesizer = VoiceSynthesizer()
 
-    processor = AudioProcessor(command_handler=handler, voice_synthesizer=synthesizer)
+    processor = AudioProcessor(
+        command_handler=handler, voice_synthesizer=synthesizer)
 
     processor.listen_and_transcribe()
 
@@ -129,7 +131,14 @@ def run_hotword_mode():
     try:
         handler = MCPCommandHandler()
         synthesizer = VoiceSynthesizer()
-        hotword = HotwordDetector(keyword="mcp")
+
+        model_path = get_model_path()
+        if not model_path:
+            raise ValueError("Modelo Vosk não encontrado")
+
+        hotword = HotwordDetector(
+            model_path=model_path,
+        )
 
         processor = AudioProcessor(
             command_handler=handler,

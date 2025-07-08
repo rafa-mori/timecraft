@@ -5,9 +5,10 @@ This file lists the authors and contributors to the TimeCraft project.
 ## Lead Maintainer
 
 **Rafael Mori** (@rafa-mori)
-- Email: faelmori@gmail.com
-- GitHub: https://github.com/rafa-mori
-- LinkedIn: https://www.linkedin.com/in/rafa-mori
+
+- Email: <faelmori@gmail.com>
+- GitHub: <https://github.com/rafa-mori>
+- LinkedIn: <https://www.linkedin.com/in/rafa-mori>
 - Role: Project founder and lead maintainer
 
 ## Contributors
@@ -51,9 +52,10 @@ All contributors are valued and recognized for their efforts. Contributors will 
 ## Contact
 
 For questions about contributing or this project, please contact:
-- Rafael Mori: faelmori@gmail.com
-- GitHub Issues: https://github.com/rafa-mori/timecraft/issues
-- GitHub Discussions: https://github.com/rafa-mori/timecraft/discussions
+
+- Rafael Mori: <faelmori@gmail.com>
+- GitHub Issues: <https://github.com/rafa-mori/timecraft/issues>
+- GitHub Discussions: <https://github.com/rafa-mori/timecraft/discussions>
 
 ---
 

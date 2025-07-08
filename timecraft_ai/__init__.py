@@ -102,3 +102,11 @@ else:
         f"Version: {__version__}, Author: {__author__}, Email: {__email__}, License: {__license__}")
     print(f"Available modules: {', '.join(__all__)}")
     print("You can now use the TimeCraft AI functionalities in your application.")
+
+# CLI entry point for console access
+
+
+# def main():
+#     """Main CLI entry point for console_scripts"""
+#     from .cli import timecraft_ai
+#     timecraft_ai()

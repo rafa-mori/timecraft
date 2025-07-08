@@ -64,9 +64,11 @@ handler = MCPCommandHandler()
 
 # Configuration em memória para plugins/LLMs
 PLUGINS_CONFIG: Dict[str, Dict[str, Any]] = {
-    "local": {"enabled": True, "api_key": None},  # Módulos locais sempre habilitados
+    # Módulos locais sempre habilitados
+    "local": {"enabled": True, "api_key": None},
     "chatbot": {"enabled": True, "api_key": None},  # Chatbot sempre habilitado
-    "audio": {"enabled": True, "api_key": None},  # Módulo de áudio sempre habilitado
+    # Módulo de áudio sempre habilitado
+    "audio": {"enabled": True, "api_key": None},
     "hotword": {
         "enabled": True,
         "api_key": None,

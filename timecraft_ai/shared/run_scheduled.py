@@ -7,7 +7,7 @@ in a separate thread, allowing for periodic tasks without blocking the main appl
 #   python -m timecraft_ai status
 #
 #     if len(sys.argv) < 2:
-#         print(HELP) 
+#         print(HELP)
 #         return
 #     command = sys.argv[1]
 #     if command == "status":
@@ -17,7 +17,7 @@ in a separate thread, allowing for periodic tasks without blocking the main appl
 #     else:
 #         print(f"Unknown command: {command}")
 #         print("Use 'help' to see available commands.")
-# 
+#
 """
 
 from typing import Optional
@@ -41,13 +41,53 @@ class SchedulerService:
     This class provides a method to schedule a function to run at specified intervals.
     """
 
+    def __init__(self):
+        self.thread: Optional[threading.Thread] = None
+        self.max_runs: Optional[int] = None
+        self.interval_seconds: int = 60
+
+    def __del__(self):
+        """
+        Ensure the thread is cleaned up when the service is deleted.
+        """
+        if self.thread and self.thread.is_alive():
+            logger.info("[Scheduler] Stopping scheduled thread.")
+            self.thread.join(timeout=1)
+            logger.info("[Scheduler] Scheduled thread stopped.")
+        else:
+            logger.info("[Scheduler] No active scheduled thread to stop.")
+
+    def run(self, target_func, *args, **kwargs):
+        """
+        Run a target function in a background thread.
+        : param target_func: Function to execute.
+        : param args: Positional arguments for the function.
+        : param kwargs: Keyword arguments for the function.
+        """
+        if self.thread and self.thread.is_alive():
+            logger.warning(
+                "[Scheduler] A scheduled task is already running. Please stop it before starting a new one."
+            )
+            return None
+
+        def _runner():
+            logger.info("[Scheduler] Running task: %s", target_func.__name__)
+            try:
+                target_func(*args, **kwargs)
+            except Exception as e:
+                logger.error("[Scheduler] Error in scheduled task: %s", e)
+
+        self.thread = threading.Thread(target=_runner, daemon=True)
+        self.thread.start()
+        return self.thread
+
     @staticmethod
-    def run_scheduled(
+    def scheduled_run(
         target_func,
+        *args,
         interval_seconds: int = 60,
         max_runs: Optional[int] = None,
-        *args,
-        **kwargs,
+        **kwargs
     ):
         """
         Run a target function periodically in a background thread.
@@ -62,12 +102,14 @@ class SchedulerService:
             run_count = 0
             while max_runs is None or run_count < max_runs:
                 logger.info(
-                    f"[Scheduler] Running scheduled task: {target_func.__name__} (run {run_count+1})"
+                    "[Scheduler] Running scheduled task: %s (run %d)",
+                    target_func.__name__,
+                    run_count + 1,
                 )
                 try:
                     target_func(*args, **kwargs)
                 except Exception as e:
-                    logger.error(f"[Scheduler] Error in scheduled task: {e}")
+                    logger.error("[Scheduler] Error in scheduled task: %s", e)
                 run_count += 1
                 time.sleep(interval_seconds)
 
@@ -78,10 +120,10 @@ class SchedulerService:
     @staticmethod
     def run_scheduled_with_timeout(
         target_func,
-        interval_seconds: int = 60,
-        timeout_seconds: int = 10,
-        max_runs: Optional[int] = None,
         *args,
+        # timeout_seconds: int = 10,
+        interval_seconds: int = 60,
+        max_runs: Optional[int] = None,
         **kwargs,
     ):
         """
@@ -98,12 +140,14 @@ class SchedulerService:
             run_count = 0
             while max_runs is None or run_count < max_runs:
                 logger.info(
-                    f"[Scheduler] Running scheduled task with timeout: {target_func.__name__} (run {run_count+1})"
+                    "[Scheduler] Running scheduled task with timeout: %s (run %d)",
+                    target_func.__name__,
+                    run_count + 1,
                 )
                 try:
                     target_func(*args, **kwargs)
                 except Exception as e:
-                    logger.error(f"[Scheduler] Error in scheduled task: {e}")
+                    logger.error("[Scheduler] Error in scheduled task: %s", e)
                 run_count += 1
                 time.sleep(interval_seconds)
 
@@ -114,10 +158,10 @@ class SchedulerService:
     @staticmethod
     def run_scheduled_with_webhook(
         target_func,
+        *args,
         interval_seconds: int = 60,
         webhook_url: str = "",
         max_runs: Optional[int] = None,
-        *args,
         **kwargs,
     ):
         """
@@ -134,15 +178,44 @@ class SchedulerService:
             run_count = 0
             while max_runs is None or run_count < max_runs:
                 logger.info(
-                    f"[Scheduler] Running scheduled task with webhook: {target_func.__name__} (run {run_count+1})"
+                    "[Scheduler] Running scheduled task with webhook: %s (run %d)",
+                    target_func.__name__,
+                    run_count + 1,
                 )
                 try:
                     result = target_func(*args, **kwargs)
                     if webhook_url:
                         # Assuming result is a dictionary to send as JSON
-                        requests.post(webhook_url, json=result)
+                        if isinstance(result, dict):
+                            result = {"data": result}
+                        else:
+                            result = {"result": result}
+
+                        # Send the result to the webhook URL
+                        if requests is None:
+                            logger.error(
+                                "[Scheduler] requests module is not available. Cannot send webhook."
+                            )
+                        else:
+                            logger.info(
+                                "[Scheduler] Sending result to webhook: %s", webhook_url
+                            )
+                        if not webhook_url.startswith("http"):
+                            logger.error(
+                                "[Scheduler] Invalid webhook URL: %s", webhook_url
+                            )
+                            return
+                        if not result:
+                            logger.error(
+                                "[Scheduler] No result to send to webhook."
+                            )
+                            return
+
+                        timeout = kwargs.get("timeout", 10)
+                        requests.post(webhook_url, json=result,
+                                      timeout=timeout)
                 except Exception as e:
-                    logger.error(f"[Scheduler] Error in scheduled task: {e}")
+                    logger.error("[Scheduler] Error in scheduled task: %s", e)
                 run_count += 1
                 time.sleep(interval_seconds)
 

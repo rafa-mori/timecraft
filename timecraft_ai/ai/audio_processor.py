@@ -835,18 +835,20 @@ def get_model_path()->str | None:
     This function checks if the model exists in the expected directory.
     If not, it prompts the user to download the model.
     """
-    # import os
-    # current_dir = os.path.dirname(os.path.abspath(__file__))
-    # parent_dir = os.path.dirname(current_dir)
-    # model_path = os.path.join(parent_dir, "models/vosk-model-small-pt-0.3")
-    model_path = "/srv/apps/KUBEX/timecraft_ai/docs/models/vosk-model-small-pt-0.3"
-    return model_path
-    # if not os.path.exists(model_path):
-    #     print(f"❌ Modelo Vosk não encontrado em {model_path}. Por favor, baixe o modelo correto.")
-    #     return None
-    # else:
-    #     print(f"✅ Modelo Vosk encontrado em {model_path}.")
-    #     return model_path
+    import os
+    
+    path = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(path)
+    model_path = os.path.join(parent_dir, "models")
+    fallback_model_path = os.path.join(model_path, "vosk-model-small-pt-0.3")
+    path_from_env = os.getenv("TIMECRAFT_AI_TALK_MODEL", fallback_model_path)
+
+    if not os.path.exists(path_from_env):
+        print(f"❌ Modelo Vosk não encontrado em {path_from_env}. Por favor, baixe o modelo correto.")
+        return None
+    else:
+        print(f"✅ Modelo Vosk encontrado em {path_from_env}.")
+        return path_from_env
 
 
 def main():
