@@ -1,0 +1,11 @@
+{
+    "sourceType": "godror",
+    "sourceConnectionString": "sankhya/Bioextratus2000@127.0.0.1:1521/orcl",
+    "destinationType": "sqlite3",
+    "destinationConnectionString": "$HOME/.kubex/kbx/sql.db",
+    "destinationTable": "erp_products",
+    "sqlQuery": "SELECT * FROM PRODUTOS",
+    "kafkaURL": "localhost:9092",
+    "kafkaTopic": "etl_topic",
+    "kafkaGroupID": "etl_group"
+  }

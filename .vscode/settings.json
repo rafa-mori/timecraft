@@ -1,0 +1,34 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.addMissingImports": "explicit",
+    "source.organizeImports": "always",
+    "source.sortImports": "always",
+    "source.removeUnused": "explicit"
+  },
+  "python-envs.pythonProjects": [
+    {
+      "path": "",
+      "envManager": "ms-python.python:venv",
+      "packageManager": "uv",
+      "pythonPath": "${workspaceFolder}/.venv/bin/python3",
+      "pythonVersion": ">=3.12",
+      "isDefault": true,
+      "isCurrent": true,
+      "isVirtualEnv": true,
+      "isCondaEnv": false,
+      "isPipEnv": false,
+      "isPoetryEnv": false,
+      "isPipxEnv": false,
+      "isVirtualEnvWrapperEnv": false,
+    }
+  ],
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python3",
+  "python.analysis.autoImportCompletions": false,
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.diagnosticMode": "workspace",
+  "python.analysis.indexing": true,
+  "python.analysis.useLibraryCodeForTypes": true,
+  "python.analysis.inlayHints.variableTypes": true,
+  "python.analysis.inlayHints.functionReturnTypes": true
+}

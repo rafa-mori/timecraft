@@ -1,0 +1,152 @@
+WITH EST AS (
+    SELECT
+        P.CODPROD,
+        SUM(E.ESTOQUE) AS ESTOQUE,
+        SUM(E.RESERVADO) AS RESERVADO,
+        (SUM(E.ESTOQUE) - SUM(E.RESERVADO)) AS SALDO
+    FROM
+        SANKHYA.TGFPRO P
+            INNER JOIN
+        SANKHYA.TGFEST E ON P.CODPROD = E.CODPROD
+    WHERE
+        P.CODPROD = { product_id }
+    GROUP BY
+        P.CODPROD
+),
+     FIRST_MOV AS (
+         SELECT
+             I.CODPROD,
+             MIN(C.DTNEG) AS FIRST_DTNEG
+         FROM
+             SANKHYA.TGFCAB C
+                 INNER JOIN
+             SANKHYA.TGFITE I ON C.NUNOTA = I.NUNOTA
+         WHERE
+             C.TIPMOV IN ('T', 'C', 'V')
+         GROUP BY
+             I.CODPROD
+     ),
+     MOV_A AS (
+         SELECT
+             C.DTNEG,
+             I.CODPROD,
+             SUM(IIF(C.TIPMOV IN ('T', 'C'), I.QTDNEG, 0))          AS ENTRADA,
+             SUM(IIF(C.TIPMOV = 'V', I.QTDNEG, 0)) AS SAIDA
+         FROM
+             SANKHYA.TGFCAB C
+                 INNER JOIN
+             SANKHYA.TGFITE I ON C.NUNOTA = I.NUNOTA
+                 INNER JOIN
+             FIRST_MOV F ON I.CODPROD = F.CODPROD
+         WHERE
+             C.DTNEG >= F.FIRST_DTNEG
+         GROUP BY
+             C.DTNEG, I.CODPROD
+     ),
+     MOV_B AS (
+         SELECT
+             A.DTNEG,
+             A.CODPROD,
+             A.ENTRADA,
+             A.SAIDA,
+             SUM(A.ENTRADA - A.SAIDA) OVER (
+                 PARTITION BY A.CODPROD
+                 ORDER BY A.DTNEG
+                 ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+                 ) AS SALDO_ATUAL
+         FROM
+             MOV_A A
+     ),
+     MOV_C AS (
+         SELECT
+             B.DTNEG,
+             B.CODPROD,
+             B.ENTRADA,
+             B.SAIDA,
+             B.SALDO_ATUAL,
+             E.SALDO AS INVENTARIO
+         FROM
+             MOV_B B
+                 INNER JOIN
+             EST E ON B.CODPROD = E.CODPROD
+     ),
+     MOVIMENTACAO AS (
+         SELECT
+             C.DTNEG,
+             C.CODPROD,
+             C.ENTRADA,
+             C.SAIDA,
+             C.SALDO_ATUAL,
+             C.INVENTARIO
+         FROM
+             MOV_C C
+     ),
+     LAST_MOV AS (
+         SELECT
+             M.CODPROD,
+             MAX(M.DTNEG) AS DTNEG
+         FROM
+             MOVIMENTACAO M
+         GROUP BY
+             M.CODPROD
+     ),
+     EXPECTED_QTY AS (
+         SELECT
+             M.CODPROD,
+             M.DTNEG,
+             M.ENTRADA,
+             M.SAIDA,
+             M.SALDO_ATUAL,
+             M.INVENTARIO
+         FROM
+             MOVIMENTACAO M
+                 INNER JOIN
+             LAST_MOV L ON M.CODPROD = L.CODPROD
+         WHERE
+             M.DTNEG = L.DTNEG
+     ),
+     CALCULATED_QTY AS (
+         SELECT
+             MOVIMENTACAO.DTNEG,
+             MOVIMENTACAO.CODPROD,
+             MOVIMENTACAO.ENTRADA,
+             MOVIMENTACAO.SAIDA,
+             MOVIMENTACAO.INVENTARIO,
+             SUM(MOVIMENTACAO.ENTRADA - MOVIMENTACAO.SAIDA) OVER (
+                 PARTITION BY MOVIMENTACAO.CODPROD
+                 ORDER BY MOVIMENTACAO.DTNEG
+                 ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+                 ) AS SALDO_ATUAL
+         FROM
+             MOVIMENTACAO
+     ),
+     CONSOLIDADO AS (
+         SELECT
+             CQ.CODPROD,
+             CQ.DTNEG,
+             CQ.SALDO_ATUAL AS SALDO_HISTORICO,
+             EQ.SALDO_ATUAL AS SALDO_CALCULADO,
+             EQ.INVENTARIO AS INVENTARIO_ATUAL
+         FROM
+             CALCULATED_QTY CQ
+                 INNER JOIN
+             EXPECTED_QTY EQ
+             ON CQ.CODPROD = EQ.CODPROD
+         WHERE
+             EQ.DTNEG >= '2024-06-01'
+     )
+SELECT
+    C.DTNEG,
+    C.CODPROD,
+    C.SALDO_HISTORICO,
+    C.SALDO_CALCULADO,
+    C.INVENTARIO_ATUAL
+FROM
+    CONSOLIDADO C
+WHERE
+    C.DTNEG >= '2024-06-01'
+  -- AND C.SALDO_CALCULADO >= 0
+  -- AND C.SALDO_HISTORICO >= 0
+ORDER BY
+    C.CODPROD ASC
+       , C.DTNEG ASC
