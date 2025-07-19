@@ -262,7 +262,7 @@ curl -X POST http://localhost:8000/mcp/plugins/openai/config \
 ### File Structure
 
 ```plaintext
-src/timecraft_ai/
+timecraft_ai/timecraft_ai/
 ├── __init__.py
 ├── audio_processor.py      # Audio capture and transcription
 ├── chatbot_actions.py      # Chatbot actions (data, predictions)

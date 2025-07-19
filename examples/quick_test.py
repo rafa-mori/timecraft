@@ -21,7 +21,7 @@ if parent_dir not in sys.path:
 
 # Try to import from installed package first, fallback to dev environment
 try:
-    import src.timecraft_ai as timecraft_ai
+    import timecraft_ai as timecraft_ai
 
     DEV_MODE = False
     print("📦 Usando TimeCraft AI instalado como package")
@@ -31,7 +31,7 @@ except ImportError:
     if os.path.exists(src_path):
         sys.path.insert(0, src_path)
 
-        import src.timecraft_ai as timecraft_ai
+        import timecraft_ai as timecraft_ai
 
         DEV_MODE = True
         print("🔧 Usando TimeCraft AI em modo desenvolvimento")
@@ -51,8 +51,10 @@ def main():
     print()
 
     print("🔍 Disponibilidade de Recursos:")
-    print(f"  🤖 AI Modules: {'✅' if timecraft_ai.AI_AVAILABLE else '❌'}")
-    print(f"  🌐 MCP Server: {'✅' if timecraft_ai.SERVER_AVAILABLE else '❌'}")
+    print(
+        f"  🤖 AI Modules: {'✅' if timecraft_ai.is_ai_modules_available() else '❌'}")
+    print(
+        f"  🌐 MCP Server: {'✅' if timecraft_ai.is_mcp_server_available() else '❌'}")
     print()
 
     print("🧪 Testando Funcionalidades Core:")
@@ -62,7 +64,8 @@ def main():
         print(
             f"  ✅ DatabaseConnector: {type(timecraft_ai.DatabaseConnector).__name__}"
         )
-        print(f"  ✅ LinearRegression: {type(timecraft_ai.LinearRegression).__name__}")
+        print(
+            f"  ✅ LinearRegression: {type(timecraft_ai.LinearRegressionAnalysis).__name__}")
 
         # Criar instância para testar
         tc = timecraft_ai.TimeCraftAI()
@@ -75,11 +78,11 @@ def main():
     print()
 
     # Verificar recursos AI
-    if not timecraft_ai.AI_AVAILABLE:
+    if not timecraft_ai.is_ai_modules_available():
         print("⚠️ Módulos AI não disponíveis (dependências faltando)")
         print("  💡 Para instalar: make install-ai")
 
-    if not timecraft_ai.SERVER_AVAILABLE:
+    if not timecraft_ai.is_mcp_server_available():
         print("⚠️ Servidor MCP não disponível")
         print("  💡 Para instalar: pip install fastapi uvicorn")
 

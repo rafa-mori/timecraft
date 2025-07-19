@@ -93,13 +93,13 @@ Before submitting code, please run:
 
 ```bash
 # Format code with Black
-black src/ examples/ tests/
+black timecraft_ai/ examples/ tests/
 
 # Check code style with flake8
-flake8 src/ examples/ tests/
+flake8 timecraft_ai/ examples/ tests/
 
 # Type checking with mypy
-mypy src/
+mypy timecraft_ai/
 ```
 
 ### Documentation

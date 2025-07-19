@@ -26,14 +26,14 @@ import sys
 
 # Try to import from installed package first, fallback to dev environment
 try:
-    from ..src.timecraft_ai import (
+    from timecraft_ai import (
         AudioProcessor,
-        ChatbotActions,
         HotwordDetector,
-        MCPCommandHandler,
         VoiceSynthesizer,
+        ChatbotActions
     )
-    from ..src.timecraft_ai import mcp_server_app as mcp_server
+    from timecraft_ai.ai.audio_processor import get_model_path
+    from timecraft_ai import mcp_server_app as mcp_server
 
     DEV_MODE = False
     print("📦 Usando TimeCraft instalado como package")
@@ -42,14 +42,13 @@ except ImportError:
     src_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "src")
     if os.path.exists(src_path):
         sys.path.insert(0, src_path)
-        from ..src.timecraft_ai import (
+        from timecraft_ai import (
             AudioProcessor,
-            ChatbotActions,
             HotwordDetector,
-            MCPCommandHandler,
             VoiceSynthesizer,
+            ChatbotActions,
         )
-        from ..src.timecraft_ai import mcp_server_app as mcp_server
+        from timecraft_ai import mcp_server_app as mcp_server
 
         DEV_MODE = True
         print("🔧 Usando TimeCraft em modo desenvolvimento")
@@ -93,8 +92,10 @@ def test_voice_synthesizer():
 def test_mcp_handler():
     """Testa o handler de comandos MCP."""
     print("🤖 Testando MCPCommandHandler...")
+    from timecraft_ai import ChatbotMsgSetHandler
+    command_handler = ChatbotMsgSetHandler()
 
-    handler = MCPCommandHandler()
+    handler = command_handler.process_user_input
 
     test_commands = [
         "me mostre o histórico",
@@ -104,7 +105,7 @@ def test_mcp_handler():
     ]
 
     for cmd in test_commands:
-        response = handler.handle(cmd)
+        response = handler(cmd)
         print(f"📝 Comando: '{cmd}' → Resposta: '{response}'")
 
 
@@ -113,11 +114,14 @@ def run_voice_mode():
     print("🎤 Iniciando modo de voz contínua...")
     print("💡 Dica: Fale comandos como 'histórico', 'previsão' ou 'insights'")
     print("🛑 Pressione Ctrl+C para parar")
+    from timecraft_ai import ChatbotMsgSetHandler
 
-    handler = MCPCommandHandler()
+    command_handler = ChatbotMsgSetHandler()
+    handler = command_handler.process_user_input
     synthesizer = VoiceSynthesizer()
 
-    processor = AudioProcessor(command_handler=handler, voice_synthesizer=synthesizer)
+    processor = AudioProcessor(
+        command_handler=handler, voice_synthesizer=synthesizer)
 
     processor.listen_and_transcribe()
 
@@ -136,9 +140,18 @@ def run_hotword_mode():
         return
 
     try:
-        handler = MCPCommandHandler()
+        from timecraft_ai import ChatbotMsgSetHandler
+        command_handler = ChatbotMsgSetHandler()
+        handler = command_handler.process_user_input
         synthesizer = VoiceSynthesizer()
-        hotword = HotwordDetector(keyword="mcp")
+
+        model_path = get_model_path()
+        if not model_path:
+            raise ValueError("Modelo Vosk não encontrado")
+
+        hotword = HotwordDetector(
+            model_path=model_path,
+        )
 
         processor = AudioProcessor(
             command_handler=handler,
@@ -161,7 +174,7 @@ def run_server_mode():
     try:
         import uvicorn
 
-        uvicorn.run(mcp_server, host="0.0.0.0", port=8000)
+        uvicorn.run(mcp_server.server.run, host="0.0.0.0", port=8000)
     except ImportError:
         print("❌ uvicorn não encontrado. Instale com: pip install uvicorn")
     except Exception as e:
@@ -205,6 +218,27 @@ def main():
         run_server_mode()
 
     print("\n✅ Finalizado!")
+
+
+if hasattr(sys, 'ps1'):
+    print("🔄 Modo interativo detectado. Use as funções diretamente.")
+    __all__ = [
+        "test_chatbot_actions",
+        "test_voice_synthesizer",
+        "test_mcp_handler",
+        "run_voice_mode",
+        "run_hotword_mode",
+        "run_server_mode",
+        "main",
+    ]
+else:
+    __all__ = [
+        "MCPCommandHandler",
+        "VoiceSynthesizer",
+        "AudioProcessor",
+        "HotwordDetector",
+        "ChatbotActions",
+    ]
 
 
 if __name__ == "__main__":

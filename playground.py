@@ -6,7 +6,7 @@
 #     pip install timecraft_ai
 from datetime import datetime
 
-from .src.timecraft_ai import TimeCraftModel
+from timecraft_ai import TimeCraftModel
 
 start_time = datetime.now()
 

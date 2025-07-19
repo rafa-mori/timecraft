@@ -1,0 +1,206 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2034,SC2155,SC2317,SC2015
+
+# Define the PID file and directory
+# All variables are readonly to prevent accidental modification
+readonly _D="${HOME:-~}"
+readonly _LOG_FILE="${_D:-/var/log}/dbus-snitch.log"
+readonly _SECURITY_LOG="${_D:-/var/log}/dbus-snitch.security.log"
+readonly _FILTERS=(
+  "interface='org.freedesktop.Notifications'"
+  "interface='org.freedesktop.PolicyKit1.Authority'"
+  "interface='org.freedesktop.NetworkManager'"
+  "interface='org.freedesktop.login1.Manager'"
+)
+readonly _PID_DIR="$(dirname "${_D}")/.snitcher"
+readonly _PID_FILE="${_PID_DIR}/snitcher.pid"
+
+# Snitcher MTF - Monitors D-Bus system messages for security-related events
+# This script monitors D-Bus system messages and notifies the user of security-related events.
+cleanup() {
+  # Remove the PID file if it exists
+  if [[ -f "${_PID_FILE:-}" ]]; then
+    sudo rm -f "${_PID_FILE:-}" || true
+    printf '%s\n' "Snitcher MTF cleanup completed."
+  else
+    printf '%s\n' "Snitcher MTF cleanup: PID file not found."
+  fi
+}
+
+# Set the trap to clean up on exit
+trap cleanup EXIT ERR HUP INT TERM
+
+# Trap signals to ensure cleanup on exit
+validate_deps() {
+  # Ensure the script is run with root or sudo privileges
+  if [[ $EUID -ne 0 || ! $(sudo -v 2>&1 >/dev/null) ]]; then
+    printf '%s\n' "This script must be run as root or with sudo." >&2
+    return 1
+  fi
+  # Check if dbus-monitor is installed
+  if ! command -v dbus-monitor &> /dev/null; then
+    printf '%s\n' "dbus-monitor is not installed. Please install it to use this script." >&2
+    return 1
+  fi
+  # Check if notify-send is installed
+  if ! command -v notify-send &> /dev/null; then
+    printf '%s\n' "notify-send is not installed. Please install it to use this script." >&2
+    return 1
+  fi  
+  # Ensure log files are writable
+  if [[ ! -d "$(dirname "${LOG_FILE:-}")" ]]; then
+    sudo mkdir -p "$(dirname "${LOG_FILE:-}")" || return 1
+  fi
+  # Ensure security log directory exists
+  if [[ ! -d "$(dirname "${SECURITY_LOG:-}")" ]]; then
+    sudo mkdir -p "$(dirname "${SECURITY_LOG:-}")" || return 1
+  fi
+  # Create log files if they do not exist
+  if [[ ! -f "${LOG_FILE:-}" ]]; then
+    sudo touch "${LOG_FILE:-}" || return 1
+  fi
+  # Create security log file if it does not exist
+  if [[ ! -f "${SECURITY_LOG:-}" ]]; then
+    sudo touch "${SECURITY_LOG:-}" || return 1
+  fi
+  # Create the PID directory if it does not exist
+  if [[ ! -d "${_PID_DIR}" ]]; then
+    mkdir -p "${_PID_DIR}" || exit 1
+  fi
+
+  sudo chmod 644 "${LOG_FILE:-}" "${SECURITY_LOG:-}" || return 1
+
+  return 0
+}
+
+# Snitcher MTF - Monitors D-Bus system messages for security-related events
+# Usage: snitcher-mtf.sh
+# This script monitors D-Bus system messages and notifies the user of security-related events.
+# It requires root privileges to access system D-Bus messages and uses notify-send for notifications.
+snitcher() {
+
+  # Check if the line is empty
+  local timestamp=""
+  timestamp=$(date +'%Y-%m-%d %H:%M:%S')
+  if [[ -z "${timestamp}" ]]; then
+    printf '%s\n' "Failed to get current timestamp." >&2
+    exit 1
+  fi
+
+  # Print initial message to log file
+  printf '%s\n' "================================="
+  printf '%s\n' "[*] Snitcher MTF is watching..." | sudo tee -a "${LOG_FILE:-}" || return 1
+  printf '%s\n' "================================="
+  printf '%s\n' "Snitcher MTF started at: ${timestamp:-$(date +'%Y-%m-%d %H:%M:%S')}" | sudo tee -a "${LOG_FILE:-}" || return 1
+  printf '%s\n' "================================="
+
+  # Start monitoring D-Bus system messages
+  # Use dbus-monitor to listen for specific interfaces and events
+  # and notify the user of security-related events
+  # Redirect output to the log file and notify the user
+  sudo dbus-monitor --system \
+    "interface='org.freedesktop.PolicyKit1.Authority'" \
+    "interface='org.freedesktop.login1.Manager'" \
+    "interface='org.freedesktop.NetworkManager'" \
+    "interface='org.freedesktop.Notifications'" |
+  while read -r line; do
+    # Skip empty lines
+    if [[ -z "${line}" ]]; then
+      continue
+    fi
+
+    # Check if the line contains any of the specified interfaces
+    #######################################################
+    if printf '%s\n' "${line}" | grep -q "org.freedesktop.PolicyKit1"; then
+
+      ######################################################
+      # Notify for PolicyKit access requests
+      printf '%s\n' "[${timestamp:-$(date +'%Y-%m-%d %H:%M:%S')}] [SECURITY] $line" | tee -a "${SECURITY_LOG:-}" || true
+      notify-send -u critical -i dialog-warning "🔐 PolicyKit Access" "Root access requested or changed"
+      #######################################################
+
+    elif printf '%s\n' "${line}" | grep -q "org.freedesktop.NetworkManager"; then
+
+      # Notify for NetworkManager state changes
+      ######################################################
+      printf '%s\n' "[${timestamp:-$(date +'%Y-%m-%d %H:%M:%S')}] [SECURITY] $line" | tee -a "${SECURITY_LOG:-}" || true
+      if printf '%s\n' "${line}" | grep -q "StateChanged"; then
+        notify-send -u normal -i network-wireless "🌐 Network State Changed" "Network state has changed"
+      elif printf '%s\n' "${line}" | grep -q "org.freedesktop.login1"; then
+        printf '%s\n' "[${timestamp:-$(date +'%Y-%m-%d %H:%M:%S')}] [SECURITY] $line" | tee -a "${SECURITY_LOG:-}" || true
+      elif printf '%s\n' "${line}" | grep -q "SessionNew"; then
+        notify-send -u normal -i user-available "👤 New Session Created" "A new user session has been created"
+      elif printf '%s\n' "${line}" | grep -q "SessionRemoved"; then
+        notify-send -u normal -i user-away "👤 Session Removed" "A user session has been removed"
+      fi
+      ######################################################
+
+    elif printf '%s\n' "${line}" | grep -q "org.freedesktop.login1.Manager"; then
+
+      # Notify for login session management
+      ######################################################
+      printf '%s\n' "[${timestamp:-$(date +'%Y-%m-%d %H:%M:%S')}] [SECURITY] $line" | tee -a "${SECURITY_LOG:-}" || true
+
+      if printf '%s\n' "${line}" | grep -q "PrepareForShutdown"; then
+        notify-send -u critical -i system-shutdown "🔒 Prepare for Shutdown"
+      elif printf '%s\n' "${line}" | grep -q "SessionManagement"; then
+        notify-send -u critical -i system-log-out "🔁 Session/Suspend" "Logout, reboot, or suspend requested"
+      elif printf '%s\n' "${line}" | grep -q "PrepareForSleep"; then
+        notify-send -u critical -i system-suspend "🔋 Prepare for Sleep" "System is preparing to sleep"
+      fi
+      #######################################################
+
+    elif printf '%s\n' "${line}" | grep -q "org.freedesktop.Notifications"; then
+      notify-send -u low -i dialog-information "📨 Notification Issued" "Someone or something issued a notification"
+    fi
+    ###################################################
+
+  done
+}
+
+# Validate dependencies
+validate_deps || {
+  printf '%s\n' "Dependency validation failed. Exiting." >&2
+  return 1
+}
+
+main(){
+  # Start the snitcher process in the background
+  # and capture its PID
+  snitcher &
+  _SNITCHER_PID=$!
+
+  # Check if the snitcher process started successfully
+  if [[ -z "${_SNITCHER_PID}" ]]; then
+      printf '%s\n' "Snitcher MTF ERROR: Failed to start snitcher process." >&2
+      exit 1
+  fi
+
+  # Check if the snitcher process is running
+  if [[ ! $_SNITCHER_PID -eq 0 ]]; then
+      printf '%s\n' "Snitcher MTF ERROR: $?" 
+      printf '%s\n' "Snitcher MTF failed to start." >&2
+      exit 1
+  else
+      printf '%s\n' "Snitcher MTF started with PID: ${_SNITCHER_PID}" 
+      printf '%s\n' "Snitcher MTF is running in the background."
+      printf '%s' $! | sudo tee "${PID_FILE:-}"
+  fi
+
+  # Create the PID file with the snitcher process ID
+  if [[ -f "${_PID_FILE}" ]]; then
+    printf '%s\n' "Snitcher MTF PID file created at: ${_PID_FILE}"
+  else
+    printf '%s\n' "Failed to create Snitcher MTF PID file at: ${_PID_FILE}" >&2
+    exit 1
+  fi
+}
+
+# Wait for the snitcher process to finish
+main && wait $_SNITCHER_PID || {
+  printf '%s\n' "Snitcher MTF encountered an error." >&2
+  exit $?
+}
+
+# Exit with the status of the snitcher process
+exit $?

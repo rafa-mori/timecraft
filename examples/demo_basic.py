@@ -13,54 +13,43 @@ import argparse
 import os
 import sys
 
-from ..src.timecraft_ai import ai, core
+import timecraft_ai
+
+# Controle de modo de desenvolvimento
+DEV_MODE = False
 
 # Try to import from installed package first, fallback to dev environment
 try:
-    if core:
-        from ..src.timecraft_ai.core import (
+    if timecraft_ai:
+        from timecraft_ai.core import (
             DatabaseConnector,
-            LinearRegression,
-            RandomForestClassifier,
-            TimeCraftAI,
+            LinearRegressionAnalysis
         )
 
-    if ai:
-        from ..src.timecraft_ai.ai import (
-            AI_MODULES_AVAILABLE,
-            AudioProcessor,
-            ChatbotActions,
-            VoiceSynthesizer,
-        )
-
-    DEV_MODE = False
-    print("📦 Usando TimeCraft AI instalado como package")
+        from timecraft_ai import TimeCraftAI, TimeCraftModel
+        print("📦 Usando TimeCraft AI instalado como package")
 except ImportError:
     # Development mode - add src to path
     src_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "src")
     if os.path.exists(src_path):
         sys.path.insert(0, src_path)
-        if core:
+        if timecraft_ai:
             # Importar as classes principais do core
-            from ..src.timecraft_ai.core import (
-                DatabaseConnector,
-                LinearRegression,
-                RandomForestClassifier,
-                TimeCraftAI,
-            )
+            from timecraft_ai.core import (DatabaseConnector, LinearRegressionAnalysis,
+                                           TimeCraftAI)
         else:
-            print("⚠️ Módulo core não encontrado. Verifique a instalação.")
+            print(
+                "⚠️ Módulo core não encontrado. Verifique a instalação.")
             sys.exit(1)
 
-        if ai:
-            # Importar os módulos de AI
-            from ..src.timecraft_ai.ai import (
-                AI_MODULES_AVAILABLE,
+        # Verificar se o módulo de AI está disponível
+        try:
+            from timecraft_ai.ai import (
                 AudioProcessor,
                 ChatbotActions,
                 VoiceSynthesizer,
             )
-        else:
+        except ImportError:
             print("⚠️ Módulo AI não encontrado. Verifique a instalação.")
             sys.exit(1)
 
@@ -72,16 +61,8 @@ except ImportError:
 
 # Verificar se o módulo de AI está disponível
 try:
-    from ..src.timecraft_ai.ai import (
-        AI_MODULES_AVAILABLE,
-        AudioProcessor,
-        ChatbotActions,
-        VoiceSynthesizer,
-    )
-
-    AI_AVAILABLE = (
-        hasattr(AI_MODULES_AVAILABLE, "AI_AVAILABLE") and AI_MODULES_AVAILABLE
-    )
+    from timecraft_ai.ai import (AudioProcessor,
+                                 ChatbotActions, VoiceSynthesizer)
 except ImportError:
     AI_AVAILABLE = False
     print("⚠️ Módulos de AI não disponíveis. Instale com: make install-ai")
@@ -93,19 +74,16 @@ def demo_core_features():
 
     try:
         # Criar instância principal
-        tc = core.TimeCraftAI()
+        tc = timecraft_ai.TimeCraftAI()
         print("✅ TimeCraftAI criado com sucesso")
 
         # Testar conexão com banco (sem conectar realmente)
-        db = core.DatabaseConnector("sqlite")
+        db = timecraft_ai.DatabaseConnector("sqlite")
         print("✅ DatabaseConnector criado com sucesso")
 
         # Testar modelos de ML
-        lr = core.LinearRegression()
+        lr = timecraft_ai.LinearRegressionAnalysis("linear_model")
         print("✅ LinearRegression criado com sucesso")
-
-        rf = core.RandomForestClassifier()
-        print("✅ RandomForestClassifier criado com sucesso")
 
         print("🎉 Todas as funcionalidades core funcionando!")
 
@@ -120,25 +98,20 @@ def demo_ai_features():
     """Demonstra as funcionalidades de AI (se disponíveis)"""
     print("\n🤖 === DEMONSTRAÇÃO AI === ")
 
-    if not AI_AVAILABLE:
-        print("⚠️ Recursos de AI não disponíveis")
-        print("💡 Para instalar: make install-ai")
-        return False
-
     try:
         # Testar processamento de áudio
-        if ai:
-            audio = ai.AudioProcessor()
-            print("✅ AudioProcessor criado com sucesso")
+        # if AI_MODULES_AVAILABLE and AudioProcessor:
+        #     audio = timecraft_ai.AudioProcessor()
+        #     print("✅ AudioProcessor criado com sucesso")
 
         # Testar chatbot
-        if ai.ChatbotActions:
-            chatbot = ai.ChatbotActions()
+        if timecraft_ai.ChatbotActions:
+            chatbot = timecraft_ai.ChatbotActions()
             print("✅ ChatbotActions criado com sucesso")
 
         # Testar síntese de voz
-        if ai.VoiceSynthesizer:
-            voice = ai.VoiceSynthesizer()
+        if timecraft_ai.VoiceSynthesizer:
+            voice = timecraft_ai.VoiceSynthesizer()
             print("✅ VoiceSynthesizer criado com sucesso")
 
         print("🎉 Recursos de AI funcionando!")
@@ -157,6 +130,7 @@ def demo_data_analysis():
     try:
         import numpy as np
         import pandas as pd
+        from timecraft_ai import TimeCraftModel
 
         # Criar dados de exemplo
         dates = pd.date_range("2023-01-01", periods=100, freq="D")
@@ -168,8 +142,10 @@ def demo_data_analysis():
         print(f"📈 Valor médio: {data['value'].mean():.2f}")
         print(f"📊 Desvio padrão: {data['value'].std():.2f}")
 
-        # Testar TimeCraftAI com dados
-        tc = core.TimeCraftAI()
+        # Testar TimeCraftModel com dados
+        tc = TimeCraftModel(data=data, date_column="date",
+                            value_columns=["value"], is_csv=False, periods=30)
+
         print("✅ Pronto para a análise de séries temporais")
 
         return True
@@ -190,8 +166,8 @@ def main():
 
     print("🎯 TimeCraft AI - Demonstração Básica")
     print("=" * 50)
-    print("📦 Versão: {getattr(core, '__version__', 'N/A')}")
-    print("🔧 Modo: {'Desenvolvimento' if DEV_MODE else 'Produção'}")
+    print(f"📦 Versão: {getattr(timecraft_ai, '__version__', 'N/A')}")
+    print(f"🔧 Modo: {'Desenvolvimento' if DEV_MODE else 'Produção'}")
     print()
 
     success = True

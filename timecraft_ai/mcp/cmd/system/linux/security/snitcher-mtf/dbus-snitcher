@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+PID_FILE="$HOME/.snitcher/snitcher.pid"
+SERVICE_NAME="snitcher"
+
+case "$1" in
+  start)
+    if systemctl --user is-active --quiet "$SERVICE_NAME"; then
+      echo "Snitcher já está rodando via systemd."
+    else
+      systemctl --user start "$SERVICE_NAME"
+      echo "Snitcher iniciado via systemd."
+    fi
+    ;;
+  stop)
+    systemctl --user stop "$SERVICE_NAME"
+    echo "Snitcher parado."
+    ;;
+  status)
+    systemctl --user status "$SERVICE_NAME"
+    ;;
+  logs)
+    journalctl --user-unit "$SERVICE_NAME" -n 50 --no-pager
+    ;;
+  tail)
+    journalctl --user-unit "$SERVICE_NAME" -f
+    ;;
+  *)
+    echo "Uso: $0 {start|stop|status|logs|tail}"
+    ;;
+esac
+

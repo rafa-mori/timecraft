@@ -8,6 +8,9 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+bkp/**/*
+*.bkp/**/*
+bkp.*/**/*
 build/
 develop-eggs/
 dist/
@@ -15,7 +18,10 @@ downloads/
 eggs/
 .eggs/
 lib/
-lib64/
+**/venv/
+**/.venv/
+.venv//
+venv/
 parts/
 sdist/
 var/
@@ -25,6 +31,10 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+.env
+node_modules/
+**/node_modules/
+**/**/node_modules/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -180,3 +190,5 @@ bkp/
 *.bkp/
 bkp.*/
 docs/jobs/*.md
+log/**/*
+timecraft_ai/models/

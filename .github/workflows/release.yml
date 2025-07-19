@@ -2,8 +2,9 @@ name: Kubex Release Workflow - (Python)
 
 on:
   push:
-    tags:
-      - "v*.*.*"
+    branches: [ never ] # [main]
+  #   tags:
+  #     - "v*.*.*"
   workflow_dispatch:
     inputs:
       tag_strategy:

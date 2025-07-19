@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2034,SC2155,SC2317,SC2015,SC2016
+
+# Make swap file and set swappiness
+# Define the PID file and directory
+# All variables are readonly to prevent accidental modification
+readonly _D="${HOME:-~}"
+readonly _LOG_FILE="${_D:-/var/log}/swap-manager.log"
+readonly _PID_DIR="$(dirname "${_D}")/.swap-manager"
+readonly _PID_FILE="${_PID_DIR}/swap-manager.pid"
+
+$(command -v sudo || echo '') \
+  fallocate -l 4G /swapfile 
+
+$(command -v sudo || echo '') \
+  chmod 600 /swapfile 
+
+$(command -v sudo || echo '') \
+  mkswap /swapfile  
+
+$(command -v sudo || echo '') \
+  swapon /swapfile 
+
+$(command -v sudo || echo '') \
+  cp /etc/fstab /etc/fstab.bak  
+  
+echo '/$(command -v sudo || echo '') swapfile none swap sw 0 0' | $(command -v sudo || echo '') \
+  tee -a /etc/fstab 
+
+$(command -v sudo || echo '') \
+  sysctl vm.swappiness=10 && 
+
+$(command -v sudo || echo '') \
+  sysctl vm.vfs_cache_pressure=50
+
+$(command -v sudo || echo '') \
+  nano /etc/sysctl.conf
+
+printf '%s\n' "vm.swappiness=10" | sudo tee -a /etc/sysctl.conf
+printf '%s\n' "vm.vfs_cache_pressure=50" | sudo tee -a /etc/sysctl.conf
+
+if [[ ! -d "${_PID_DIR:-}" ]]; then
+  if [[ ! -f "${SECURITY_LOG:-}" ]]; then
+    sudo touch "${SECURITY_LOG:-}" || return 1
+  fi
+  # Ensure PID directory exists
+  if [[ ! -d "${_PID_DIR:-}" ]]; then
+    sudo mkdir -p "${_PID_DIR:-}" || return 1
+  fi
+  # Create PID file if it does not exist
+  if [[ ! -f "${_PID_FILE:-}" ]]; then
+    sudo touch "${_PID_FILE:-}" || return 1
+  fi
+fi
+

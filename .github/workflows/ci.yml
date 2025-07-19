@@ -4,7 +4,7 @@ on:
   #push:
   #  branches: [ main, develop ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ never ] # [ main, develop ]
   workflow_dispatch:
 
 jobs:
@@ -54,17 +54,17 @@ jobs:
     - name: Lint with flake8
       run: |
         # Stop the build if there are Python syntax errors or undefined names
-        flake8 src/ --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 timecraft_ai/ --count --select=E9,F63,F7,F82 --show-source --statistics
         # Exit-zero treats all errors as warnings
-        flake8 src/ --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+        flake8 timecraft_ai/ --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
 
     - name: Check code formatting with Black
       run: |
-        black --check src/ examples/ --diff
+        black --check timecraft_ai/ examples/ --diff
 
     - name: Type check with mypy
       run: |
-        mypy src/ --ignore-missing-imports
+        mypy timecraft_ai/ --ignore-missing-imports
       continue-on-error: true
 
     - name: Test with pytest
@@ -102,7 +102,7 @@ jobs:
 
     - name: Run bandit security scan
       run: |
-        bandit -r src/ -f json || true
+        bandit -r timecraft_ai/ -f json || true
 
   docs-build:
     runs-on: ubuntu-latest
@@ -143,7 +143,7 @@ jobs:
         VERSION=$(grep -o 'version = "[^"]*"' setup.py | cut -d'"' -f2 || echo "")
         if [ -z "$VERSION" ]; then
           # Fallback: try to get version from pyproject.toml or __init__.py
-          VERSION=$(grep -o '__version__ = "[^"]*"' src/timecraft_ai/__init__.py | cut -d'"' -f2 || echo "1.1.1")
+          VERSION=$(grep -o '__version__ = "[^"]*"' timecraft_ai/timecraft_ai/__init__.py | cut -d'"' -f2 || echo "1.1.1")
         fi
         echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
         
